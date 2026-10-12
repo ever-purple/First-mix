@@ -6,17 +6,36 @@
   <meta name="theme-color" content="#F3F1EA" />
   <meta name="description" content="FIRST MIX 是面向零基础用户的浏览器 DJ 混音互动体验。无需设备，边听边完成第一次转场。" />
   <title>FIRST MIX｜零基础完成第一次混音</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <script>document.documentElement.dataset.entryView = new URLSearchParams(location.search).get("view") || "";</script>
+  <script>
+    (() => {
+      const entryParams = new URLSearchParams(location.search);
+      document.documentElement.dataset.entryView = entryParams.get("view") || "";
+      document.documentElement.dataset.entrySkill = entryParams.get("skill") || "";
+    })();
+  </script>
   <style>
-    html[data-entry-view="learning"] .intro,
-    html[data-entry-view="practice"] .intro,
-    html[data-entry-view="my"] .intro,
+    .app-route-cover{position:fixed;inset:0;z-index:2147483647;display:none;pointer-events:none;background:#dcebed}
+    html[data-entry-view="practice"] .app-route-cover{background:#d5e8e8}
+    html[data-entry-view="my"] .app-route-cover{background:#e2e7ec}
+    html:not(.app-ready) .app-route-cover,html.route-changing .app-route-cover{display:block}
+    html[data-entry-view="learning"] body > main#top > .intro,
+    html[data-entry-view="practice"] body > main#top > .intro,
+    html[data-entry-view="my"] body > main#top > .intro,
     html[data-entry-view="learning"] body > .masthead,
     html[data-entry-view="practice"] body > .masthead,
     html[data-entry-view="my"] body > .masthead { display: none !important; }
+    html[data-entry-view="learning"],html[data-entry-view="learning"] body{background:#e3eef0}
+    html[data-entry-view="practice"],html[data-entry-view="practice"] body{background:linear-gradient(145deg,#c1e1df,#dcd4e9)}
+    html[data-entry-view="my"],html[data-entry-view="my"] body{background:linear-gradient(150deg,#d8ece9,#e7edf2 42%,#ddd4ee 75%,#efdeda)}
+    html[data-entry-view="learning"] body:not(.practice-open):not(.works-open) #unifiedLearning[hidden]{display:flex!important}
+    html[data-entry-view="practice"] #unifiedLearning,
+    html[data-entry-view="my"] #unifiedLearning{display:none!important}
+    html[data-entry-view="learning"] #worksLibrary,
+    html[data-entry-view="practice"] #worksLibrary{display:none!important}
+    html[data-entry-view="learning"] body > .practice-recorder,
+    html[data-entry-view="learning"] body > .practice-guide,
+    html[data-entry-view="my"] body > .practice-recorder,
+    html[data-entry-view="my"] body > .practice-guide{display:none!important}
   </style>
   <link rel="stylesheet" href="./styles.css?v=20261012-entry-fix-1" />
   <link rel="stylesheet" href="./ac-unified.css?v=20261012-entry-fix-1" />
@@ -24,6 +43,19 @@
     <link rel="stylesheet" href="./waveform-polish.css?v=20261011-real-wave-3" />
 </head>
 <body>
+  <div class="app-route-cover" aria-hidden="true"></div>
+  <script>
+    (() => {
+      const view = document.documentElement.dataset.entryView;
+      const skill = document.documentElement.dataset.entrySkill;
+      if (view === "learning") document.body.classList.add("learning-open");
+      if (view === "practice") {
+        document.body.classList.add("hub-open", "course-open", "practice-open");
+        if (skill) document.body.classList.add("skill-practice-open", `skill-${skill}-open`);
+      }
+      if (view === "my") document.body.classList.add("hub-open", "works-open");
+    })();
+  </script>
   <a class="skip-link" href="#mixer">跳到混音练习</a>
   <header class="masthead">
     <a class="wordmark" href="#top" aria-label="FIRST MIX 首页">FIRST MIX</a>
@@ -271,6 +303,7 @@
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5h10.5A2.5 2.5 0 0 1 18 7v13H7.5A2.5 2.5 0 0 1 5 17.5v-13Z"/><path d="M5 17.5A2.5 2.5 0 0 1 7.5 15H18M9 8h5M9 11h4"/></svg>
       <span>使用教程</span>
     </button>
+    <span id="practiceLandscapeAnchor" hidden></span>
     <button class="practice-landscape-button" id="practiceLandscape" type="button" aria-label="进入横屏打碟模式">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/><path d="m3 8 5-5m8 0 5 5M3 16l5 5m8 0 5-5"/></svg>
       <span>横屏</span>
@@ -620,11 +653,12 @@
   </dialog>
 
   <noscript>FIRST MIX 需要 JavaScript 才能运行浏览器音频原型。</noscript>
-  <link rel="stylesheet" href="./controller-3d.css?v=20261012-model-zoom-1" />
+  <link rel="stylesheet" href="./controller-3d.css?v=20261013-background-seam-2" />
   <link rel="stylesheet" href="./sheet-swipe-dismiss.css?v=20261011-1" />
   <link rel="stylesheet" href="./layout-refresh.css?v=20261012-hide-landscape-nav-1" />
-  <link rel="stylesheet" href="./hot-cue-lesson.css?v=20261012-skills-2" />
+  <link rel="stylesheet" href="./hot-cue-lesson.css?v=20261012-skills-3" />
+  <link rel="stylesheet" href="./mobile-layout-fixes.css?v=20261013-mobile-pages-5" />
   <script defer src="./sheet-swipe-dismiss.js?v=20261011-1"></script>
-  <script type="module" src="./app.js?v=20261012-orientation-choice-1"></script>
+  <script type="module" src="./app.js?v=20261013-route-cover-seam-4"></script>
 </body>
 </html>

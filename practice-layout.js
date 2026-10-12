@@ -2,6 +2,20 @@
 export function setupPracticeLayout(){
   const body=document.body,button=document.getElementById('practiceLandscape');
   let stage=null,placements=[],requestedFullscreen=false,waitingForLandscape=false;
+  const fullscreenElement=()=>document.fullscreenElement||document.webkitFullscreenElement||document.msFullscreenElement||null;
+  const requestNativeFullscreen=()=>{
+    const root=document.documentElement;
+    const request=root.requestFullscreen||root.webkitRequestFullscreen||root.msRequestFullscreen;
+    return request?Promise.resolve(request.call(root)):Promise.reject(new Error('Fullscreen API unavailable'));
+  };
+  const exitNativeFullscreen=async()=>{
+    const exitFullscreen=document.exitFullscreen||document.webkitExitFullscreen||document.msExitFullscreen;
+    if(!exitFullscreen)return;
+    for(let attempt=0;attempt<2&&fullscreenElement();attempt+=1){
+      await Promise.resolve(exitFullscreen.call(document)).catch(()=>{});
+      await new Promise(resolve=>setTimeout(resolve,60));
+    }
+  };
   function resize(){
     const active=body.classList.contains('practice-landscape');
     const portrait=innerHeight>innerWidth;
@@ -17,12 +31,15 @@ export function setupPracticeLayout(){
     document.dispatchEvent(new Event('practice-layout-change'));
   }
   async function exit(){
+    if(!stage&&!waitingForLandscape&&!fullscreenElement()&&!requestedFullscreen)return;
     waitingForLandscape=false;
     body.classList.remove('practice-landscape','practice-rotated');
     placements.forEach(({node,marker})=>marker.replaceWith(node));placements=[];stage?.remove();stage=null;
     button.querySelector('span').textContent='横屏';button.setAttribute('aria-label','进入横屏打碟模式');button.setAttribute('aria-pressed','false');
     try{screen.orientation?.unlock?.();}catch{}
-    if(requestedFullscreen&&document.fullscreenElement)await document.exitFullscreen().catch(()=>{});
+    // Restore browser/system bars in the same tap. Mobile browsers can remove
+    // the landscape stage before native fullscreen has completely closed.
+    await exitNativeFullscreen();
     requestedFullscreen=false;resize();
   }
   function enter(){
@@ -34,8 +51,9 @@ export function setupPracticeLayout(){
     }
     body.classList.add('practice-landscape');button.querySelector('span').textContent='退出横屏';button.setAttribute('aria-label','退出横屏打碟模式');button.setAttribute('aria-pressed','true');
     document.querySelector('main').scrollTop=0;resize();
-    if(!document.fullscreenElement&&document.documentElement.requestFullscreen){
-      document.documentElement.requestFullscreen().then(()=>{requestedFullscreen=true;return screen.orientation?.lock?.('landscape');}).catch(()=>{});
+    if(!fullscreenElement()){
+      requestedFullscreen=true;
+      requestNativeFullscreen().then(()=>screen.orientation?.lock?.('landscape')).catch(()=>{requestedFullscreen=false;});
     }
   }
   function requestLandscape(){
@@ -44,13 +62,16 @@ export function setupPracticeLayout(){
     button.querySelector('span').textContent='请横置';
     button.setAttribute('aria-label','请将手机横置以进入横屏打碟模式');
     button.setAttribute('aria-pressed','false');
-    if(!document.fullscreenElement&&document.documentElement.requestFullscreen){
-      document.documentElement.requestFullscreen().then(()=>screen.orientation?.lock?.('landscape')).catch(()=>{});
+    if(!fullscreenElement()){
+      requestedFullscreen=true;
+      requestNativeFullscreen().then(()=>screen.orientation?.lock?.('landscape')).catch(()=>{requestedFullscreen=false;});
     }
   }
-  button.addEventListener('click',()=>{if(stage)exit();else requestLandscape();});
+  button.addEventListener('click',()=>{if(stage||waitingForLandscape||fullscreenElement())exit();else requestLandscape();});
   window.addEventListener('resize',()=>{if(waitingForLandscape&&innerWidth>innerHeight){enter();return;}resize();});
-  document.addEventListener('fullscreenchange',()=>{if(requestedFullscreen&&!document.fullscreenElement&&stage)exit();else resize();});
+  const onFullscreenChange=()=>{if(requestedFullscreen&&!fullscreenElement()&&stage)exit();else resize();};
+  document.addEventListener('fullscreenchange',onFullscreenChange);
+  document.addEventListener('webkitfullscreenchange',onFullscreenChange);
   document.addEventListener('keydown',event=>{if(event.key==='Escape'&&stage)exit();});
   new MutationObserver(()=>{if(stage&&!body.classList.contains('practice-open'))exit();}).observe(body,{attributes:true,attributeFilter:['class']});
   resize();

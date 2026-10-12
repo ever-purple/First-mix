@@ -28,6 +28,7 @@ body.learning-open .skill-list .is-available .skill-art {
 .skill-lesson[hidden],
 .skill-lesson-controls[hidden],
 .skill-filter-control[hidden] { display: none !important; }
+body:not(.practice-open) .skill-lesson { display: none !important; }
 body.practice-open.skill-practice-open .mix-recorder,
 body.practice-open.skill-practice-open .practice-guide-button,
 body.practice-open.skill-practice-open .model-coach,
@@ -52,6 +53,26 @@ body.practice-open.skill-practice-open .skill-lesson {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+}
+.hot-cue-lesson-head:has(.practice-landscape-button) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 44px;
+  align-items: center;
+  gap: 8px;
+}
+body.practice-open.skill-practice-open .practice-landscape-button.is-skill-inline {
+  position: static !important;
+  z-index: auto;
+  width: 44px !important;
+  min-width: 44px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  padding: 0 !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+}
+body.practice-open.skill-practice-open .practice-landscape-button.is-skill-inline span {
+  display: none !important;
 }
 .hot-cue-lesson-head h2 {
   margin: 0;

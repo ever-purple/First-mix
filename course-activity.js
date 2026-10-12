@@ -1,4 +1,38 @@
 (() => {
+  const removeCourseWordmark = () => {
+    document.querySelectorAll('.topbar .logo, .topbar > .brand, .challenge-brand').forEach((wordmark) => {
+      wordmark.classList.add('course-wordmark-space');
+      wordmark.setAttribute('aria-hidden', 'true');
+    });
+  };
+  document.documentElement.classList.add('course-playable');
+  const mobileLayout = document.createElement('link');
+  mobileLayout.rel = 'stylesheet';
+  mobileLayout.href = '../mobile-layout-fixes.css?v=20261012-mobile-pages-4';
+  document.head.append(mobileLayout);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', removeCourseWordmark, { once: true });
+  } else {
+    removeCourseWordmark();
+  }
+
+  const reuseLearningPage = () => {
+    const back = document.querySelector('a[href*="index.html?view=learning"]');
+    if (!back) return;
+    back.addEventListener('click', (event) => {
+      let sameOriginReferrer = false;
+      try { sameOriginReferrer = Boolean(document.referrer) && new URL(document.referrer).origin === location.origin; } catch { /* use the link fallback */ }
+      if (!sameOriginReferrer || history.length < 2) return;
+      event.preventDefault();
+      history.back();
+    });
+  };
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', reuseLearningPage, { once: true });
+  } else {
+    reuseLearningPage();
+  }
+
   const KEY = 'first-mix-activity-log-v1';
   const titles = {
     '00': '第一次交接',

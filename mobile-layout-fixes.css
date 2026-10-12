@@ -1,0 +1,303 @@
+/* Mobile viewport QA fixes: safe-area ownership belongs to each screen, not body globally. */
+:root { --fm-system-clearance: max(0px, env(safe-area-inset-top)); }
+.local-device-status { display: none !important; }
+body.practice-open #unifiedLearning[hidden],
+body.works-open #unifiedLearning[hidden] { display: none !important; }
+html.local-device-preview {
+  --fm-system-clearance: max(0px, env(safe-area-inset-top));
+}
+
+@media (max-width: 760px) {
+  body.learning-open .learning-topbar {
+    display: flex !important;
+  }
+  body.learning-open .learning-wordmark {
+    display: block !important;
+    visibility: visible !important;
+    white-space: nowrap !important;
+  }
+  /* Entry and learning are document layouts, so the status preview may reserve body space. */
+  html.local-device-preview[data-entry-view="" ] body,
+  html.local-device-preview[data-entry-view="learning"] body {
+    padding-top: var(--fm-system-clearance) !important;
+  }
+
+  /* Launch is one fixed composition: visible brand, no document scroll. */
+  html[data-entry-view=""],
+  html[data-entry-view=""] body {
+    width: 100%;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    overflow: hidden !important;
+  }
+  html[data-entry-view=""] body {
+    box-sizing: border-box;
+  }
+  html[data-entry-view=""] body > .masthead {
+    top: var(--fm-system-clearance) !important;
+    display: flex !important;
+  }
+  html[data-entry-view=""] body > .masthead .wordmark {
+    display: inline-flex !important;
+    visibility: visible !important;
+  }
+  html[data-entry-view=""] body > main#top {
+    height: calc(100dvh - var(--fm-system-clearance)) !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+  }
+  html[data-entry-view=""] body > main#top > .intro {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    overflow: hidden !important;
+  }
+
+  /* App-like screens own a fixed viewport and must not inherit document padding. */
+  html.local-device-preview body.practice-open,
+  html.local-device-preview body.works-open,
+  html.local-device-preview.course-playable body {
+    padding-top: 0 !important;
+  }
+
+  /* Practice: recording owns the first row; help/orientation stay compact at its right. */
+  body.practice-open .practice-guide-button,
+  body.practice-open .practice-landscape-button {
+    top: max(16px, calc(var(--fm-system-clearance) + 8px)) !important;
+    width: 44px !important;
+    min-width: 44px !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    padding: 0 !important;
+    gap: 0 !important;
+    border-radius: 13px !important;
+    box-shadow: 0 8px 20px rgba(55, 43, 68, .1) !important;
+    touch-action: manipulation;
+  }
+  body.practice-open .practice-guide-button {
+    right: calc(var(--fm-page-gutter, 16px) + 52px) !important;
+  }
+  body.practice-open .practice-landscape-button {
+    right: var(--fm-page-gutter, 16px) !important;
+  }
+  body.practice-open .practice-guide-button span,
+  body.practice-open .practice-landscape-button span {
+    display: none !important;
+  }
+  body.practice-open .mix-recorder {
+    top: max(16px, calc(var(--fm-system-clearance) + 8px)) !important;
+    left: var(--fm-page-gutter, 16px) !important;
+    right: calc(var(--fm-page-gutter, 16px) + 104px) !important;
+    width: auto !important;
+    min-height: 44px !important;
+    padding: 5px 7px 5px 10px !important;
+    grid-template-columns: auto minmax(0, 1fr) auto auto !important;
+    gap: 7px !important;
+    transform: none !important;
+  }
+  body.practice-open .mix-recorder small,
+  body.practice-open .mix-recorder time {
+    display: none !important;
+  }
+  body.practice-open .mix-recorder .coach-toggle {
+    display: inline-grid !important;
+    place-items: center;
+    min-height: 36px !important;
+    padding-inline: 7px !important;
+  }
+  body.practice-open .mix-recorder > div {
+    overflow: hidden;
+  }
+  body.practice-open .mix-recorder > div strong {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  body.practice-open .mix-recorder #recordButton {
+    min-height: 36px !important;
+    padding-inline: 9px !important;
+  }
+  body.practice-open main {
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    padding-top: max(84px, calc(var(--fm-system-clearance) + 66px)) !important;
+    padding-bottom: max(112px, calc(96px + env(safe-area-inset-bottom))) !important;
+  }
+  body.practice-open.skill-practice-open main {
+    padding-top: max(16px, calc(var(--fm-system-clearance) + 8px)) !important;
+  }
+  body.practice-open .controller-3d {
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  /* My: the page begins below system chrome and the expanded player stays between both bars. */
+  body.works-open .my-library {
+    padding-top: var(--fm-system-clearance) !important;
+  }
+  body.works-open .library-player.is-expanded {
+    top: calc(var(--fm-system-clearance) + 8px) !important;
+    right: var(--fm-page-gutter, 16px) !important;
+    bottom: calc(88px + env(safe-area-inset-bottom)) !important;
+    left: var(--fm-page-gutter, 16px) !important;
+    width: auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    padding: 16px 14px 20px !important;
+    box-sizing: border-box;
+    transform: none !important;
+    overscroll-behavior: contain;
+  }
+  body.works-open .library-player.is-expanded .mix-story-panel {
+    min-width: 0;
+  }
+  body.works-open .library-player.is-expanded .mix-story-note,
+  body.works-open .library-player.is-expanded .mix-story-moment {
+    min-width: 0;
+  }
+
+  /* Courses 00–06: use the entire phone width and keep dark desktop gutters out. */
+  html.course-playable:not(:has(body.course-07)),
+  html.course-playable:not(:has(body.course-07)) body {
+    width: 100% !important;
+    height: 100dvh !important;
+    min-height: 0 !important;
+    background: #c8e5e6 !important;
+  }
+  html.local-device-preview.course-playable:not(:has(body.course-07)) body {
+    padding-top: var(--fm-system-clearance) !important;
+    box-sizing: border-box;
+  }
+  html.course-playable:not(:has(body.course-07)) .frame {
+    width: 100vw !important;
+    max-width: none !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    box-shadow: none !important;
+  }
+  html.course-playable .course-wordmark-space {
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+  html.course-playable:not(:has(body.course-07)) .app {
+    grid-template-rows: 48px minmax(0, 1fr) !important;
+  }
+  html.course-playable:not(:has(body.course-07)) .topbar {
+    padding: 0 8px !important;
+    translate: 0 !important;
+  }
+  html.course-playable:not(:has(body.course-07)) .topbar .icon-button {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 13px !important;
+    touch-action: manipulation;
+  }
+  html.course-playable:not(:has(body.course-07)) .course-stack {
+    translate: 0 22px !important;
+  }
+
+  /* Logo-free screens share one 16px top rail. */
+  body.works-open .my-heading {
+    align-items: flex-start !important;
+    padding-top: var(--fm-page-gutter, 16px) !important;
+  }
+
+  /* Course 00: retain the shared character-left-of-bubble composition. */
+  html.course-playable body:not(.course-07) .question-strip {
+    min-height: 44px;
+  }
+  html.course-playable body:not(.course-07) .question-strip .question-avatar {
+    left: -72px !important;
+    width: 66px !important;
+    height: 66px !important;
+  }
+
+  /* Course 07: same safe-area contract, with scrolling inside the instrument stage. */
+  html.course-playable body.course-07 {
+    width: 100% !important;
+    height: 100dvh !important;
+    min-height: 0 !important;
+    background: linear-gradient(145deg, #d9eeee, #e0d7ed) !important;
+  }
+  html.local-device-preview.course-playable body.course-07 {
+    padding-top: var(--fm-system-clearance) !important;
+    box-sizing: border-box;
+  }
+  body.course-07.course-console main.challenge-shell {
+    height: 100% !important;
+    max-height: 100% !important;
+  }
+  body.course-07 .practice-guide-button {
+    top: max(16px, calc(var(--fm-system-clearance) + 8px)) !important;
+  }
+  body.course-07 .deck-stage {
+    min-height: 0 !important;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-bottom: 12px;
+  }
+}
+
+@media (max-width: 390px) {
+  body.works-open .library-player.is-expanded {
+    padding-inline: 12px !important;
+  }
+  body.works-open .library-player.is-expanded .mix-story-panel {
+    padding: 12px !important;
+  }
+  body.works-open .library-player.is-expanded .mix-story-moment {
+    grid-template-columns: 70px minmax(0, 1fr) !important;
+  }
+  body.works-open .library-player.is-expanded .mix-story-face {
+    width: 70px !important;
+    height: 70px !important;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 650px) {
+  body.practice-open .practice-guide-button,
+  body.practice-open .practice-landscape-button,
+  body.practice-open .mix-recorder {
+    top: max(8px, calc(var(--fm-system-clearance) + 6px)) !important;
+  }
+  body.practice-open .practice-guide-button {
+    right: max(60px, calc(env(safe-area-inset-right) + 60px)) !important;
+  }
+  body.practice-open .practice-landscape-button {
+    right: max(8px, env(safe-area-inset-right)) !important;
+  }
+  body.practice-open .mix-recorder {
+    left: max(16px, env(safe-area-inset-left)) !important;
+    right: max(112px, calc(env(safe-area-inset-right) + 112px)) !important;
+    min-height: 44px !important;
+  }
+  body.practice-open main,
+  body.practice-open.skill-practice-open main {
+    padding-top: max(62px, calc(var(--fm-system-clearance) + 58px)) !important;
+  }
+  body.practice-open .practice-guide-button,
+  body.practice-open .practice-landscape-button {
+    width: 44px !important;
+    min-width: 44px !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    padding: 0 !important;
+    gap: 0 !important;
+  }
+  body.practice-open .practice-guide-button span,
+  body.practice-open .practice-landscape-button span {
+    display: none !important;
+  }
+  body.practice-open.skill-practice-open main {
+    padding-top: max(8px, calc(var(--fm-system-clearance) + 8px)) !important;
+  }
+  body.practice-open.skill-practice-open .practice-landscape-button.is-skill-inline {
+    position: static !important;
+  }
+}

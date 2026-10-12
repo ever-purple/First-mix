@@ -1,9 +1,9 @@
 import { AudioEngine } from "./audio-engine.js";
 import { TutorialMachine, TUTORIAL_STEPS, phrasePosition } from "./tutorial-engine.js";
 import { InterfaceTour } from "./interface-tour.js";
-import { createController } from "./controller-3d.js?v=20261012-guide-nav-1";
+import { createController } from "./controller-3d.js?v=20261013-free-zoom-seam-4";
 import { createTrackLibrary } from "./track-library.js?v=20261010-compact-2";
-import { setupPracticeLayout } from "./practice-layout.js?v=20261011-practice-guide-9";
+import { setupPracticeLayout } from "./practice-layout.js?v=20261013-fullscreen-exit-11";
 import { saveWork, getWorks, deleteWork } from "./works-store.js";
 import { analyzeWeeklyProfile, getAiStatus } from "./ai-client.js";
 
@@ -2379,7 +2379,50 @@ function showLearningStage(stage) {
   $("#skillsPanel").hidden = basics;
 }
 
+function syncEntryView(view, skill = "") {
+  document.documentElement.dataset.entryView = view;
+  document.documentElement.dataset.entrySkill = skill;
+}
+
+let routeTransitionToken = 0;
+function beginRouteTransition(view, skill = "") {
+  const token = ++routeTransitionToken;
+  syncEntryView(view, skill);
+  document.documentElement.classList.add("route-changing");
+  return token;
+}
+function finishRouteTransition(token) {
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    if (token !== routeTransitionToken) return;
+    document.documentElement.classList.add("app-ready");
+    document.documentElement.classList.remove("route-changing");
+  }));
+}
+
+function placePracticeLandscapeButton(skill = null) {
+  const button = $("#practiceLandscape");
+  const anchor = $("#practiceLandscapeAnchor");
+  const lessonId = { "hot-cue": "hotCueLesson", loop: "loopLesson", filter: "filterLesson" }[skill];
+  const head = lessonId ? $(`#${lessonId} .hot-cue-lesson-head`) : null;
+  button.classList.toggle("is-skill-inline", Boolean(head));
+  if (head) head.append(button);
+  else anchor.after(button);
+}
+
+function clearSkillPracticeState() {
+  runtime.activeSkill = null;
+  runtime.hotCueLessonActive = false;
+  document.body.classList.remove("skill-hot-cue-open", "skill-loop-open", "skill-filter-open", "skill-practice-open");
+  placePracticeLandscapeButton();
+  $$(".skill-lesson").forEach(lesson => { lesson.hidden = true; });
+  $("#loopControls").hidden = true;
+  $("#filterControls").hidden = true;
+  $("#hotCueDelete").hidden = true;
+  document.dispatchEvent(new CustomEvent("hot-cue-delete-mode", { detail: { enabled: false } }));
+}
+
 function openUnifiedLearning(stage = "basics") {
+  const routeToken = beginRouteTransition("learning");
   if ($("#practiceOrientationChoice").open) $("#practiceOrientationChoice").close();
   closePracticeGuide();
   closeTechniquesSheet({ immediate: true });
@@ -2390,10 +2433,7 @@ function openUnifiedLearning(stage = "basics") {
     $("#filterA").value = "0";
     $("#filterA").dispatchEvent(new Event("input", { bubbles: true }));
   }
-  runtime.activeSkill = null;
-  runtime.hotCueLessonActive = false;
-  document.body.classList.remove("skill-hot-cue-open", "skill-practice-open");
-  $$(".skill-lesson").forEach(lesson => { lesson.hidden = true; });
+  clearSkillPracticeState();
   document.body.classList.remove("hub-open", "course-open", "course-console", "app-course-phrase", "app-course-module", "console-focus", "practice-open", "works-open");
   document.body.classList.add("learning-open");
   $("#unifiedLearning").hidden = false;
@@ -2404,6 +2444,7 @@ function openUnifiedLearning(stage = "basics") {
   setAppNav("learning");
   window.history.replaceState(null, "", `./index.html?view=learning${stage === "skills" ? "&stage=skills" : ""}`);
   window.scrollTo({ top: 0, behavior: "smooth" });
+  finishRouteTransition(routeToken);
 }
 
 const landscapePreferenceKey = "first-mix-landscape-default";
@@ -2422,6 +2463,8 @@ function rememberLandscapeChoice(choice, always) {
 }
 
 function openPracticeDeck({ skill = null } = {}) {
+  const normalizedSkill = ["hot-cue", "loop", "filter"].includes(skill) ? skill : null;
+  const routeToken = beginRouteTransition("practice", normalizedSkill || "");
   closeTechniquesSheet({ immediate: true });
   closePracticeGuide();
   clearTimeout(runtime.completionTimer);
@@ -2439,11 +2482,14 @@ function openPracticeDeck({ skill = null } = {}) {
   $("#filterA").dispatchEvent(new Event("input", { bubbles: true }));
   setTransport("a", false);
   setTransport("b", false);
-  runtime.activeSkill = ["hot-cue", "loop", "filter"].includes(skill) ? skill : null;
+  runtime.activeSkill = normalizedSkill;
   runtime.hotCueLessonActive = runtime.activeSkill === "hot-cue";
   document.body.classList.toggle("skill-hot-cue-open", runtime.hotCueLessonActive);
+  document.body.classList.toggle("skill-loop-open", runtime.activeSkill === "loop");
+  document.body.classList.toggle("skill-filter-open", runtime.activeSkill === "filter");
   document.body.classList.toggle("skill-practice-open", Boolean(runtime.activeSkill));
   $$(".skill-lesson").forEach(lesson => { lesson.hidden = lesson.id !== ({ "hot-cue": "hotCueLesson", loop: "loopLesson", filter: "filterLesson" }[runtime.activeSkill]); });
+  placePracticeLandscapeButton(runtime.activeSkill);
   $("#hotCueLessonStart").hidden = false;
   $("#hotCueLessonStatus").textContent = "使用内置曲目《Venus》。播放后，1、2 号打击垫各有一个示范 Cue 点。";
   $("#loopLessonStart").hidden = false;
@@ -2483,6 +2529,7 @@ function openPracticeDeck({ skill = null } = {}) {
     practiceLayout?.requestLandscape();
   }
   window.scrollTo({ top: 0, behavior: "smooth" });
+  finishRouteTransition(routeToken);
 }
 
 $("#practiceOrientationStay").addEventListener("click", () => {
@@ -3045,6 +3092,15 @@ $("#enterApp").addEventListener("click", () => {
 
 $("#basicsTab").addEventListener("click", () => showLearningStage("basics"));
 $("#skillsTab").addEventListener("click", () => showLearningStage("skills"));
+$$('.skill-link').forEach(link => link.addEventListener('click', event => {
+  event.preventDefault();
+  const skill = new URL(link.href, window.location.href).searchParams.get('skill');
+  openPracticeDeck({ skill });
+}));
+$$('.skill-lesson a[href*="view=learning"]').forEach(link => link.addEventListener('click', event => {
+  event.preventDefault();
+  openUnifiedLearning('skills');
+}));
 const techniquesSheet = $("#techniquesSheet");
 const techniquesBackdrop = $("#techniquesBackdrop");
 let techniquesDrag = null;
@@ -3121,8 +3177,10 @@ $("#navPractice").addEventListener("click", async () => {
   openPracticeDeck();
 });
 $("#navConsole").addEventListener("click", async () => {
+  const routeToken = beginRouteTransition("my");
   closePracticeGuide();
   closeTechniquesSheet({ immediate: true });
+  clearSkillPracticeState();
   if (document.body.classList.contains("console-focus")) await exitConsoleMode();
   if (engine.decks.a?.playing) engine.decks.a.pause();
   if (engine.decks.b?.playing) engine.decks.b.pause();
@@ -3138,6 +3196,7 @@ $("#navConsole").addEventListener("click", async () => {
   const preview = new URLSearchParams(window.location.search).get("works-preview");
   window.history.replaceState(null, "", preview === "filled" || preview === "empty" ? `./index.html?view=my&works-preview=${preview}` : "./index.html?view=my");
   window.scrollTo({ top: 0, behavior: "smooth" });
+  finishRouteTransition(routeToken);
 });
 $$("[data-my-view]").forEach(button => button.addEventListener("click", () => openMyView(button.dataset.myView)));
 $("#myRecordOnce").addEventListener("click", openPracticeDeck);
@@ -3156,6 +3215,42 @@ $("#activityCalendar").addEventListener("click", event => {
   runtime.myActivityDate = day.dataset.activityDate;
   renderActivityCalendar(readCourseProgress().size);
 });
+let activityScrubPointer = null;
+let activityScrubMoved = false;
+function previewActivityDay(day) {
+  if (!day) return;
+  const calendar = $("#activityCalendar");
+  runtime.myActivityDate = day.dataset.activityDate;
+  calendar.querySelectorAll(".activity-day").forEach(row => {
+    const selected = row === day;
+    row.classList.toggle("is-selected", selected);
+    row.setAttribute("aria-pressed", String(selected));
+  });
+  shapeActivityBands(day);
+}
+$("#activityCalendar").addEventListener("pointerdown", event => {
+  const day = event.target.closest("[data-activity-date]");
+  if (!day) return;
+  activityScrubPointer = event.pointerId;
+  activityScrubMoved = false;
+  event.currentTarget.setPointerCapture?.(event.pointerId);
+  previewActivityDay(day);
+});
+$("#activityCalendar").addEventListener("pointermove", event => {
+  if (activityScrubPointer !== event.pointerId) return;
+  const day = document.elementFromPoint(event.clientX, event.clientY)?.closest?.("[data-activity-date]");
+  if (!day || !event.currentTarget.contains(day)) return;
+  activityScrubMoved = activityScrubMoved || day.dataset.activityDate !== runtime.myActivityDate;
+  previewActivityDay(day);
+});
+function finishActivityScrub(event) {
+  if (activityScrubPointer !== event.pointerId) return;
+  activityScrubPointer = null;
+  event.currentTarget.releasePointerCapture?.(event.pointerId);
+  renderActivityCalendar(readCourseProgress().size);
+}
+$("#activityCalendar").addEventListener("pointerup", finishActivityScrub);
+$("#activityCalendar").addEventListener("pointercancel", finishActivityScrub);
 $("#activityCalendar").addEventListener("pointerover", event => {
   const day = event.target.closest("[data-activity-date]");
   if (day) shapeActivityBands(day);
@@ -3573,17 +3668,17 @@ requestAnimationFrame(tick);
 const requestedView = new URLSearchParams(window.location.search).get('view');
 if (requestedView === 'practice') {
   const requestedSkill = new URLSearchParams(window.location.search).get('skill');
-  window.setTimeout(() => openPracticeDeck({ skill: requestedSkill }), 0);
+  openPracticeDeck({ skill: requestedSkill });
 } else if (requestedView === 'my') {
-  window.setTimeout(() => {
-    const worksPreview = new URLSearchParams(window.location.search).get('works-preview');
-    if (worksPreview === 'filled' || worksPreview === 'empty' || new URLSearchParams(window.location.search).get('my-view') === 'works') runtime.myView = 'works';
-    $('#navConsole').click();
-    if (new URLSearchParams(window.location.search).get('preview') === 'ai') {
-      window.setTimeout(() => openAiDirectionModal(true), 450);
-    }
-  }, 0);
+  const worksPreview = new URLSearchParams(window.location.search).get('works-preview');
+  if (worksPreview === 'filled' || worksPreview === 'empty' || new URLSearchParams(window.location.search).get('my-view') === 'works') runtime.myView = 'works';
+  $('#navConsole').click();
+  if (new URLSearchParams(window.location.search).get('preview') === 'ai') {
+    window.setTimeout(() => openAiDirectionModal(true), 450);
+  }
 } else if (requestedView === 'learning') {
   const requestedStage = new URLSearchParams(window.location.search).get('stage');
-  window.setTimeout(() => openUnifiedLearning(requestedStage), 0);
+  openUnifiedLearning(requestedStage);
+} else {
+  document.documentElement.classList.add('app-ready');
 }

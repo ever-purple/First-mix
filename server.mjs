@@ -14,6 +14,7 @@ if (existsSync(envPath)) {
   }
 }
 const port = Number(process.env.PORT ?? 4177);
+const host = process.env.HOST || "127.0.0.1";
 const qwenModel = process.env.QWEN_MODEL || "qwen-flash";
 const dashscopeBaseUrl = (process.env.DASHSCOPE_BASE_URL || "https://dashscope.aliyuncs.com/compatible-mode/v1").replace(/\/$/, "");
 const dashscopeApiKey = process.env.DASHSCOPE_API_KEY || "";
@@ -242,6 +243,7 @@ const server = createServer(async (request, response) => {
   });
   if (request.method === "HEAD") response.end();
   else createReadStream(file).pipe(response);
-}).listen(port, "127.0.0.1", () => {
-  console.log(`FIRST MIX running at http://127.0.0.1:${server.address().port}`);
+}).listen(port, host, () => {
+  const displayHost = host === "0.0.0.0" ? "localhost" : host;
+  console.log(`FIRST MIX running at http://${displayHost}:${server.address().port}`);
 });

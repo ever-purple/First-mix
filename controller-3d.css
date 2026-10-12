@@ -468,7 +468,7 @@ body.practice-open.practice-coach-on .model-coach,body.practice-open.practice-co
   body.practice-open .app-tabbar{left:50%!important;right:auto!important;width:420px!important;transform:translateX(-50%)!important;bottom:12px!important}
 }
 body.practice-open main{scroll-padding-top:148px;scroll-padding-bottom:100px}
-body.practice-open::before{content:""!important;display:block!important;position:fixed;z-index:70;inset:0 0 auto;height:140px;pointer-events:none;background:linear-gradient(180deg,#c0dfe0 0%,#c5e0e1 90%,rgba(197,224,225,0));filter:none!important;animation:none!important}
+body.practice-open::before{content:none!important;display:none!important}
 body.practice-open .app-tab{border:0!important;box-shadow:none!important}
 body.practice-open .app-tab svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 @media(min-width:900px){body.practice-open::before{height:84px}body.practice-open main{scroll-padding-top:92px}}
@@ -521,7 +521,7 @@ body.practice-open.practice-wide.practice-coach-on .model-coach{grid-area:coach;
 body.practice-open.practice-wide.practice-coach-on .model-ai-score{grid-area:score;margin:0}
 .practice-stage{position:fixed;z-index:90;inset:0;width:100%;height:100%;overflow:hidden;background:linear-gradient(145deg,#c1e1df,#dcd4e9)}
 body.practice-open.practice-landscape::before{display:none!important}
-.practice-stage::before{content:'';position:absolute;z-index:70;inset:0 0 auto;height:74px;pointer-events:none;background:#c5e0e1}
+.practice-stage::before{content:none;display:none}
 body.practice-open.practice-landscape main{height:calc(var(--practice-height) - env(safe-area-inset-bottom))!important;max-height:calc(var(--practice-height) - env(safe-area-inset-bottom))!important;padding-bottom:0!important}
 body.practice-open.practice-landscape .app-tabbar{display:none!important}
 @media(max-width:380px){.display-numbers input[data-bpm]{width:78px;font-size:24px}.display-numbers small{font-size:10px}.model-parameters .mix-balance{font-size:11px}.model-parameters .model-view-control>span{font-size:0}.model-parameters .model-view-control>span::after{content:'倾角';font-size:12px}}

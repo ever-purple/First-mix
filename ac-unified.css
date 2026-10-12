@@ -363,6 +363,18 @@ html[data-entry-view="my"] body > .masthead {
   font-size: 1.62rem !important;
 }
 
+/* Brand belongs to the entry and learning home only. Keep utility pages clear. */
+.my-topbar,
+.my-wordmark,
+body.practice-open .practice-brand {
+  display: none !important;
+}
+
+.my-topbar {
+  height: 0 !important;
+  min-height: 0 !important;
+}
+
 /* Shared course operation area: one clear shell, one instruction language. */
 .frame {
   font-family: var(--fm-font-ui) !important;

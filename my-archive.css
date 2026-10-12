@@ -49,7 +49,7 @@ body.works-open .my-works-panel .wave-work .work-info{grid-column:2!important;gr
 
 .ai-weekly-coach{display:grid;grid-template-columns:58px minmax(0,1fr) auto;align-items:center;gap:16px;padding:20px 22px;border-radius:18px;background:rgba(255,255,255,.9);box-shadow:0 18px 48px rgba(55,43,65,.1)}
 .ai-weekly-mark{width:54px;height:54px;display:grid;place-items:center;border-radius:15px;background:#211c27;color:#baff2e}.ai-weekly-mark svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
-.ai-weekly-copy{min-width:0}.ai-weekly-title-row{display:flex;align-items:center;gap:10px}.ai-weekly-title-row h3{margin:0;color:#211c27;font-size:17px!important}.ai-weekly-title-row span{padding:5px 8px;border-radius:999px;background:#eee7fa;color:#64499d;font-size:9px;font-weight:800}
+.ai-weekly-copy{min-width:0}.ai-weekly-title-row{display:flex;align-items:center;gap:10px}.ai-weekly-title-row h3{margin:0;color:#211c27;font-size:17px!important}.ai-weekly-title-row span{flex:0 0 auto;min-width:max-content;padding:5px 8px;border-radius:999px;background:#eee7fa;color:#64499d;font-size:9px;font-weight:800;white-space:nowrap}
 .ai-weekly-copy>p,.ai-weekly-result p{margin:6px 0 0;color:#716777!important;font-size:12px!important;line-height:1.5!important}.ai-weekly-result{margin-top:12px;padding-top:12px;border-top:1px solid rgba(38,30,44,.1)}.ai-weekly-result strong{color:#211c27;font-size:14px}
 .ai-weekly-action{min-height:44px;padding:0 15px;border:0;border-radius:12px;background:#baff2e;color:#211c27;font-weight:800;cursor:pointer}.ai-weekly-action:not(:disabled):hover{background:#c7ff48}.ai-weekly-action:disabled{background:#e5e0e8;color:#8b828e;cursor:not-allowed}
 
@@ -247,6 +247,7 @@ body.works-open .practice-footprint-head p{max-width:34ch;margin:9px 0 0;color:v
 .activity-terrain-panel{gap:12px;padding:18px 0 20px;border:0;border-radius:0;background:rgba(255,255,255,.54);box-shadow:none}
 .activity-terrain-panel .practice-calendar-head{padding:0 15px 6px}
 .activity-terrain-panel .activity-calendar{gap:0!important}
+.activity-terrain-panel .activity-calendar{touch-action:none;overscroll-behavior:contain;-webkit-user-select:none;user-select:none}
 .activity-terrain-panel .activity-day,
 .activity-terrain-panel .activity-day:is(.is-selected,:hover,:focus-visible){grid-template-columns:32px minmax(0,1fr)!important;height:44px!important;min-height:44px!important}
 .activity-terrain-panel .activity-day.is-proximity-focus{height:84px!important;min-height:84px!important}
