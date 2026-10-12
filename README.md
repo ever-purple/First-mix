@@ -1,7 +1,5 @@
 # FIRST MIX V1
 
-WorkBuddy 或其他接手者请先阅读 [`WORKBUDDY-HANDOFF.md`](./WORKBUDDY-HANDOFF.md)。它是当前页面组合、设计边界、3D 控台、音乐与继续开发规则的唯一交接入口。
-
 FIRST MIX is a guided browser experience for a beginner's first DJ transition. Phase two validated the audio foundation; phase three now builds the progressive tutorial and recovery system on top of it. The project remains independent from the portfolio application.
 
 ## Run
