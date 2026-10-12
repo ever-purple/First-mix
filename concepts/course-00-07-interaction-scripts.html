@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>00–07 课程交互脚本｜FIRST MIX</title>
+  <style>
+    @font-face { font-family: Inter; src: url('../fonts/Inter-400.woff2'); }
+    @font-face { font-family: Inter; src: url('../fonts/Inter-600.woff2'); font-weight: 700; }
+    @font-face { font-family: 'Gochi Hand'; src: url('../fonts/GochiHand.woff2'); }
+    :root {
+      --ink: #17131d;
+      --muted: #756d79;
+      --paper: #fbfaf4;
+      --purple: #7750cf;
+      --lime: #a3f52f;
+      --line: rgba(23, 19, 29, .1);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      overflow: hidden;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 6% 0%, rgba(163, 245, 47, .28), transparent 28rem),
+        radial-gradient(circle at 98% 10%, rgba(162, 218, 255, .28), transparent 34rem),
+        #e7eee9;
+      font-family: Inter, "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+    button, a { font: inherit; color: inherit; }
+    button { border: 0; }
+    .shell { height: 100%; display: grid; grid-template-rows: 76px minmax(0, 1fr); }
+    .topbar {
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(251, 250, 244, .82);
+      backdrop-filter: blur(18px);
+    }
+    .brand-block { display: flex; align-items: baseline; gap: 18px; min-width: 0; }
+    .brand { font: 28px 'Gochi Hand', cursive; letter-spacing: .05em; white-space: nowrap; }
+    .page-title { margin: 0; font-size: 15px; white-space: nowrap; }
+    .topbar__status { color: var(--muted); font-size: 12px; white-space: nowrap; }
+    .layout {
+      min-height: 0;
+      padding: 18px;
+      display: grid;
+      grid-template-columns: 252px minmax(0, 1fr);
+      gap: 16px;
+    }
+    .sidebar {
+      min-height: 0;
+      padding: 20px 14px;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      background: rgba(251, 250, 244, .9);
+      box-shadow: 0 16px 45px rgba(58, 40, 73, .1);
+    }
+    .sidebar__label { margin: 0 10px 14px; color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .12em; }
+    .course-list { margin: 0; padding: 0; display: grid; gap: 5px; list-style: none; }
+    .course-button {
+      width: 100%;
+      padding: 13px 12px;
+      display: grid;
+      grid-template-columns: 31px 1fr;
+      gap: 8px;
+      align-items: center;
+      border-radius: 14px;
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
+      transition: background .18s ease, transform .18s ease;
+    }
+    .course-button:hover { background: #f1edf4; transform: translateX(2px); }
+    .course-button[aria-selected="true"] { background: var(--lime); font-weight: 700; }
+    .course-button__no { color: var(--purple); font-variant-numeric: tabular-nums; }
+    .course-button[aria-selected="true"] .course-button__no { color: var(--ink); }
+    .course-button__title { font-size: 13px; line-height: 1.35; }
+    .sidebar__note {
+      margin: 18px 8px 2px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.55;
+    }
+    .viewer {
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: 54px minmax(0, 1fr);
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      background: var(--paper);
+      box-shadow: 0 18px 54px rgba(58, 40, 73, .12);
+    }
+    .viewer__bar {
+      padding: 0 18px 0 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      border-bottom: 1px solid var(--line);
+      background: #f5f2ef;
+    }
+    .viewer__name { margin: 0; font-size: 14px; }
+    .viewer__actions { display: flex; align-items: center; gap: 8px; }
+    .viewer__actions a {
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: #e9e3ee;
+      color: #564d5b;
+      font-size: 11px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .viewer__actions a:hover { background: var(--purple); color: #fff; }
+    .viewer iframe { width: 100%; height: 100%; border: 0; background: #e7eee9; }
+    .loading { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+    @media (max-width: 760px) {
+      body { overflow: hidden; }
+      .shell { grid-template-rows: 64px minmax(0, 1fr); }
+      .topbar { padding: 0 16px; }
+      .brand { font-size: 24px; }
+      .page-title { display: none; }
+      .layout { padding: 10px; grid-template-columns: 1fr; grid-template-rows: 62px minmax(0, 1fr); gap: 9px; }
+      .sidebar { padding: 8px; border-radius: 18px; overflow-x: auto; overflow-y: hidden; }
+      .sidebar__label, .sidebar__note { display: none; }
+      .course-list { width: max-content; display: flex; gap: 5px; }
+      .course-button { width: auto; min-width: 118px; padding: 10px 11px; grid-template-columns: 25px 1fr; }
+      .course-button__title { font-size: 11px; }
+      .viewer { border-radius: 18px; grid-template-rows: 48px minmax(0, 1fr); }
+      .viewer__bar { padding: 0 10px 0 14px; }
+      .viewer__name { font-size: 12px; }
+      .viewer__actions a { padding: 7px 9px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand-block"><span class="brand">FIRST MIX</span><h1 class="page-title">00–07 课程交互脚本</h1></div>
+      <span class="topbar__status" id="status">当前：00 / 07</span>
+    </header>
+    <div class="layout">
+      <nav class="sidebar" aria-label="课程脚本">
+        <p class="sidebar__label">课程</p>
+        <ol class="course-list" id="course-list"></ol>
+        <p class="sidebar__note">所有脚本集中在此页面查看。切换课程不会打开新标签，当前课程会保存在网址末尾。</p>
+      </nav>
+      <main class="viewer">
+        <header class="viewer__bar">
+          <h2 class="viewer__name" id="viewer-name">00 第一次交接</h2>
+          <div class="viewer__actions"><a id="open-single" href="course-00-interaction-script.html" target="_blank" rel="noopener">单独打开 ↗</a></div>
+        </header>
+        <iframe id="script-frame" title="00 第一次交接交互脚本" src="course-00-interaction-script.html" allow="autoplay"></iframe>
+      </main>
+    </div>
+  </div>
+  <p class="loading" id="loading" role="status" aria-live="polite"></p>
+  <script>
+    const courses = [
+      ['00', '第一次交接'],
+      ['01', '设置开始位置'],
+      ['02', '听懂音乐结构'],
+      ['03', '让两首歌对齐'],
+      ['04', '在正确时间接入'],
+      ['05', '让转场保持清晰'],
+      ['06', '选择短交接或长混合'],
+      ['07', '独立完成与 AI 评分']
+    ];
+    const list = document.querySelector('#course-list');
+    const frame = document.querySelector('#script-frame');
+    const name = document.querySelector('#viewer-name');
+    const status = document.querySelector('#status');
+    const openSingle = document.querySelector('#open-single');
+    const loading = document.querySelector('#loading');
+
+    list.innerHTML = courses.map(([no, title]) => `
+      <li><button class="course-button" type="button" data-course="${no}" role="tab" aria-selected="false">
+        <span class="course-button__no">${no}</span><span class="course-button__title">${title}</span>
+      </button></li>`).join('');
+
+    function selectCourse(no, updateHash = true) {
+      const course = courses.find(([id]) => id === no) || courses[0];
+      const [id, title] = course;
+      const source = `course-${id}-interaction-script.html`;
+      document.querySelectorAll('.course-button').forEach(button => {
+        const active = button.dataset.course === id;
+        button.setAttribute('aria-selected', String(active));
+        if (active) button.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+      });
+      name.textContent = `${id} ${title}`;
+      status.textContent = `当前：${id} / 07`;
+      openSingle.href = source;
+      frame.title = `${id} ${title}交互脚本`;
+      if (!frame.src.endsWith(source)) {
+        loading.textContent = `正在打开 ${id} ${title}`;
+        frame.src = source;
+      }
+      if (updateHash) history.replaceState(null, '', `#course-${id}`);
+    }
+
+    list.addEventListener('click', event => {
+      const button = event.target.closest('.course-button');
+      if (button) selectCourse(button.dataset.course);
+    });
+    frame.addEventListener('load', () => { loading.textContent = ''; });
+    window.addEventListener('hashchange', () => selectCourse(location.hash.match(/course-(0[0-7])/)?.[1] || '00', false));
+    selectCourse(location.hash.match(/course-(0[0-7])/)?.[1] || '00', false);
+  </script>
+</body>
+</html>

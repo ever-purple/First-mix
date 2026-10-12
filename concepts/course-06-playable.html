@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>FIRST MIX｜06 量出转场长度</title>
+  <link rel="stylesheet" href="../ac-unified.css?v=20261010-ac-5">
+  <style>
+    .lesson{background:rgba(255,255,255,.88)!important}
+    body{visibility:hidden}.hidden{display:none!important}
+    .topbar .logo{position:relative;z-index:16}
+    .progress{grid-template-columns:repeat(5,1fr)!important}
+    .controller{display:block!important;height:auto!important;min-height:0!important;padding:10px 12px 12px!important;overflow:hidden!important;position:relative}
+    .feedback.concept{background:#eee5f7;box-shadow:inset 0 0 0 2px #7952cf}.feedback.concept strong{color:#7952cf}.feedback .actions button[hidden]{display:none}.feedback .actions button:disabled{opacity:.35}.feedback .primary{background:#c8ff32;color:#192108}
+    .frame>.overlay,.frame>.success{background:rgba(24,20,28,.42)!important}
+    .hidden-controls{display:none!important}
+    @media(max-width:390px){.controller{padding-inline:9px!important}}
+  </style>
+  <link rel="stylesheet" href="course-06-playable-v2.css?v=20261012-13">
+  <link rel="stylesheet" href="../sheet-swipe-dismiss.css?v=20261011-1">
+  <script defer src="../sheet-swipe-dismiss.js?v=20261011-1"></script>
+</head>
+<body>
+<main class="frame">
+  <div class="ambient"></div>
+  <div class="app">
+    <header class="topbar"><a class="icon-button" href="../index.html?view=learning" aria-label="返回学习页"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></a><div class="logo">FIRST MIX</div><button class="icon-button" id="resetCourse" aria-label="重新开始"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 1-2.3-5.7L20 7M20 3v4h-4"/></svg></button></header>
+    <div class="course-stack">
+      <div class="question-bubble" id="bubble" hidden><span class="avatar"><img src="../assets/characters/dj-question-avatar-v1.png" alt=""></span><strong>这次该用 16 拍短交接，还是 32 拍长混合？</strong></div>
+      <section class="lesson">
+        <nav class="progress" id="progress" aria-label="学习进度"><span class="current">听差别</span><span>量两次</span><span>选长度</span><span>看动作</span><span>带走</span></nav>
+        <header class="lesson-head"><h1>06 量出转场长度</h1><span class="step-count" id="stepBadge">01 / 06</span></header>
+        <div class="instruction"><span class="instruction-icon" id="instructionIcon">听</span><span><strong id="instructionTitle">先听两种结局</strong><span id="instructionCopy">同一套动作，有的组合能继续走，有的很快就会挤在一起。</span></span></div>
+        <section class="controller" id="stage" aria-live="polite"></section>
+        <div class="feedback concept" id="feedbackCard"><div><strong id="feedbackTitle">先用耳朵建立印象</strong><p id="feedbackText">只听两个教学片段，比较它们能共同走多久。</p></div><div class="actions"><button class="secondary" id="secondaryAction" hidden>重听</button><button class="primary ready" id="primaryAction">听懂差别，继续</button></div></div>
+      </section>
+    </div>
+  </div>
+
+  <section class="overlay" id="introOverlay"><div class="question-card"><img class="question-character" src="../assets/characters/dj-question-thinking-v1.png" alt="DJ 角色正在倾听"><h2>该短交接，还是长混合？</h2><p>先听两个教学片段，比较它们同时播放时的效果，再量出适合的转场长度。</p><button id="startCourse">开始听</button></div></section>
+
+  <section class="success hidden" id="resultOverlay"><div class="success-sheet"><img class="success-character" src="../assets/characters/dj-feedback-avatar-v1.png" alt="DJ 角色庆祝完成"><h2>你会判断转场长度了</h2><p>06 只练判断。07 会在横屏打碟台先引导 16 拍短接，再完成 32 拍长混和 AI 评分。</p><div class="results" id="resultFacts"></div><div class="sheet-actions"><button class="repeat" id="repeatCourse">再做一次</button><button class="next" id="goCourse07">进入 07</button></div></div></section>
+
+<audio id="trackA" preload="auto" src="../assets/tracks/course-06-a-madoromi.mp3"></audio>
+<audio id="trackB1" preload="auto" src="../assets/tracks/course-06-b1-wo-zhi-zai-hu-ni.mp3"></audio>
+<section class="hidden-controls" aria-hidden="true">
+  <div id="mixer"></div>
+  <button id="playA" aria-pressed="false">播放 A</button><button id="playB" aria-pressed="false">播放 B</button>
+  <button id="cueA">Cue A</button><button id="cueB">Cue B</button><button id="syncB">Sync B</button><button id="restoreTraining">恢复</button>
+  <input id="fileA" type="file"><input id="fileB" type="file">
+  <input id="bpmInputA" type="number" value="72"><input id="bpmInputB" type="number" value="77">
+  <label>音量 A<input id="volumeA" type="range" min="0" max="100" value="80"></label><label>音量 B<input id="volumeB" type="range" min="0" max="100" value="80"></label>
+  <input id="lowA" type="range" min="-12" max="12" value="0"><input id="midA" type="range" min="-12" max="12" value="0"><input id="highA" type="range" min="-12" max="12" value="0"><input id="filterA" type="range" min="-100" max="100" value="0">
+  <input id="lowB" type="range" min="-12" max="12" value="-12"><input id="midB" type="range" min="-12" max="12" value="0"><input id="highB" type="range" min="-12" max="12" value="0"><input id="filterB" type="range" min="-100" max="100" value="0">
+  <input id="crossfader" type="range" min="-100" max="100" value="-100">
+  <button data-pad="kick"></button><button data-pad="clap"></button><button data-pad="hat"></button><button data-pad="tone"></button>
+</section>
+ </main>
+<script>
+(async()=>{try{const source=await fetch('course-03-playable.html').then(r=>r.text());const doc=new DOMParser().parseFromString(source,'text/html');const baseStyle=doc.querySelector('style');if(baseStyle)document.head.insertBefore(baseStyle.cloneNode(true),document.head.querySelector('style'))}finally{document.body.style.visibility='visible'}})();
+</script>
+<script src="../course-activity.js?v=20261012-1"></script>
+<script src="../progress-step-navigation.js?v=20261012-1"></script>
+<script type="module" src="course-06-playable-v2.js?v=20261012-15"></script>
+</body>
+</html>

@@ -1,0 +1,1071 @@
+/* FIRST MIX A+C unified interface layer
+   Baseline approved from concepts/font-comparison.html. */
+
+@font-face {
+  font-family: "Inter";
+  src: url("./fonts/Inter-400.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("./fonts/Inter-600.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 600 800;
+  font-display: swap;
+}
+
+:root {
+  --fm-font-ui: "Inter", "Noto Sans SC", "PingFang SC", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
+  --fm-font-data: "Cubic", "SFMono-Regular", Consolas, monospace;
+
+  --fm-ink: #1d1922;
+  --fm-muted: #625a67;
+  --fm-quiet: #756d7a;
+  --fm-violet: #7952cf;
+  --fm-violet-soft: #eee7fa;
+  --fm-lime: #baff2e;
+  --fm-surface: rgba(255, 255, 255, .88);
+  --fm-surface-strong: rgba(255, 255, 255, .94);
+  --fm-line: rgba(42, 34, 48, .12);
+  --fm-equipment: #211d27;
+  --fm-shadow: 0 20px 52px rgba(56, 44, 68, .12);
+
+  --fm-space-1: 4px;
+  --fm-space-2: 8px;
+  --fm-space-3: 12px;
+  --fm-space-4: 16px;
+  --fm-space-5: 20px;
+  --fm-space-6: 24px;
+  --fm-space-8: 32px;
+
+  --fm-radius-control: 13px;
+  --fm-radius-art: 16px;
+  --fm-radius-panel: 24px;
+  --fm-radius-shell: 28px;
+  --fm-control-height: 48px;
+  --fm-row-height: 72px;
+  --fm-page-gutter: 16px;
+}
+
+html,
+body,
+button,
+input,
+select,
+textarea {
+  font-family: var(--fm-font-ui);
+}
+
+body {
+  color: var(--fm-ink);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--fm-lime);
+  outline-offset: 3px;
+}
+
+/* Main app: preserve layout and behavior, normalize typography and surfaces. */
+.unified-learning,
+.my-page,
+.course-open main,
+.practice-open main {
+  font-family: var(--fm-font-ui);
+}
+
+.learning-header h1,
+.my-hero h1,
+.my-page h1 {
+  font-size: clamp(2rem, 8vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -.035em;
+}
+
+.learning-header p,
+.my-page p {
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+body.learning-open .route-count,
+body.learning-open .current-state,
+body.learning-open .lesson-number {
+  font-size: 13px !important;
+  line-height: 1.35 !important;
+}
+
+body.learning-open .current-copy h2,
+body.learning-open .route-heading h2,
+body.learning-open .skills-intro h2 {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+}
+
+body.learning-open .current-copy p,
+body.learning-open .route-heading p,
+body.learning-open .skills-intro p {
+  color: var(--fm-muted) !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+}
+
+body.learning-open .lesson-list a,
+body.learning-open .skill-list li {
+  min-height: var(--fm-row-height) !important;
+}
+
+body.learning-open .lesson-copy strong,
+body.learning-open .skill-list strong {
+  font-size: 16px !important;
+  line-height: 1.35 !important;
+}
+
+body.learning-open .lesson-copy small {
+  font-size: 13px !important;
+  line-height: 1.35 !important;
+}
+
+body.learning-open .lesson-status,
+body.learning-open .skill-list em,
+body.learning-open .skill-list span {
+  font-size: 12px !important;
+  line-height: 1.35 !important;
+}
+
+/* My: same type ladder and row geometry as Learning. */
+body.works-open .my-heading h2 {
+  font-size: clamp(2rem, 8vw, 2.5rem) !important;
+  font-weight: 700 !important;
+  line-height: 1.08 !important;
+  letter-spacing: -.035em !important;
+}
+
+body.works-open .progress-resume span {
+  font-size: 13px !important;
+  line-height: 1.35 !important;
+}
+
+body.works-open .progress-resume h3,
+body.works-open .panel-heading h3,
+body.works-open .activity-widget-head h3,
+body.works-open .daily-activity h3,
+body.works-open .recent-progress h3 {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+}
+
+body.works-open .progress-resume p,
+body.works-open .works-empty p,
+body.works-open .activity-widget-head p,
+body.works-open .daily-activity header p {
+  color: var(--fm-muted) !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+}
+
+body.works-open .learning-progress-list button {
+  min-height: var(--fm-row-height) !important;
+}
+
+body.works-open .learning-progress-list strong,
+body.works-open .work-item.work-player .work-info strong,
+body.works-open .works-empty strong {
+  font-size: 16px !important;
+  line-height: 1.35 !important;
+}
+
+body.works-open .learning-progress-list small,
+body.works-open .work-item.work-player .work-info span,
+body.works-open .works-storage-note {
+  font-size: 13px !important;
+  line-height: 1.35 !important;
+}
+
+body.works-open .my-tabs {
+  min-height: 48px !important;
+}
+
+body.works-open .my-tabs button {
+  min-height: 40px !important;
+  font-size: 14px !important;
+  line-height: 1.35 !important;
+}
+
+body.works-open .work-item.work-player {
+  min-height: var(--fm-row-height) !important;
+  border: 1px solid var(--fm-line) !important;
+  border-radius: 18px !important;
+}
+
+.learning-panel,
+.my-panel,
+.my-progress-panel,
+.my-works-panel {
+  border-color: var(--fm-line) !important;
+  border-radius: var(--fm-radius-panel) !important;
+  background: var(--fm-surface) !important;
+  box-shadow: var(--fm-shadow) !important;
+}
+
+.primary-action,
+.primary-button,
+.lesson-primary-action,
+.enter-app {
+  min-height: var(--fm-control-height);
+  border-radius: var(--fm-radius-control) !important;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.app-tabbar,
+body.hub-open .app-tabbar,
+body.course-open .app-tabbar,
+body.learning-open .app-tabbar,
+body.practice-open .app-tabbar,
+body.works-open .app-tabbar {
+  position: fixed;
+  z-index: 60;
+  left: 50% !important;
+  right: auto !important;
+  bottom: max(12px, env(safe-area-inset-bottom)) !important;
+  width: min(420px, calc(100% - 24px)) !important;
+  min-height: 66px;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  padding: 6px 14px 5px !important;
+  border: 1px solid #fff !important;
+  border-radius: 999px !important;
+  background: #fff !important;
+  box-shadow: 0 14px 36px rgba(56, 44, 68, .14) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  transform: translateX(-50%) !important;
+  overflow: visible !important;
+}
+
+.app-tab {
+  position: relative;
+  min-width: 0;
+  min-height: 54px;
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+  color: var(--fm-quiet) !important;
+  overflow: visible;
+  transition: color .2s ease, transform .2s cubic-bezier(.16, 1, .3, 1);
+}
+
+.app-tab svg,
+body.learning-open .app-tab svg,
+body.practice-open .app-tab svg,
+body.works-open .app-tab svg {
+  box-sizing: content-box;
+  width: 20px !important;
+  height: 20px !important;
+  padding: 7px;
+  border-radius: 50%;
+  background: transparent;
+  transition: color .2s ease, background .2s ease, transform .24s cubic-bezier(.16, 1, .3, 1), box-shadow .24s ease;
+}
+
+.app-tab span {
+  font-size: 12px !important;
+  font-weight: 600;
+  line-height: 1.35;
+  transition: color .2s ease, transform .24s cubic-bezier(.16, 1, .3, 1);
+}
+
+.app-tab.is-active,
+body.hub-open .app-tab.is-active,
+body.course-open .app-tab.is-active,
+body.learning-open .app-tab.is-active,
+body.practice-open .app-tab.is-active,
+body.works-open .app-tab.is-active {
+  background: transparent !important;
+  color: var(--fm-violet) !important;
+  box-shadow: none !important;
+}
+
+.app-tab.is-active svg,
+body.hub-open .app-tab.is-active svg,
+body.course-open .app-tab.is-active svg,
+body.learning-open .app-tab.is-active svg,
+body.practice-open .app-tab.is-active svg,
+body.works-open .app-tab.is-active svg {
+  background: var(--fm-violet-soft) !important;
+  color: var(--fm-violet) !important;
+  box-shadow: 0 0 0 6px rgba(255, 255, 255, .92), 0 10px 24px rgba(87, 61, 137, .18);
+  transform: translateY(-12px);
+}
+
+.app-tab.is-active span,
+body.hub-open .app-tab.is-active span,
+body.course-open .app-tab.is-active span,
+body.learning-open .app-tab.is-active span,
+body.practice-open .app-tab.is-active span,
+body.works-open .app-tab.is-active span {
+  color: var(--fm-violet) !important;
+  transform: translateY(-7px);
+}
+
+.app-tab:not(.is-active):active svg {
+  background: rgba(238, 231, 250, .7);
+}
+
+/* One brand position everywhere: match the mixer at the upper-left. */
+body.works-open .masthead,
+body.hub-open.works-open:not(.course-open) > .masthead,
+html[data-entry-view="my"] body > .masthead {
+  display: none !important;
+}
+
+.learning-topbar,
+.my-topbar {
+  height: 64px !important;
+  display: flex !important;
+  align-items: center;
+}
+
+.learning-topbar-space,
+.my-topbar > span {
+  display: none !important;
+}
+
+.learning-wordmark,
+.my-wordmark {
+  flex: 0 0 auto;
+  justify-self: auto !important;
+  margin: 0 auto 0 4px !important;
+  font-size: 1.62rem !important;
+}
+
+/* Shared course operation area: one clear shell, one instruction language. */
+.frame {
+  font-family: var(--fm-font-ui) !important;
+}
+
+.frame .app {
+  color: var(--fm-ink);
+}
+
+.frame .topbar {
+  position: relative;
+  z-index: 30;
+  min-height: 72px;
+  pointer-events: none;
+}
+
+.frame .topbar .icon-button {
+  pointer-events: auto;
+}
+
+.frame .icon-button {
+  width: 44px !important;
+  height: 44px !important;
+  border: 1px solid rgba(255, 255, 255, .7) !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, .62) !important;
+  color: var(--fm-ink) !important;
+  box-shadow: 0 8px 24px rgba(64, 51, 77, .08) !important;
+}
+
+.frame .lesson {
+  border: 1px solid var(--fm-line) !important;
+  border-radius: var(--fm-radius-shell) !important;
+  background: var(--fm-surface) !important;
+  box-shadow: var(--fm-shadow) !important;
+}
+
+.frame .progress {
+  min-height: 48px;
+  gap: 8px !important;
+}
+
+.frame .progress span {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 1.35 !important;
+}
+
+.frame .lesson-head h1 {
+  color: var(--fm-ink) !important;
+  font-size: clamp(1.75rem, 6vw, 2rem) !important;
+  font-weight: 700 !important;
+  line-height: 1.08 !important;
+  letter-spacing: -.035em !important;
+}
+
+.frame .step-count {
+  color: var(--fm-muted) !important;
+  font: 400 13px/1.35 var(--fm-font-ui) !important;
+}
+
+.frame .instruction {
+  min-height: 64px;
+  grid-template-columns: minmax(0, 1fr) !important;
+  gap: 0 !important;
+  padding-block: 12px !important;
+  border-top: 1px solid var(--fm-line) !important;
+  border-bottom: 1px solid var(--fm-line) !important;
+}
+
+.frame .instruction-icon {
+  display: none !important;
+}
+
+.frame .instruction strong {
+  color: var(--fm-ink) !important;
+  font-size: 16px !important;
+  line-height: 1.35 !important;
+}
+
+.frame .instruction strong + span,
+.frame .instruction > span > span {
+  color: var(--fm-muted) !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+}
+
+.frame .controller {
+  border: 1px solid var(--fm-line) !important;
+  border-radius: var(--fm-radius-panel) !important;
+  background: rgba(238, 235, 226, .72) !important;
+  box-shadow: none !important;
+}
+
+.frame .feedback {
+  min-height: 72px;
+  gap: 12px !important;
+  padding: 12px 16px !important;
+  border: 2px solid var(--fm-violet) !important;
+  border-radius: 18px !important;
+  background: rgba(247, 243, 255, .9) !important;
+  color: var(--fm-ink) !important;
+}
+
+.frame .feedback strong {
+  color: var(--fm-violet) !important;
+  font-size: 16px !important;
+  line-height: 1.35 !important;
+}
+
+.frame .feedback p,
+.frame .feedback small {
+  color: var(--fm-muted) !important;
+  line-height: 1.5 !important;
+}
+
+.frame .feedback button,
+.frame .lesson-controls button,
+.frame .deck-actions button,
+.frame .sheet-actions button,
+.frame .question-card button {
+  min-height: 48px !important;
+  border-radius: var(--fm-radius-control) !important;
+  font-family: var(--fm-font-ui) !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+}
+
+.frame .primary,
+.frame .action,
+.frame .next,
+.frame .question-card button {
+  border-color: transparent !important;
+  background: var(--fm-lime) !important;
+  color: var(--fm-ink) !important;
+}
+
+.frame .secondary,
+.frame .repeat {
+  border: 1px solid var(--fm-line) !important;
+  background: rgba(255, 255, 255, .72) !important;
+  color: var(--fm-ink) !important;
+}
+
+@media (max-width: 520px) {
+  .frame .lesson {
+    border-radius: 24px !important;
+  }
+
+  .frame .lesson-head h1 {
+    font-size: 1.75rem !important;
+  }
+
+  .frame .feedback {
+    padding: 12px !important;
+  }
+}
+
+@media (max-width: 760px) {
+  html:has(body.learning-open),
+  html:has(body.works-open),
+  body.learning-open,
+  body.works-open {
+    scrollbar-width: none;
+  }
+
+  html:has(body.learning-open)::-webkit-scrollbar,
+  html:has(body.works-open)::-webkit-scrollbar,
+  body.learning-open::-webkit-scrollbar,
+  body.works-open::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+/* Learning route: fixed goal card and navigation, with one dedicated scroll region. */
+html:has(body.learning-open),
+body.learning-open {
+  height: 100%;
+  overflow: hidden !important;
+}
+
+body.learning-open main {
+  height: 100dvh !important;
+  min-height: 0 !important;
+  max-height: 100dvh !important;
+  overflow: hidden !important;
+}
+
+body.learning-open .unified-learning {
+  height: 100dvh;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0 var(--fm-page-gutter) calc(92px + env(safe-area-inset-bottom));
+  overflow: hidden;
+}
+
+/* One mobile alignment rail across Home, Learning, Practice and My. */
+@media (max-width: 700px) {
+  body:not(.hub-open):not(.course-open):not(.practice-open):not(.works-open) .masthead {
+    padding-left: calc(var(--fm-page-gutter) + 4px) !important;
+    padding-right: var(--fm-page-gutter) !important;
+  }
+
+  body:not(.hub-open):not(.course-open):not(.practice-open):not(.works-open) .intro {
+    padding-left: var(--fm-page-gutter) !important;
+    padding-right: var(--fm-page-gutter) !important;
+  }
+
+  body.learning-open .unified-learning,
+  body.works-open .my-library {
+    padding-left: var(--fm-page-gutter) !important;
+    padding-right: var(--fm-page-gutter) !important;
+  }
+
+  .app-tabbar,
+  body.hub-open .app-tabbar,
+  body.course-open .app-tabbar,
+  body.learning-open .app-tabbar,
+  body.practice-open .app-tabbar,
+  body.works-open .app-tabbar {
+    left: var(--fm-page-gutter) !important;
+    right: var(--fm-page-gutter) !important;
+    width: auto !important;
+    transform: none !important;
+  }
+}
+
+body.learning-open .learning-topbar {
+  flex: 0 0 64px;
+}
+
+body.learning-open .learning-main {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+body.learning-open .learning-goal {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  flex: 0 0 216px;
+  min-height: 216px;
+  padding: 22px 174px 22px 22px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .92);
+  border-radius: 28px;
+  background: rgba(255, 255, 255, .88);
+  box-shadow: 0 12px 32px rgba(56, 44, 68, .075);
+}
+
+body.learning-open .learning-goal-copy {
+  position: relative;
+  z-index: 3;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+body.learning-open .learning-goal .current-state {
+  margin: 0 0 8px;
+  color: var(--fm-violet);
+  font-size: 13px !important;
+  font-weight: 700;
+}
+
+body.learning-open .learning-goal h1 {
+  max-width: 7em;
+  margin: 0;
+  font-size: clamp(1.9rem, 8vw, 2.35rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -.035em;
+}
+
+body.learning-open .learning-goal p {
+  max-width: 17em;
+  margin: 10px 0 0;
+  color: var(--fm-muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+body.learning-open .learning-goal img {
+  position: absolute;
+  z-index: 2;
+  right: -16px;
+  bottom: 0;
+  width: 202px;
+  height: 204px;
+  object-fit: contain;
+  object-position: center bottom;
+  filter: drop-shadow(0 16px 18px rgba(47, 36, 60, .15));
+  pointer-events: none;
+}
+
+body.learning-open .learning-goal .primary-action {
+  width: 136px;
+  min-height: 42px;
+  margin-top: auto;
+  padding: 0 13px;
+  font-size: 14px;
+}
+
+body.learning-open .learning-goal .current-number {
+  display: none;
+}
+
+body.learning-open .learning-goal .route-progress {
+  display: none;
+}
+
+body.learning-open .stage-tabs {
+  width: 100%;
+  min-width: 0;
+  flex: 0 0 44px;
+}
+
+body.learning-open .learning-panel {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  padding: 0 10px 22px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  border: 0 !important;
+  border-radius: 24px !important;
+  background: rgba(255, 255, 255, .34) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .58) !important;
+}
+
+body.learning-open .learning-panel::-webkit-scrollbar {
+  display: none;
+}
+
+body.learning-open .route-heading {
+  position: relative;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 3px 12px;
+  padding: 18px 8px 8px;
+}
+
+body.learning-open .route-heading h2 {
+  font-size: 20px !important;
+}
+
+body.learning-open .route-heading p {
+  grid-column: 1;
+  margin: 0 !important;
+}
+
+body.learning-open .route-heading .route-count {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  align-self: center;
+  margin: 0;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .82);
+  color: var(--fm-violet);
+  white-space: nowrap;
+}
+
+body.learning-open .lesson-list {
+  position: relative;
+  margin: 0;
+  padding: 4px 0 18px;
+}
+
+body.learning-open .lesson-list::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: 50px;
+  bottom: 52px;
+  left: 50%;
+  width: 4px;
+  border-radius: 999px;
+  background: linear-gradient(#7952cf, #bca9e4 72%, #ded5ef);
+  transform: translateX(-50%);
+}
+
+body.learning-open .lesson-list li {
+  position: relative;
+  min-height: 126px;
+  border: 0;
+}
+
+body.learning-open .lesson-list a {
+  min-height: 126px !important;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 78px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+body.learning-open .lesson-route-card {
+  position: relative;
+  z-index: 2;
+  min-width: 0;
+  min-height: 88px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 13px 14px;
+  border: 1px solid rgba(255, 255, 255, .9);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .9);
+  box-shadow: 0 12px 26px rgba(56, 44, 68, .09);
+}
+
+body.learning-open .lesson-list li:nth-child(odd) .lesson-route-card {
+  grid-column: 1;
+  grid-row: 1;
+  text-align: right;
+}
+
+body.learning-open .lesson-list li:nth-child(even) .lesson-route-card {
+  grid-column: 3;
+  grid-row: 1;
+  text-align: left;
+}
+
+body.learning-open .lesson-list li.is-current .lesson-route-card {
+  border-color: rgba(121, 82, 207, .45);
+  box-shadow: 0 0 0 3px rgba(121, 82, 207, .1), 0 14px 30px rgba(67, 48, 91, .12);
+}
+
+body.learning-open .lesson-list li.is-complete .lesson-route-card {
+  background: rgba(244, 250, 234, .94);
+}
+
+body.learning-open .lesson-route-card .lesson-number {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--fm-violet);
+  font-size: 12px !important;
+}
+
+body.learning-open .lesson-route-card .lesson-copy strong {
+  font-size: 15px !important;
+}
+
+body.learning-open .lesson-route-card .lesson-copy small {
+  margin-top: 4px;
+  font-size: 11px !important;
+  white-space: normal;
+}
+
+body.learning-open .lesson-route-card .lesson-status {
+  margin-top: 8px;
+  font-size: 10px !important;
+}
+
+body.learning-open .lesson-list li:nth-child(odd) .lesson-status {
+  justify-content: flex-end;
+}
+
+body.learning-open .route-node {
+  position: relative;
+  z-index: 3;
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: center;
+  width: 28px;
+  height: 28px;
+  border: 7px solid #fff;
+  border-radius: 50%;
+  background: #e9e0f8;
+  box-shadow: 0 4px 14px rgba(63, 46, 84, .13);
+}
+
+body.learning-open .route-node.has-avatar {
+  width: 96px;
+  height: 96px;
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
+  background-image: url("./assets/characters/dj-route-headshots-v1.png");
+  background-repeat: no-repeat;
+  background-size: 300% 100%;
+  box-shadow: none;
+  filter: drop-shadow(0 10px 12px rgba(55, 42, 67, .13));
+}
+
+body.learning-open .lesson-list li:nth-child(1) .route-node.has-avatar { background-position: 0 center; }
+body.learning-open .lesson-list li:nth-child(3) .route-node.has-avatar { background-position: 50% center; }
+body.learning-open .lesson-list li:nth-child(5) .route-node.has-avatar { background-position: 100% center; }
+
+body.learning-open .lesson-list li.is-current .route-node.has-avatar {
+  filter: drop-shadow(0 0 0 var(--fm-lime)) drop-shadow(0 12px 14px rgba(55, 42, 67, .16));
+}
+
+@media (max-width: 390px), (max-height: 760px) {
+  body.learning-open .learning-goal {
+    flex-basis: 190px;
+    min-height: 190px;
+    padding: 18px 146px 16px 18px;
+  }
+
+  body.learning-open .learning-goal img {
+    right: -22px;
+    width: 174px;
+    height: 190px;
+  }
+
+  body.learning-open .learning-goal h1 {
+    font-size: 1.8rem;
+  }
+
+  body.learning-open .learning-goal p {
+    margin-top: 7px;
+    font-size: 12px;
+  }
+
+  body.learning-open .learning-goal .primary-action {
+    width: 124px;
+    min-height: 38px;
+  }
+
+  body.learning-open .lesson-list a,
+  body.learning-open .lesson-list li {
+    min-height: 116px !important;
+  }
+
+  body.learning-open .route-node.has-avatar {
+    width: 86px;
+    height: 86px;
+  }
+}
+
+/* Home artwork belongs to the ambient field; remove the visible glass rectangle seam. */
+body:not(.hub-open):not(.course-open):not(.practice-open):not(.works-open) .hero-card {
+  border: 0 !important;
+  border-radius: 34px !important;
+  background: linear-gradient(145deg, rgba(255, 255, 255, .34), rgba(231, 224, 245, .15) 58%, rgba(197, 236, 208, .1)) !important;
+  box-shadow: inset 0 1px rgba(255, 255, 255, .52), 0 24px 54px rgba(66, 52, 82, .075) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+body:not(.hub-open):not(.course-open):not(.practice-open):not(.works-open) .hero-card::before,
+body:not(.hub-open):not(.course-open):not(.practice-open):not(.works-open) .hero-card::after {
+  display: none !important;
+}
+
+@media(max-width:700px){
+  body:not(.hub-open):not(.course-open):not(.practice-open):not(.works-open) .enter-app{
+    animation:none!important;
+    opacity:1;
+    bottom:calc(48px + env(safe-area-inset-bottom, 0px));
+    transform:translateX(-50%)!important;
+  }
+}
+
+@media (orientation:landscape) and (max-height:500px){
+  body:not(.hub-open):not(.course-open):not(.practice-open):not(.works-open):not(.learning-open) .enter-app{
+    position:fixed;
+    z-index:80;
+    left:50%;
+    bottom:calc(18px + env(safe-area-inset-bottom, 0px));
+    transform:translateX(-50%);
+  }
+}
+
+/* Techniques reuse the approved character-course card grammar. */
+body.learning-open .skills-panel{padding:18px 10px 24px!important}
+body.learning-open .skills-intro{padding:0 8px 14px}
+body.learning-open .skills-intro p{max-width:34em;margin:7px 0 0!important}
+body.learning-open .skill-list{
+  display:grid;grid-auto-flow:column;grid-auto-columns:clamp(148px,39vw,210px);
+  gap:12px;margin:0;padding:0 8px 12px;overflow-x:auto;overflow-y:hidden;
+  overscroll-behavior-inline:contain;scroll-snap-type:x proximity;scrollbar-width:none;
+  touch-action:pan-x;
+}
+body.learning-open .skill-list::-webkit-scrollbar{display:none}
+body.learning-open .skill-list li{
+  min-height:0!important;display:flex;flex-direction:column;align-items:stretch;
+  gap:0;border:0;scroll-snap-align:start;
+}
+body.learning-open .skill-art{
+  position:relative;isolation:isolate;aspect-ratio:.86;overflow:hidden;
+  border-radius:22px;background:#211d27;
+  box-shadow:0 14px 30px rgba(45,35,55,.17);
+}
+body.learning-open .skill-art::before{
+  content:"";position:absolute;z-index:-1;width:132%;aspect-ratio:1;right:-47%;top:4%;
+  border-radius:50%;opacity:.72;
+  background:radial-gradient(circle,transparent 0 12%,rgba(188,169,228,.28) 12.5% 13%,transparent 13.5% 24%,rgba(188,169,228,.24) 24.5% 25%,transparent 25.5% 36%,rgba(188,169,228,.2) 36.5% 37%,transparent 37.5% 48%,rgba(188,169,228,.17) 48.5% 49%,transparent 49.5%);
+}
+body.learning-open .skill-art i{
+  position:absolute;z-index:1;inset:13% -4% 0;
+  background:url("./assets/characters/dj-route-headshots-v1.png") 0 center/300% 100% no-repeat;
+  filter:drop-shadow(0 9px 8px rgba(12,9,16,.38));
+}
+body.learning-open .skill-list li:nth-child(2) .skill-art i{background-position:50% center}
+body.learning-open .skill-list li:nth-child(3) .skill-art i{background-position:100% center}
+body.learning-open .skill-art .skill-code,
+body.learning-open .skill-art .skill-number{
+  position:absolute;z-index:2;top:12px;color:var(--fm-lime)!important;
+  font:700 12px/1 var(--fm-font-ui)!important;
+}
+body.learning-open .skill-art .skill-code{left:12px;font-size:10px!important;letter-spacing:.04em}
+body.learning-open .skill-art .skill-number{right:12px;font-size:15px!important;font-variant-numeric:tabular-nums}
+body.learning-open .skill-list strong{
+  min-height:2.7em;margin-top:10px;color:var(--fm-ink);font-size:15px!important;
+  line-height:1.35!important;text-wrap:balance;
+}
+body.learning-open .skill-list em{margin-top:4px;color:var(--fm-muted);font-size:12px!important;font-style:normal}
+@media(min-width:700px){
+  body.learning-open .skill-list{grid-auto-columns:minmax(0,1fr);grid-template-columns:repeat(3,minmax(0,1fr));overflow:visible}
+}
+
+/* Learning overlays: strong photographic defocus while the active prompt stays crisp. */
+.frame .question-overlay,
+.frame > .overlay,
+.frame .success{
+  background:rgba(25,21,30,.24)!important;
+  -webkit-backdrop-filter:blur(5px) saturate(90%)!important;
+  backdrop-filter:blur(5px) saturate(90%)!important;
+}
+.frame .question-card,
+.frame .success-sheet{
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+@media(max-width:520px){
+  .frame .question-overlay,
+  .frame > .overlay,
+  .frame .success{
+    background:rgba(25,21,30,.22)!important;
+    -webkit-backdrop-filter:blur(5px) saturate(90%)!important;
+    backdrop-filter:blur(5px) saturate(90%)!important;
+  }
+}
+
+/* Lesson step navigation: reached steps can be revisited without resetting work. */
+.progress span[data-step-jump]{
+  border-radius:8px;
+  cursor:pointer;
+  touch-action:manipulation;
+  transition:background-color .16s ease,color .16s ease,opacity .16s ease;
+}
+.progress span[data-step-jump]:not([aria-disabled="true"]):hover{
+  background:rgba(121,82,207,.08);
+}
+.progress span[data-step-jump]:focus-visible{
+  outline:2px solid #7952cf;
+  outline-offset:3px;
+}
+.progress span[data-step-jump][aria-disabled="true"]{
+  cursor:not-allowed;
+  opacity:.62;
+}
+
+.orientation-choice{
+  box-sizing:border-box;
+  width:min(360px,calc(100vw - 32px));
+  max-width:none;
+  margin:auto;
+  padding:24px;
+  border:1px solid rgba(255,255,255,.72);
+  border-radius:24px;
+  background:#fbfaf8;
+  color:#211b29;
+  box-shadow:0 24px 72px rgba(31,24,40,.26);
+}
+.orientation-choice::backdrop{background:rgba(30,25,39,.42)}
+.orientation-choice h2{margin:0;font-size:20px;line-height:1.35}
+.orientation-choice p{margin:12px 0 22px;color:#5e5669;line-height:1.55}
+.orientation-choice-remember{display:flex;align-items:center;gap:8px;margin:0 0 18px;font-size:14px;line-height:1.4;color:#40384a;cursor:pointer}
+.orientation-choice-remember input{width:18px;height:18px;margin:0;accent-color:#7952cf}
+.orientation-choice-actions{display:flex;gap:8px}
+.orientation-choice-actions button{
+  flex:1;min-width:0;min-height:48px;padding:0 8px;
+  border:0;border-radius:14px;font-family:inherit;font-size:14px;font-weight:700;line-height:1.2;cursor:pointer;
+}
+.orientation-choice-actions button:first-child{background:#eee9f2;color:#382d45}
+.orientation-choice-actions button:last-child{background:#baff2e;color:#18200f}
+.orientation-choice-actions button:focus-visible{outline:3px solid #7952cf;outline-offset:2px}

@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FIRST MIX｜课程 00 静态稿</title>
+  <style>
+    @font-face{font-family:Inter;src:url('../fonts/Inter-400.woff2') format('woff2');font-weight:400;font-display:swap}
+    @font-face{font-family:Inter;src:url('../fonts/Inter-600.woff2') format('woff2');font-weight:600;font-display:swap}
+    @font-face{font-family:GochiHand;src:url('../fonts/GochiHand.woff2') format('woff2');font-weight:400;font-display:swap}
+    @font-face{font-family:SmileySans;src:url('../fonts/SmileySans-Oblique.woff2') format('woff2');font-weight:400;font-display:swap}
+    :root{--ink:#1c1821;--muted:#696170;--paper:#f7f3eb;--paper-strong:#fffdf8;--violet:#7753c8;--violet-soft:#d9caef;--lime:#a9ef3d;--line:rgba(28,24,33,.14);color-scheme:light}
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;overflow:hidden}
+    body{background:#121015;color:var(--ink);font-family:Inter,"Microsoft YaHei UI",sans-serif;-webkit-font-smoothing:antialiased;display:grid;place-items:center}
+    button{font:inherit}
+    ::selection{background:var(--lime);color:var(--ink)}
+    :focus-visible{outline:3px solid var(--lime);outline-offset:3px}
+    .frame{position:relative;width:min(430px,100vw);height:min(900px,100dvh);min-height:720px;overflow:hidden;background:linear-gradient(150deg,#b9dbe8 0%,#d7c9ec 45%,#f0d9ca 100%);box-shadow:0 40px 90px rgba(0,0,0,.42)}
+    .ambient{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+    .ambient:before,.ambient:after{content:"";position:absolute;border-radius:47% 53% 61% 39%;filter:blur(34px);opacity:.52}
+    .ambient:before{width:270px;height:260px;background:#adf042;left:-36%;top:1%}
+    .ambient:after{width:300px;height:280px;background:#a888df;right:-41%;bottom:-12%;transform:rotate(24deg)}
+    .app{position:relative;height:100%;display:grid;grid-template-rows:58px minmax(0,1fr);padding:0 10px 10px}
+    .topbar{display:grid;grid-template-columns:42px 1fr 42px;align-items:center;padding:0 4px}
+    .icon-button{width:42px;height:42px;border:0;border-radius:50%;background:rgba(255,255,255,.48);color:var(--ink);display:grid;place-items:center}
+    .icon-button svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .logo{justify-self:center;font-family:GochiHand,cursive;font-size:1.55rem;letter-spacing:.015em}
+    .lesson-panel{min-height:0;background:rgba(248,245,238,.95);border-radius:28px;padding:12px;display:grid;grid-template-rows:auto auto auto minmax(250px,1fr) auto;gap:10px;box-shadow:0 20px 48px rgba(67,49,88,.2);overflow:hidden}
+    .route{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;align-items:start;padding:2px 4px 0}
+    .route-step{position:relative;text-align:center;color:#89818d;font-size:.61rem;line-height:1.25;white-space:nowrap}
+    .route-step:before{content:"";display:block;width:9px;height:9px;border-radius:50%;background:#d6d0d7;margin:0 auto 6px;box-shadow:0 0 0 3px var(--paper)}
+    .route-step:not(:last-child):after{content:"";position:absolute;height:1px;background:#d6d0d7;left:calc(50% + 7px);right:calc(-50% + 7px);top:4px;z-index:-1}
+    .route-step.done{color:#58505e}
+    .route-step.done:before{background:var(--violet)}
+    .route-step.done:after{background:var(--violet)}
+    .route-step.current{color:var(--ink);font-weight:600}
+    .route-step.current:before{width:24px;border-radius:999px;background:var(--lime)}
+    .lesson-title{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:12px;margin-top:8px;padding:3px 4px 0}
+    .lesson-title h1{font-family:Inter,"Microsoft YaHei UI","PingFang SC",sans-serif;font-size:1.8rem;font-weight:600;line-height:1.12;letter-spacing:-.025em;margin:0 0 8px}
+    .lesson-title p{display:inline-flex;align-items:center;min-height:28px;padding:5px 9px;color:#5d5562;background:rgba(255,255,255,.9);border-radius:10px;font-size:clamp(.65rem,2.7vw,.72rem);line-height:1.4;margin:0;white-space:nowrap}
+    .step-count{align-self:start;margin-top:3px;color:#665d6e;font-size:.68rem;font-variant-numeric:tabular-nums;letter-spacing:.08em}
+    .track{display:grid;grid-template-columns:42px minmax(0,1fr) auto;align-items:center;gap:10px;padding:8px 4px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+    .cover{width:42px;height:42px;border-radius:13px;background:#211d27;color:var(--lime);display:grid;place-items:center;font-family:GochiHand,cursive;font-size:1rem;transform:rotate(-2deg)}
+    .track strong,.track span{display:block}
+    .track strong{font-size:.76rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .track span{font-size:.63rem;color:#756d79;margin-top:4px}
+    .track time{font-size:.66rem;color:#5e5663;font-variant-numeric:tabular-nums}
+    .controller-wrap{position:relative;min-height:0;display:grid;place-items:center;padding:0 2px}
+    .controller{position:relative;width:100%;height:auto;aspect-ratio:10.8/8.4;border-radius:22px;background:#eeeae1;box-shadow:0 16px 30px rgba(42,34,50,.2),inset 0 1px 0 rgba(255,255,255,.88);padding:10px;display:grid;grid-template-rows:58px minmax(0,1fr) 29px;gap:6px;overflow:hidden}
+    .controller-screen{border-radius:12px;background:#17151c;color:#fff;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:9px;padding:9px 10px;position:relative;z-index:0}
+    .deck-wave{height:34px;display:flex;align-items:center;gap:2px;color:var(--lime)}
+    .deck-wave.right{color:#a785dd}
+    .deck-wave i{display:block;flex:1;height:var(--h);min-width:1px;border-radius:999px;background:currentColor}
+    .screen-time{text-align:center;font-size:.55rem;line-height:1.4;color:#bfb9c7;font-variant-numeric:tabular-nums}
+    .screen-time b{display:block;color:#fff;font-size:.66rem}
+    .hardware{display:grid;grid-template-columns:minmax(0,1fr) 58px minmax(0,1fr);gap:7px;min-height:0}
+    .deck,.mixer{position:relative;min-width:0}
+    .deck-label,.mixer-label{text-align:center;font-size:.5rem;letter-spacing:.09em;color:#6a626d;margin-bottom:4px}
+    .platter{position:relative;width:min(86px,78%);aspect-ratio:1;margin:0 auto 5px;border-radius:50%;background:radial-gradient(circle,#a98bdf 0 8%,#ece7dd 9% 30%,#8c8690 31% 34%,#f8f4ea 35% 52%,#45404a 53% 55%,#d9d4ca 56% 68%,#2c2830 69% 72%,#eeeadf 73%);box-shadow:0 6px 12px rgba(36,29,42,.16)}
+    .platter .star{position:absolute;width:13px;aspect-ratio:1;background:var(--star);clip-path:polygon(50% 0,61% 35%,98% 35%,68% 56%,79% 92%,50% 70%,21% 92%,32% 56%,2% 35%,39% 35%)}
+    .platter .s1{left:17%;top:22%;--star:#cc5c86}.platter .s2{right:15%;top:30%;--star:#9a83d2}.platter .s3{left:25%;bottom:17%;--star:#b7cf58;width:10px}
+    .transport{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;padding:0 3px}
+    .transport button{min-height:25px;border:0;border-radius:9px;background:#f9f6ef;color:#28232d;font-size:.52rem;font-weight:600;box-shadow:0 3px 7px rgba(42,34,48,.1)}
+    .transport .play svg{width:10px;height:10px;fill:currentColor;margin-right:3px;vertical-align:-1px}
+    .transport .cue-target{position:relative;z-index:4;background:var(--lime);color:#19161d;box-shadow:0 0 0 4px rgba(169,239,61,.35),0 7px 14px rgba(76,104,26,.24)}
+    .cue-target:before{content:"现在按这里";position:absolute;left:50%;bottom:calc(100% + 8px);translate:-50% 0;width:max-content;background:#201c25;color:#fff;border-radius:999px;padding:4px 7px;font-size:.5rem;font-weight:600;box-shadow:0 7px 14px rgba(0,0,0,.22)}
+    .cue-target:after{content:"";position:absolute;left:50%;bottom:calc(100% + 4px);translate:-50% 0;border:5px solid transparent;border-top-color:#201c25;border-bottom:0}
+    .pads{display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:5px 3px 0}
+    .pads span{display:grid;place-items:center;min-height:20px;border-radius:7px;background:#d8d3ca;color:#625b65;font-size:.45rem;line-height:1}
+    .mixer{display:grid;grid-template-rows:auto 1fr;z-index:0}
+    .channels{display:grid;grid-template-columns:1fr 1fr;gap:7px;justify-items:center}
+    .channel{display:flex;flex-direction:column;align-items:center;gap:3px}
+    .knob{width:13px;height:13px;border-radius:50%;background:linear-gradient(135deg,#5d5660,#28242c);position:relative}
+    .knob:after{content:"";position:absolute;left:50%;top:2px;width:1px;height:5px;background:#fff}
+    .fader{width:4px;flex:1;min-height:30px;border-radius:999px;background:#bdb7b8;position:relative}
+    .fader:after{content:"";position:absolute;width:13px;height:7px;border-radius:4px;background:#554e59;left:50%;top:42%;translate:-50% -50%}
+    .crossfader{position:relative;display:grid;grid-template-columns:auto 1fr auto;align-items:start;gap:8px;padding:0 17%}
+    .crossfader span{font-size:.5rem;color:#756d78}
+    .cross-track{height:4px;border-radius:999px;background:#aaa3aa;position:relative;margin-top:3px}
+    .cross-track:after{content:"";position:absolute;width:14px;height:12px;border-radius:5px;background:#3a343e;left:45%;top:50%;translate:-50% -50%}
+    .controller-brand{position:absolute;left:50%;bottom:3px;translate:-50% 0;font-family:GochiHand,cursive;font-size:.5rem;color:#68616b;z-index:1}
+    .focus-shade{position:absolute;inset:0;border-radius:22px;background:rgba(25,21,30,.42);z-index:2;pointer-events:none}
+    .lesson-note{display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:11px;align-items:center;margin-bottom:14px;background:rgba(255,255,255,.76);border-radius:16px;padding:13px;box-shadow:0 12px 24px rgba(71,52,94,.12)}
+    .cue-symbol{width:42px;height:42px;border-radius:13px;background:var(--violet);color:#fff;display:grid;place-items:center;font-weight:600;font-size:.72rem}
+    .lesson-note strong{display:block;font-size:.92rem;line-height:1.32;margin-bottom:4px}
+    .lesson-note p{color:#5e5662;font-size:.72rem;line-height:1.42;margin:0}
+    .waiting{align-self:center;border-radius:999px;background:#e8e2ef;color:#544a5f;font-size:.6rem;font-weight:600;padding:8px 9px;white-space:nowrap}
+    .static-label{position:fixed;left:24px;bottom:20px;color:#b5aebb;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase}
+    @media(max-width:520px){
+      .frame{width:100vw;height:100dvh;min-height:650px;box-shadow:none}
+      .static-label{display:none}
+      .app{padding:0 8px 8px}
+      .lesson-panel{padding:12px;gap:10px}
+      .lesson-title h1{font-size:1.8rem}
+      .controller{max-height:none}
+    }
+    @media(max-height:760px){
+      .app{grid-template-rows:50px minmax(0,1fr)}
+      .topbar{transform:scale(.94)}
+      .lesson-panel{padding:10px;gap:8px;grid-template-rows:auto auto auto minmax(225px,1fr) auto}
+      .lesson-title{margin-top:4px;padding:2px 4px 0}.lesson-title h1{font-size:1.62rem}.lesson-title p{min-height:25px;padding:4px 8px;font-size:.65rem}
+      .track{padding:5px 2px}.cover{width:36px;height:36px}
+      .route-step{font-size:.55rem}.route-step:before{margin-bottom:4px}
+      .lesson-note{margin-bottom:8px;padding:10px 11px}.lesson-note p{font-size:.66rem}
+    }
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+  </style>
+</head>
+<body>
+  <main class="frame" aria-label="课程 00 静态设计稿">
+    <div class="ambient" aria-hidden="true"></div>
+    <div class="app">
+      <header class="topbar">
+        <button class="icon-button" type="button" aria-label="返回学习首页">
+          <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="logo">FIRST MIX</div>
+        <span aria-hidden="true"></span>
+      </header>
+
+      <section class="lesson-panel" aria-labelledby="lesson-title">
+        <nav class="route" aria-label="本节课进度">
+          <span class="route-step done">播放</span>
+          <span class="route-step done">找位置</span>
+          <span class="route-step current">存 Cue</span>
+          <span class="route-step">返回</span>
+          <span class="route-step">转场</span>
+        </nav>
+
+        <div class="lesson-title">
+          <div><h1 id="lesson-title">把第一句存下来</h1><p>已找到人声起点，现在按下 CUE 保存。</p></div>
+          <span class="step-count">03 / 05</span>
+        </div>
+
+        <div class="track" aria-label="当前练习歌曲">
+          <span class="cover" aria-hidden="true">A</span>
+          <span><strong>Midnight Window</strong><span>教学歌曲 · 第一段主歌</span></span>
+          <time datetime="PT18S">00:18</time>
+        </div>
+
+        <div class="controller-wrap">
+          <div class="controller" aria-label="打碟台，Deck A 的 CUE 键已高亮">
+            <div class="controller-screen">
+              <div class="deck-wave" aria-hidden="true"><i style="--h:35%"></i><i style="--h:72%"></i><i style="--h:48%"></i><i style="--h:88%"></i><i style="--h:42%"></i><i style="--h:66%"></i><i style="--h:94%"></i><i style="--h:55%"></i></div>
+              <div class="screen-time"><b>00:18</b>CUE READY</div>
+              <div class="deck-wave right" aria-hidden="true"><i style="--h:46%"></i><i style="--h:76%"></i><i style="--h:34%"></i><i style="--h:82%"></i><i style="--h:54%"></i><i style="--h:92%"></i><i style="--h:60%"></i><i style="--h:38%"></i></div>
+            </div>
+
+            <div class="hardware">
+              <section class="deck left" aria-label="Deck A">
+                <div class="deck-label">DECK A</div>
+                <div class="platter" aria-hidden="true"><i class="star s1"></i><i class="star s2"></i><i class="star s3"></i></div>
+                <div class="transport">
+                  <button class="play" type="button" aria-label="播放 A"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>PLAY</button>
+                  <button class="cue-target" type="button">CUE</button>
+                </div>
+                <div class="pads" aria-hidden="true"><span>底鼓</span><span>拍手</span></div>
+              </section>
+
+              <section class="mixer" aria-label="调音台">
+                <div class="mixer-label">MIXER</div>
+                <div class="channels" aria-hidden="true">
+                  <div class="channel"><span class="knob"></span><span class="knob"></span><span class="knob"></span><span class="fader"></span></div>
+                  <div class="channel"><span class="knob"></span><span class="knob"></span><span class="knob"></span><span class="fader"></span></div>
+                </div>
+              </section>
+
+              <section class="deck right" aria-label="Deck B">
+                <div class="deck-label">DECK B</div>
+                <div class="platter" aria-hidden="true"><i class="star s1"></i><i class="star s2"></i><i class="star s3"></i></div>
+                <div class="transport">
+                  <button class="play" type="button" aria-label="播放 B"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>PLAY</button>
+                  <button type="button">SYNC</button>
+                </div>
+                <div class="pads" aria-hidden="true"><span>踩镲</span><span>电子音</span></div>
+              </section>
+            </div>
+
+            <div class="crossfader" aria-label="Crossfader 当前位于中央"><span>A</span><div class="cross-track"></div><span>B</span></div>
+            <span class="controller-brand" aria-hidden="true">FIRST MIX</span>
+            <div class="focus-shade" aria-hidden="true"></div>
+          </div>
+        </div>
+
+        <aside class="lesson-note" aria-label="当前知识点说明">
+          <span class="cue-symbol">CUE</span>
+          <span><strong>Cue 就像给这一秒做书签</strong><p>按下后保存 00:18。播放离开后再按，会回到 00:18 并暂停。</p></span>
+          <span class="waiting">等你操作</span>
+        </aside>
+      </section>
+    </div>
+  </main>
+  <div class="static-label">FIRST MIX · Course 00 · Static key screen</div>
+</body>
+</html>

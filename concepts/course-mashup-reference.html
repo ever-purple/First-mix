@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FIRST MIX｜跨文化混搭参考池</title>
+  <style>
+    @font-face{font-family:Inter;src:url('../fonts/Inter-400.woff2') format('woff2');font-weight:400;font-display:swap}
+    @font-face{font-family:Inter;src:url('../fonts/Inter-600.woff2') format('woff2');font-weight:600;font-display:swap}
+    @font-face{font-family:GochiHand;src:url('../fonts/GochiHand.woff2') format('woff2');font-weight:400;font-display:swap}
+    :root{--ink:#1c1821;--muted:#655d69;--paper:#f8f5ee;--violet:#7753c8;--violet-soft:#ddd1ef;--lime:#a9ef3d;--sky:#d9eef3;--line:rgba(28,24,33,.14);color-scheme:light}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;min-height:100vh;background:#bcdce5;color:var(--ink);font-family:Inter,"Microsoft YaHei UI",sans-serif;-webkit-font-smoothing:antialiased}
+    body:before,body:after{content:"";position:fixed;z-index:-1;width:42vw;height:42vw;border-radius:48% 52% 58% 42%;filter:blur(70px);opacity:.55}
+    body:before{left:-12vw;top:-10vw;background:#b7ef64}
+    body:after{right:-12vw;bottom:-15vw;background:#a98cdd}
+    button,a{font:inherit}button{color:inherit}::selection{background:var(--lime);color:var(--ink)}
+    :focus-visible{outline:3px solid var(--lime);outline-offset:3px}
+    .page{width:min(1180px,calc(100% - 28px));margin:0 auto;padding:24px 0 70px}
+    .topbar{display:grid;grid-template-columns:48px 1fr;align-items:center;gap:16px;margin-bottom:18px}
+    .back{width:46px;height:46px;border:0;border-radius:50%;background:rgba(255,255,255,.64);display:grid;place-items:center;text-decoration:none}
+    .back svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .brand{font-family:GochiHand,cursive;font-size:1.65rem}
+    .sheet{background:rgba(248,245,238,.96);border-radius:28px;box-shadow:0 26px 70px rgba(54,42,67,.2);overflow:hidden}
+    .intro{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(260px,.85fr);gap:44px;padding:42px 46px 34px;border-bottom:1px solid var(--line)}
+    h1{font-size:clamp(2rem,4.2vw,3.8rem);line-height:1.03;letter-spacing:-.035em;margin:0 0 18px;max-width:10em;text-wrap:balance}
+    .intro p{font-size:1rem;line-height:1.7;color:var(--muted);max-width:650px;margin:0}
+    .rule{align-self:end;border-top:1px solid var(--ink);padding-top:12px;font-size:.78rem;line-height:1.6;color:#554d59}
+    .rule strong{display:block;margin-bottom:4px;color:var(--ink)}
+    .lab-link{display:inline-flex;align-items:center;gap:8px;margin-top:13px;padding:9px 12px;border-radius:12px;background:var(--ink);color:#fff;text-decoration:none;font-size:.74rem;font-weight:600}
+    .lab-link svg{width:16px;height:16px;fill:none;stroke:var(--lime);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .filters{display:flex;gap:8px;overflow:auto;padding:18px 22px;border-bottom:1px solid var(--line);scrollbar-width:thin;scrollbar-color:var(--violet-soft) transparent}
+    .filter{flex:0 0 auto;border:0;border-radius:12px;background:transparent;padding:10px 13px;font-size:.76rem;font-weight:600;color:#655d69;cursor:pointer}
+    .filter.is-active{background:var(--ink);color:#fff}
+    .content{padding:32px 46px 46px}
+    .section-heading{display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,.6fr);gap:28px;align-items:end;margin:0 0 18px}
+    .section-heading h2{font-size:clamp(1.5rem,2.7vw,2.3rem);line-height:1.15;letter-spacing:-.025em;margin:0 0 7px}
+    .section-heading p{font-size:.82rem;line-height:1.55;color:var(--muted);margin:0}
+    .section-note{font-size:.78rem;line-height:1.55;color:#5f5764;border-top:1px solid var(--ink);padding-top:10px}
+    .mix-list{border-top:1px solid var(--line);margin-bottom:40px}
+    .mix-row{display:grid;grid-template-columns:120px minmax(260px,1.1fr) minmax(280px,1fr) 110px;gap:20px;align-items:center;padding:20px 0;border-bottom:1px solid var(--line)}
+    .status{display:inline-flex;width:max-content;align-items:center;min-height:28px;border-radius:999px;padding:5px 9px;font-size:.75rem;font-weight:600;background:var(--lime);color:#2f4310}
+    .status.test{background:var(--violet-soft);color:#4f377f}
+    .status.method{background:var(--sky);color:#285765}
+    .pair strong{display:block;font-size:.98rem;line-height:1.4;margin-bottom:5px}
+    .pair span{display:block;font-size:.76rem;line-height:1.5;color:var(--muted)}
+    .reason{font-size:.78rem;line-height:1.58;color:#564f5a;margin:0}
+    .use{font-size:.75rem;line-height:1.45;color:#5f5764}
+    .source{display:inline-block;margin-top:7px;color:var(--violet);font-size:.75rem;text-underline-offset:3px}
+    .legal{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;padding:17px 18px;border-radius:14px;background:#eee8f6;font-size:.75rem;line-height:1.55;color:#54485f}
+    .legal svg{width:20px;height:20px;fill:none;stroke:var(--violet);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+    .hidden{display:none}
+    @media(max-width:820px){
+      .page{width:100%;padding:0 0 40px}.topbar{padding:10px 12px;margin:0}.sheet{border-radius:26px 26px 0 0}
+      .intro{grid-template-columns:1fr;gap:22px;padding:28px 20px 24px}h1{font-size:2.2rem}
+      .content{padding:26px 20px 36px}.section-heading{grid-template-columns:1fr;gap:14px}
+      .mix-row{grid-template-columns:108px minmax(0,1fr);gap:12px 16px;padding:18px 0}.reason{grid-column:2}.use{grid-column:2}
+    }
+    @media(max-width:470px){.mix-row{grid-template-columns:1fr}.reason,.use{grid-column:1}.status{margin-bottom:2px}.pair strong{font-size:1rem}}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <a class="back" href="./course-music-audition.html" aria-label="返回课程选曲试听表"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></a>
+      <div class="brand">FIRST MIX</div>
+    </header>
+    <section class="sheet" aria-labelledby="page-title">
+      <div class="intro">
+        <div>
+          <h1 id="page-title">跨文化混搭参考池</h1>
+          <p>不按歌手找相似歌，而是寻找两首歌之间可以交换的部分：人声、鼓、和声、年代质感或文化语汇。先研究已经成立的作品，再把方法转成课程里的混搭实验。</p>
+        </div>
+        <div class="rule"><strong>初学课程只做一种交换</strong>第一次练习优先使用“人声 × 器乐”或“老旋律 × 新鼓点”。不要同时叠两条主唱，也不要一开始就处理复杂调性冲突。<a class="lab-link" href="./course-mashup-lab.html">进入 4 组试听实验<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M15 8l4 4-4 4"/></svg></a></div>
+      </div>
+      <nav class="filters" aria-label="筛选混搭参考">
+        <button class="filter is-active" type="button" data-filter="all">全部</button>
+        <button class="filter" type="button" data-filter="proven">已有作品</button>
+        <button class="filter" type="button" data-filter="test">待实验组合</button>
+        <button class="filter" type="button" data-filter="asia">亚洲</button>
+        <button class="filter" type="button" data-filter="global">欧美 / 非洲 / 南美</button>
+      </nav>
+      <div class="content">
+        <section data-section="proven">
+          <div class="section-heading">
+            <div><h2>先听成熟作品怎么配</h2><p>这些不是要照抄的歌单，而是不同混搭策略的可靠参照。</p></div>
+            <div class="section-note">观察三件事：保留谁的主角位置、另一首只贡献什么、冲突出现前何时退出。</div>
+          </div>
+          <div class="mix-list">
+            <article class="mix-row" data-tags="proven global"><span class="status">已有作品</span><div class="pair"><strong>Fela Kuti × De La Soul</strong><span>Fela Soul · 尼日利亚 × 美国</span></div><div><p class="reason">Afrobeat 的长律动与铜管负责空间，Rap 人声负责叙事；不是把两首完整歌曲硬叠。</p><a class="source" href="https://whitenoiserecords.org/en-tw/products/amerigo-gazaway-fela-soul-fela-kuti-vs-de-la-soul" target="_blank" rel="noreferrer">查看作品资料</a></div><div class="use">适合 06<br>跨风格选歌</div></article>
+            <article class="mix-row" data-tags="proven global"><span class="status">已有作品</span><div class="pair"><strong>Stevie Wonder × Common</strong><span>A Common Wonder · 美国 Soul × Rap</span></div><div><p class="reason">以分轨和片段重新编排，让老 Soul 与现代说唱像一次真正合作，而不只是同时播放。</p><a class="source" href="https://soulmatesproject.bandcamp.com/album/a-common-wonder" target="_blank" rel="noreferrer">试听参考作品</a></div><div class="use">适合 07<br>完整 Mix</div></article>
+            <article class="mix-row" data-tags="proven asia global"><span class="status">已有作品</span><div class="pair"><strong>Nujabes 系作品 × 美国 Rap 人声</strong><span>Samurai Champloo Mash Up Mix · 日本 × 美国</span></div><div><p class="reason">保留日系 Jazz-hop 器乐的情绪，用不同 Rap acapella 改变叙事与能量，是最直接的人声换底练习。</p><a class="source" href="https://djhazey82.bandcamp.com/album/samurai-champloo-20th-anniversary-mash-up-mix" target="_blank" rel="noreferrer">查看完整曲目表</a></div><div class="use">适合 04<br>人声进点</div></article>
+            <article class="mix-row" data-tags="proven asia global"><span class="status">已有作品</span><div class="pair"><strong>日本 City Pop 语汇 × Soulful Hip-hop</strong><span>City Hop · 日本 × 美国</span></div><div><p class="reason">不直接搬运一首名曲，而是提取 City Pop 的和声、合成器与夜色，再用 Hip-hop 鼓组重新组织。</p><a class="source" href="https://amerigo.bandcamp.com/album/city-hop" target="_blank" rel="noreferrer">试听参考专辑</a></div><div class="use">适合 06<br>风格识别</div></article>
+            <article class="mix-row" data-tags="proven global"><span class="status">已有作品</span><div class="pair"><strong>Sabotage × Os Originais do Samba</strong><span>Um Bom Lugar × Tenha Fé · 巴西</span></div><div><p class="reason">Samba 的群体律动与 Rap 的重拍共用身体感，差异来自语言和年代，而不是节奏互相打架。</p><a class="source" href="https://luisaviscardi.bandcamp.com/album/samba-flow-mashups-by-lu-sa-viscardi" target="_blank" rel="noreferrer">试听 Mashup</a></div><div class="use">适合 05<br>律动与低频</div></article>
+            <article class="mix-row" data-tags="proven global"><span class="status">已有作品</span><div class="pair"><strong>Common / Nas 人声 × 苏联 Soul / Jazz</strong><span>CommoNasm · 美国 × 东欧</span></div><div><p class="reason">陌生的旧唱片和声为熟悉的 Rap 人声换了电影感，说明跨文化不必依赖同一时期的热门歌。</p><a class="source" href="https://en.wikipedia.org/wiki/Commonasm" target="_blank" rel="noreferrer">查看作品说明</a></div><div class="use">适合 06<br>氛围匹配</div></article>
+            <article class="mix-row" data-tags="proven asia global"><span class="status method">采样案例</span><div class="pair"><strong>中华有机联盟《海潮之声》× The Spinners</strong><span>华语 Jazz Rap × 美国 Soul</span></div><div><p class="reason">截取 Soul 唱片中最有辨识度的旋律线，再围绕它建立中文说唱节奏，是“找到一句再做歌”的典型。</p><a class="source" href="https://www.bilibili.com/video/BV1J84y1o7sQ" target="_blank" rel="noreferrer">查看采样拆解</a></div><div class="use">适合 02<br>乐句识别</div></article>
+            <article class="mix-row" data-tags="proven asia"><span class="status method">选曲方法</span><div class="pair"><strong>旧中国唱片 × 当代 Bass / Hip-hop</strong><span>Howie Lee、Damacha 的挖掘方法</span></div><div><p class="reason">从老磁带与地方声音中找独特音色，再只取一个可循环事件，而不是给传统乐器简单加鼓。</p><a class="source" href="https://www.smartshanghai.com/articles/nightlife/digging-damacha2015-05-21" target="_blank" rel="noreferrer">查看挖唱片方法</a></div><div class="use">适合 06<br>素材选择</div></article>
+          </div>
+        </section>
+
+        <section data-section="test">
+          <div class="section-heading">
+            <div><h2>下一轮值得试听的组合</h2><p>这里刻意跨国家与年代。它们是实验假设，不代表 BPM 与调性已经兼容。</p></div>
+            <div class="section-note">试听顺序：先找无主唱区段，再比较速度，最后检查调性。任何一步冲突明显就换组合。</div>
+          </div>
+          <div class="mix-list">
+            <article class="mix-row" data-tags="test asia"><span class="status test">待实验</span><div class="pair"><strong>周璇《夜上海》× J Dilla〈Time: The Donut of the Heart〉</strong><span>中国 1940s × 美国 2000s</span></div><p class="reason">只取一句老上海人声，放在松弛鼓点的空拍上；重点是年代质感，不是整段合唱。</p><div class="use">人声 Hook<br>覆盖器乐</div></article>
+            <article class="mix-row" data-tags="test asia global"><span class="status test">待实验</span><div class="pair"><strong>姚莉《玫瑰玫瑰我爱你》× A Tribe Called Quest〈Electric Relaxation〉</strong><span>中国时代曲 × 美国 Jazz Rap</span></div><p class="reason">两者都有轻快摇摆感，可测试“旧旋律 + Boom-bap”是否比抒情慢歌更适合初学者。</p><div class="use">短句采样<br>接八小节</div></article>
+            <article class="mix-row" data-tags="test asia global"><span class="status test">待实验</span><div class="pair"><strong>白光《等着你回来》× Portishead〈Sour Times〉</strong><span>中国老歌 × 英国 Trip-hop</span></div><p class="reason">烟雾感人声与黑色电影式鼓组共享情绪，适合学习“情绪相近、年代不同”的选择。</p><div class="use">氛围转场<br>避免双主唱</div></article>
+            <article class="mix-row" data-tags="test asia"><span class="status test">待实验</span><div class="pair"><strong>陶喆《二十二》× Uyama Hiroto〈Waltz for Life Will Born〉</strong><span>华语 R&B × 日本 Jazz-hop</span></div><p class="reason">先比较吉他、钢琴与人声留白；如果拍号或和声冲突，就改用一句人声而不是完整副歌。</p><div class="use">人声换底<br>先测拍号</div></article>
+            <article class="mix-row" data-tags="test asia"><span class="status test">待实验</span><div class="pair"><strong>MINMI〈四季ノ唄〉× 蛋堡《她和时间跳华尔兹》</strong><span>日本 × 中国台湾</span></div><p class="reason">两首都有 Jazz-hop 的叙事气质，更适合做一句结束后另一句接手，而不是长时间叠唱。</p><div class="use">问答式交接<br>练乐句边界</div></article>
+            <article class="mix-row" data-tags="test asia global"><span class="status test">待实验</span><div class="pair"><strong>杏里〈Last Summer Whisper〉× The Pharcyde〈Runnin'〉</strong><span>日本 City Pop × 美国 Jazz Rap</span></div><p class="reason">明亮夏日和声遇到松弛 Rap，可用 City Pop 的前奏或间奏承接，而不是直接覆盖副歌。</p><div class="use">间奏接人声<br>练能量变化</div></article>
+            <article class="mix-row" data-tags="test global"><span class="status test">待实验</span><div class="pair"><strong>Cortex〈Huit Octobre 1971〉× MF DOOM〈One Beer〉</strong><span>法国 Jazz / Soul × 美国 Rap</span></div><p class="reason">先听原始 Jazz 段落，再听 Hip-hop 如何重组它；适合作为“采样不是复制整首歌”的教学对照。</p><div class="use">原曲 / 成品<br>A-B 对照</div></article>
+            <article class="mix-row" data-tags="test global"><span class="status test">待实验</span><div class="pair"><strong>Kim Choo-ja〈It's a Lie〉× Madlib〈Slim's Return〉</strong><span>韩国 Psychedelic Soul × 美国 Beat Music</span></div><p class="reason">强烈复古人声只适合当短事件；让 Madlib 的器乐段留出位置，避免旋律和说唱样本同时抢中心。</p><div class="use">短 Vocal Chop<br>练减法</div></article>
+          </div>
+        </section>
+
+        <div class="legal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.4 8.1-8 9-4.6-.9-8-4-8-9V7l8-4z"/><path d="M9 12l2 2 4-4"/></svg><span>以上商业歌曲仅用于研究选曲逻辑和课堂演示方向，不进入项目安装包。真正内置时，用已获许可的分轨、CC0 素材或专门重录的相似结构替代。</span></div>
+      </div>
+    </section>
+  </main>
+  <script>
+    const filters = [...document.querySelectorAll('[data-filter]')];
+    const rows = [...document.querySelectorAll('.mix-row')];
+    const sections = [...document.querySelectorAll('[data-section]')];
+    filters.forEach(button => button.addEventListener('click', () => {
+      const value = button.dataset.filter;
+      filters.forEach(item => item.classList.toggle('is-active', item === button));
+      rows.forEach(row => row.classList.toggle('hidden', value !== 'all' && !row.dataset.tags.split(' ').includes(value)));
+      sections.forEach(section => {
+        const visible = [...section.querySelectorAll('.mix-row')].some(row => !row.classList.contains('hidden'));
+        section.classList.toggle('hidden', !visible);
+      });
+    }));
+  </script>
+</body>
+</html>

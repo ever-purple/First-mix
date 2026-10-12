@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FIRST MIX｜01 设置开始位置 · 逐步交互脚本</title>
+  <style>
+    @font-face{font-family:Inter;src:url('../fonts/Inter-400.woff2') format('woff2');font-weight:400;font-display:swap}
+    @font-face{font-family:Inter;src:url('../fonts/Inter-600.woff2') format('woff2');font-weight:600;font-display:swap}
+    @font-face{font-family:GochiHand;src:url('../fonts/GochiHand.woff2') format('woff2');font-weight:400;font-display:swap}
+    :root{--ink:#1c1821;--muted:#696170;--paper:#f7f3eb;--white:#fffdf8;--violet:#7753c8;--violet-soft:#e7def3;--lime:#a9ef3d;--lime-soft:#e8f7ce;--line:rgba(28,24,33,.14);--shadow:0 26px 70px rgba(61,45,72,.18);color-scheme:light}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;min-height:100vh;background:#bfdee7;color:var(--ink);font-family:Inter,"Microsoft YaHei UI","PingFang SC",sans-serif;-webkit-font-smoothing:antialiased}
+    body:before,body:after{content:"";position:fixed;z-index:-1;width:44vw;height:44vw;border-radius:48% 52% 58% 42%;filter:blur(76px);opacity:.52}
+    body:before{left:-14vw;top:-15vw;background:#b9f060}body:after{right:-12vw;bottom:-17vw;background:#a98cdd}
+    a,button{font:inherit;color:inherit}::selection{background:var(--lime);color:var(--ink)}:focus-visible{outline:3px solid var(--lime);outline-offset:3px}
+    .page{width:min(1240px,calc(100% - 28px));margin:0 auto;padding:24px 0 80px}
+    .topbar{display:grid;grid-template-columns:48px 1fr;align-items:center;gap:15px;margin-bottom:18px}
+    .back{width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.67);display:grid;place-items:center;text-decoration:none}
+    .back svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.brand{font-family:GochiHand,cursive;font-size:1.65rem}
+    .workspace{display:grid;grid-template-columns:250px minmax(0,1fr);background:rgba(247,243,235,.97);border-radius:28px;box-shadow:var(--shadow);overflow:hidden}
+    .course-list{padding:30px 24px;border-right:1px solid var(--line);background:rgba(255,253,248,.66)}
+    .course-list h2{font-size:.82rem;letter-spacing:.08em;margin:0 0 17px}.course-list ol{list-style:none;padding:0;margin:0}.course-list li{border-top:1px solid var(--line)}.course-list li:last-child{border-bottom:1px solid var(--line)}
+    .course-list a{display:grid;grid-template-columns:28px 1fr;gap:8px;padding:15px 0;text-decoration:none;font-size:.82rem;line-height:1.35;color:#5d5561}.course-list a span:first-child{font-variant-numeric:tabular-nums;color:#8c838f}.course-list li.active a{color:var(--ink);font-weight:600}.course-list li.active a span:first-child{color:var(--violet)}.course-list li.active a:after{content:"";grid-column:2;width:34px;height:4px;border-radius:99px;background:var(--lime);margin-top:2px}
+    .main{min-width:0}.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(250px,.75fr);gap:42px;padding:44px 46px 35px;border-bottom:1px solid var(--line)}
+    h1{font-size:clamp(2.55rem,5vw,4.6rem);line-height:.98;letter-spacing:-.04em;margin:0 0 24px;text-wrap:balance}.question{font-size:.92rem;line-height:1.62;color:#524a57;margin:0;max-width:42em}.question strong{display:block;font-size:clamp(1.25rem,2.4vw,1.75rem);line-height:1.25;letter-spacing:-.02em;color:var(--ink);margin-bottom:9px}
+    .goal{align-self:end;padding-top:14px;border-top:1px solid var(--ink)}.goal strong{display:block;font-size:.92rem;margin-bottom:8px}.goal p{font-size:.86rem;line-height:1.58;color:var(--muted);margin:0}.goal ul{display:flex;flex-wrap:wrap;gap:7px;list-style:none;padding:0;margin:14px 0 0}.goal li{padding:6px 9px;border-radius:9px;background:var(--lime-soft);font-size:.75rem;font-weight:600;color:#38520d}
+    .guardrails{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--line)}.guardrails div{padding:18px 22px;border-right:1px solid var(--line)}.guardrails div:last-child{border-right:0}.guardrails strong{display:block;font-size:.82rem;margin-bottom:5px}.guardrails span{display:block;font-size:.79rem;line-height:1.48;color:var(--muted)}
+    .flow{padding:23px 46px;border-bottom:1px solid var(--line)}.flow ol{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;list-style:none;padding:0;margin:0}.flow li{position:relative;padding-top:17px;text-align:center;font-size:.72rem;color:#6c6470}.flow li:before{content:"";position:absolute;left:50%;top:0;width:8px;height:8px;translate:-50% 0;border-radius:50%;background:#cec7d0}.flow li:not(:last-child):after{content:"";position:absolute;left:calc(50% + 7px);right:calc(-50% + 7px);top:3px;height:1px;background:#cec7d0}.flow li:nth-child(-n+2):before,.flow li:first-child:after{background:var(--lime)}
+    .question-preview{position:relative;min-height:470px;margin:34px 46px 0;border-radius:20px;background:#dad4dc;overflow:hidden;display:grid;place-items:center;padding:112px 24px 38px}
+    .question-preview:before,.question-preview:after{content:"";position:absolute;border-radius:18px;background:rgba(255,255,255,.34);filter:blur(1px)}
+    .question-preview:before{width:78%;height:84px;left:11%;top:28px}.question-preview:after{width:88%;height:128px;left:6%;bottom:28px}
+    .question-modal{position:relative;z-index:1;width:min(560px,100%);padding:92px 28px 26px;border-radius:26px;background:#7652c5;color:#fff;box-shadow:0 24px 52px rgba(35,26,42,.28)}
+    .question-character{position:absolute;right:22px;top:-150px;width:238px;height:238px;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 14px 18px rgba(28,20,35,.24));pointer-events:none}
+    .question-modal h2{font-size:clamp(1.65rem,3.2vw,2.35rem);line-height:1.08;letter-spacing:-.025em;margin:0 0 11px;max-width:12em}.question-modal p{max-width:31em;margin:0 0 20px;color:#eee8f8;font-size:.86rem;line-height:1.55}.question-modal button{min-height:44px;border:0;border-radius:13px;background:var(--lime);color:#192108;padding:0 17px;font-weight:600}
+    .script{padding:34px 46px 48px}.script-head{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:18px}.script-head h2{font-size:1.75rem;letter-spacing:-.025em;margin:0 0 6px}.script-head p{font-size:.84rem;line-height:1.55;color:var(--muted);margin:0}.legend{font-size:.75rem;color:var(--muted);white-space:nowrap}
+    .steps{border-top:1px solid var(--ink)}.step{display:grid;grid-template-columns:76px minmax(0,1fr);gap:24px;padding:27px 0;border-bottom:1px solid var(--line)}.step-number{font-size:2.15rem;line-height:1;font-weight:600;letter-spacing:-.04em;font-variant-numeric:tabular-nums}.step-number span{display:block;width:max-content;margin-top:9px;padding:5px 8px;border-radius:8px;background:var(--violet-soft);color:#4f377f;font-size:.72rem;letter-spacing:0}.step:nth-child(1) .step-number span,.step:nth-child(4) .step-number span,.step:nth-child(7) .step-number span{background:var(--lime-soft);color:#38520d}
+    .step-main h3{font-size:1.25rem;line-height:1.25;margin:0 0 7px;letter-spacing:-.015em}.screen-copy{display:flex;gap:9px;align-items:flex-start;padding:2px 0;font-size:.85rem;font-weight:600;line-height:1.5;color:#443d48;margin:0 0 16px}.screen-copy:before{content:"";width:8px;height:8px;flex:0 0 auto;margin-top:.38em;border-radius:50%;background:var(--violet)}
+    .detail-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.detail{padding-top:11px;border-top:1px solid var(--line)}.detail b{display:block;font-size:.72rem;letter-spacing:.06em;color:#655d69;margin-bottom:6px}.detail p{font-size:.82rem;line-height:1.55;color:#574f5b;margin:0}
+    .focus-line{display:grid;grid-template-columns:20px max-content minmax(0,1fr);align-items:start;gap:10px;margin-top:14px;padding:11px 12px;border-radius:12px;background:#ebe7e0}.focus-line svg{width:20px;height:20px;fill:none;stroke:var(--violet);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.focus-line strong{font-size:.78rem}.focus-line span{font-size:.78rem;line-height:1.45;color:#5e5662}
+    .audio-brief{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:18px;margin-top:18px;padding:17px 18px;border-radius:14px;background:var(--white)}.audio-brief strong{display:block;font-size:.82rem;margin-bottom:6px}.audio-brief p{font-size:.8rem;line-height:1.5;color:var(--muted);margin:0}.mini-wave{position:relative;height:54px;border-radius:10px;background:#211c28;overflow:hidden;display:flex;align-items:center;gap:3px;padding:0 12px}.mini-wave i{display:block;flex:1;height:var(--h);border-radius:99px;background:#a98add}.mini-wave:after{content:"目标入口";position:absolute;left:42%;top:0;height:100%;border-left:2px solid var(--lime);padding:6px 0 0 7px;color:#dff7b9;font-size:.7rem;font-style:normal}
+    .bottom-sheet{position:relative;margin-top:34px;padding:62px 24px 24px;border-radius:26px 26px 18px 18px;background:#7652c5;color:#fff;overflow:visible}.character{position:absolute;right:32px;top:-42px;width:118px;height:82px;pointer-events:none}.character:before{content:"";position:absolute;right:12px;bottom:0;width:80px;height:66px;border-radius:48% 52% 42% 44%;background:#d5bcff;border:3px solid #1c1821;transform:rotate(-4deg)}.character:after{content:"★";position:absolute;right:33px;top:11px;color:var(--lime);font-size:1.8rem;text-shadow:1px 2px 0 #1c1821}.bottom-sheet h3{font-size:1.65rem;line-height:1.1;margin:0 0 8px;letter-spacing:-.025em}.bottom-sheet p{font-size:.86rem;line-height:1.52;margin:0 0 18px;max-width:39em;color:#eee8f8}.result-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}.result-row span{padding:7px 9px;border-radius:9px;background:rgba(255,255,255,.14);font-size:.75rem;font-weight:600}.sheet-actions{display:grid;grid-template-columns:1fr auto;gap:10px}.sheet-actions button{min-height:44px;border:0;border-radius:13px;padding:0 16px;font-weight:600}.sheet-actions button:first-child{background:#211c28;color:#fff}.sheet-actions button:last-child{background:var(--lime);color:#1c1821}
+    .notes{margin-top:34px;padding-top:24px;border-top:1px solid var(--ink)}.notes h2{font-size:1.35rem;margin:0 0 14px}.notes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.note{padding:14px 15px;border-radius:14px;background:#eee9e2}.note strong{display:block;font-size:.82rem;margin-bottom:6px}.note p{font-size:.8rem;line-height:1.55;color:#5e5662;margin:0}
+    @media(max-width:980px){.workspace{grid-template-columns:1fr}.course-list{border-right:0;border-bottom:1px solid var(--line);padding:20px}.course-list ol{display:grid;grid-template-columns:repeat(4,1fr)}.course-list li{border-right:1px solid var(--line)}.course-list a{padding:12px 10px}.course-list li.active a:after{display:none}.hero{padding:38px 30px 30px}.script{padding:30px}.detail-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:700px){.page{width:100%;padding:0 0 40px}.topbar{padding:10px 12px;margin:0}.workspace{border-radius:26px 26px 0 0}.course-list{overflow:auto;padding:16px 14px}.course-list h2{margin-left:8px}.course-list ol{display:flex;width:max-content}.course-list li{width:166px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.hero{grid-template-columns:1fr;gap:24px;padding:30px 20px 26px}h1{font-size:2.55rem}.guardrails{grid-template-columns:1fr}.guardrails div{border-right:0;border-bottom:1px solid var(--line);padding:14px 20px}.guardrails div:last-child{border-bottom:0}.flow{padding:20px;overflow:auto}.flow ol{width:560px}.question-preview{min-height:430px;margin:26px 14px 0;padding:104px 12px 26px}.question-modal{padding:88px 20px 21px}.question-character{right:4px;top:-137px;width:218px;height:218px}.script{padding:26px 20px 36px}.script-head{display:block}.legend{display:block;margin-top:8px}.step{grid-template-columns:48px minmax(0,1fr);gap:14px}.step-number{font-size:1.65rem}.detail-grid{grid-template-columns:1fr}.audio-brief{grid-template-columns:1fr}.bottom-sheet{padding:58px 18px 18px}.character{right:18px}.sheet-actions{grid-template-columns:1fr}.notes-grid{grid-template-columns:1fr}}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <a class="back" href="./course-00-interaction-script.html" aria-label="返回课程 00 交互脚本"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></a>
+      <div class="brand">FIRST MIX</div>
+    </header>
+
+    <section class="workspace" aria-labelledby="page-title">
+      <aside class="course-list" aria-label="课程目录">
+        <h2>课程</h2>
+        <ol>
+          <li><a href="./course-00-interaction-script.html"><span>00</span><span>第一次交接</span></a></li>
+          <li class="active"><a href="#page-title"><span>01</span><span>设置开始位置</span></a></li>
+          <li><a href="./course-02-interaction-script.html"><span>02</span><span>听懂音乐结构</span></a></li>
+          <li><a href="#"><span>03</span><span>让两首歌对齐</span></a></li>
+          <li><a href="#"><span>04</span><span>在正确时间接入</span></a></li>
+          <li><a href="#"><span>05</span><span>让转场保持清晰</span></a></li>
+          <li><a href="#"><span>06</span><span>选择短交接或长混合</span></a></li>
+          <li><a href="#"><span>07</span><span>独立完成与 AI 评分</span></a></li>
+        </ol>
+      </aside>
+
+      <div class="main">
+        <header class="hero">
+          <div>
+            <h1 id="page-title">01 设置开始位置</h1>
+            <p class="question"><strong>怎样让歌曲每次都从我选中的那一秒开始？</strong>歌曲文件的开头不一定适合接入：可能有空白、环境声或还没进入主题。本节让用户找到一个清楚的入口，把它保存为 Cue，再离开并准确返回。</p>
+          </div>
+          <aside class="goal">
+            <strong>本节完成标准</strong>
+            <p>用户亲手找到入口、保存 Cue，并从别处返回同一位置。最后一次播放必须从保存的入口发出同一个可辨认声音。</p>
+            <ul><li>约 3 分钟</li><li>7 个动作节点</li><li>产出 1 个 Cue</li></ul>
+          </aside>
+        </header>
+
+        <section class="guardrails" aria-label="课程约束">
+          <div><strong>Cue 只解释一次</strong><span>“给这一秒加书签。”不介绍耳机预听 Cue / PFL，本产品也不提供监听流程。</span></div>
+          <div><strong>不靠点“继续”</strong><span>暂停位置、微调、保存、离开和返回都由真实设备操作触发。</span></div>
+          <div><strong>声音必须像一首歌</strong><span>使用有前奏与明确乐句入口的真实曲目，不能用恒定鼓循环代替。</span></div>
+        </section>
+
+        <nav class="flow" aria-label="本节交互顺序">
+          <ol><li>对比</li><li>暂停</li><li>微调</li><li>保存</li><li>离开</li><li>返回</li><li>确认</li></ol>
+        </nav>
+
+        <section class="question-preview" aria-label="课程开场提问弹窗示意">
+          <div class="question-modal">
+            <img class="question-character" src="../assets/characters/dj-question-thinking-v1.png" alt="DJ 角色托着下巴思考">
+            <h2>怎样让歌曲每次都从我选中的那一秒开始？</h2>
+            <p>先听一遍文件开头，再听一遍理想入口。你会马上知道为什么要保存开始位置。</p>
+            <button type="button">听听两种开头</button>
+          </div>
+        </section>
+
+        <section class="script" aria-labelledby="script-title">
+          <div class="script-head">
+            <div><h2 id="script-title">逐步交互脚本</h2><p>一次只开放一个相关控件。高亮必须框准真实操作区域，底部解释和高亮始终描述同一件事。</p></div>
+            <span class="legend">屏幕话术 · 操作 · 判定 · 声音反馈</span>
+          </div>
+
+          <div class="steps">
+            <article class="step">
+              <div class="step-number">00<span>先听问题</span></div>
+              <div class="step-main">
+                <h3>先比较“文件开头”和“理想入口”</h3>
+                <p class="screen-copy">听两次开头：哪一个更像歌曲真正开始的地方？</p>
+                <div class="detail-grid">
+                  <div class="detail"><b>画面</b><p>先显示居中紫色提问弹窗，背景压暗；思考表情人物从弹窗上缘露出。</p></div>
+                  <div class="detail"><b>用户动作</b><p>点击“听听两种开头”。弹窗关闭，系统先播原始开头，再自动播放目标入口，各 4 秒；熟悉内容后可点“跳过试听”。</p></div>
+                  <div class="detail"><b>通过条件</b><p>两段试听播放完成，或用户主动跳过；允许再次试听，不记录失败。</p></div>
+                  <div class="detail"><b>声音反馈</b><p>第一段保留前奏与空白，第二段从完整旋律句或人声句开始，差别必须明显。</p></div>
+                </div>
+                <div class="audio-brief">
+                  <div><strong>候选曲：Venus · HoliznaCC0</strong><p>Synth Pop / Hip-Hop，CC0 1.0。最终片段只取目标入口前 4 秒至入口后 16 秒。</p></div>
+                  <div class="mini-wave" aria-label="波形中标出目标入口"><i style="--h:22%"></i><i style="--h:34%"></i><i style="--h:28%"></i><i style="--h:41%"></i><i style="--h:67%"></i><i style="--h:82%"></i><i style="--h:54%"></i><i style="--h:74%"></i><i style="--h:46%"></i><i style="--h:68%"></i><i style="--h:38%"></i></div>
+                </div>
+              </div>
+            </article>
+
+            <article class="step">
+              <div class="step-number">01<span>停在入口</span></div>
+              <div class="step-main">
+                <h3>播放歌曲，在完整一句开始时暂停</h3>
+                <p class="screen-copy">从入口前开始听。听到旋律完整落下的第一下，就按暂停。</p>
+                <div class="detail-grid">
+                  <div class="detail"><b>高亮</b><p>Play A / Pause 与屏幕中央播放线；其余控件继续压暗。</p></div>
+                  <div class="detail"><b>用户动作</b><p>按 Play A，听到目标入口时再次按下暂停。</p></div>
+                  <div class="detail"><b>通过条件</b><p>暂停时间落在 cueTarget 前后 0.8 秒内，进入微调。</p></div>
+                  <div class="detail"><b>即时反馈</b><p>暂停后波形保持在当前位置，显示“距离入口早 / 晚 0.X 秒”。</p></div>
+                </div>
+                <div class="focus-line"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 8v8M15 8v8"/></svg><strong>就地重试</strong><span>偏差超过 0.8 秒时，自动回到入口前 2 秒：“停早了 1.1 秒，再听一次。”不回到课程开头。</span></div>
+              </div>
+            </article>
+
+            <article class="step">
+              <div class="step-number">02<span>微调位置</span></div>
+              <div class="step-main">
+                <h3>轻推唱盘，把第一下放到播放线</h3>
+                <p class="screen-copy">向左或向右轻推唱盘，让入口正好停在屏幕中央。</p>
+                <div class="detail-grid">
+                  <div class="detail"><b>高亮</b><p>Deck A 唱盘与屏幕中央播放线；Cue 仍不可用。</p></div>
+                  <div class="detail"><b>用户动作</b><p>横向拖动唱盘，前后移动波形；每次移动都有短促声音反馈。</p></div>
+                  <div class="detail"><b>通过条件</b><p>当前位置距 cueTarget 不超过 0.12 秒，并保持 0.5 秒。</p></div>
+                  <div class="detail"><b>即时反馈</b><p>显示“还差 0.3 秒”直至变成“入口已对准”。</p></div>
+                </div>
+                <div class="focus-line"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M9 9l-3 3 3 3M15 9l3 3-3 3"/></svg><strong>为什么这样做</strong><span>暂停负责先抓到附近，唱盘负责微调到准确位置。用户之后看到 3D 打碟台时仍使用同一个唱盘动作。</span></div>
+              </div>
+            </article>
+
+            <article class="step">
+              <div class="step-number">03<span>保存 Cue</span></div>
+              <div class="step-main">
+                <h3>给这一秒加一个书签</h3>
+                <p class="screen-copy">入口已经对准。现在按 CUE，把这一秒保存下来。</p>
+                <div class="detail-grid">
+                  <div class="detail"><b>高亮</b><p>只高亮 Deck A 的 CUE 键；按钮位置必须与正式打碟台一致。</p></div>
+                  <div class="detail"><b>用户动作</b><p>在暂停状态按 CUE A。</p></div>
+                  <div class="detail"><b>通过条件</b><p>cueA 写入当前时间，误差不超过 0.12 秒。</p></div>
+                  <div class="detail"><b>即时反馈</b><p>波形出现紫色 Cue 标记，按钮短暂显示“已保存”。</p></div>
+                </div>
+                <div class="focus-line"><svg viewBox="0 0 24 24"><path d="M7 4h10v16l-5-3-5 3z"/></svg><strong>术语出现</strong><span>“Cue 就是给歌曲这一秒加书签。”不出现耳机图标，也不提 Cue / PFL 监听。</span></div>
+              </div>
+            </article>
+
+            <article class="step">
+              <div class="step-number">04<span>离开书签</span></div>
+              <div class="step-main">
+                <h3>继续播放，让音乐离开入口</h3>
+                <p class="screen-copy">按 Play A，让歌曲向前播放。书签会留在原位。</p>
+                <div class="detail-grid">
+                  <div class="detail"><b>高亮</b><p>只高亮 Play A；波形上的 Cue 标记保持可见。</p></div>
+                  <div class="detail"><b>用户动作</b><p>按 Play A 并播放至少 4 秒。</p></div>
+                  <div class="detail"><b>通过条件</b><p>当前播放位置与 cueA 相差至少 4 秒。</p></div>
+                  <div class="detail"><b>声音反馈</b><p>歌曲继续展开，Cue 标记从播放线左侧移开，证明音乐已经离开书签。</p></div>
+                </div>
+              </div>
+            </article>
+
+            <article class="step">
+              <div class="step-number">05<span>返回 Cue</span></div>
+              <div class="step-main">
+                <h3>按 Cue，回到刚才保存的位置</h3>
+                <p class="screen-copy">现在按 CUE A。音乐会停住，并回到你的书签。</p>
+                <div class="detail-grid">
+                  <div class="detail"><b>高亮</b><p>只高亮 CUE A；播放键和唱盘压暗。</p></div>
+                  <div class="detail"><b>用户动作</b><p>播放过程中按下 CUE A。</p></div>
+                  <div class="detail"><b>通过条件</b><p>播放停止，currentTime 回到 cueA，位置误差小于 0.03 秒。</p></div>
+                  <div class="detail"><b>声音反馈</b><p>声音立即停止，播放线与紫色 Cue 标记重新重合。</p></div>
+                </div>
+                <div class="focus-line"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 3-6M4 5v5h5"/></svg><strong>错误处理</strong><span>如果用户尚未离开书签就按 Cue，不推进课程：“先播放离开这里，再回来验证。”</span></div>
+              </div>
+            </article>
+
+            <article class="step">
+              <div class="step-number">06<span>确认入口</span></div>
+              <div class="step-main">
+                <h3>从 Cue 再播放一次，确认声音相同</h3>
+                <p class="screen-copy">按 Play A。如果听到同一个开头，说明入口已经设置成功。</p>
+                <div class="detail-grid">
+                  <div class="detail"><b>高亮</b><p>只高亮 Play A；其他区域仍压暗。</p></div>
+                  <div class="detail"><b>用户动作</b><p>从 Cue 点按 Play A，并完整听 3 秒。</p></div>
+                  <div class="detail"><b>通过条件</b><p>从 cueA 开始播放，连续 3 秒无跳转；系统自动完成课程。</p></div>
+                  <div class="detail"><b>声音反馈</b><p>同一个旋律或人声入口再次出现，屏幕显示“每次都从这里开始”。</p></div>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <section class="bottom-sheet" aria-label="课程完成底部弹窗示意">
+            <div class="character" aria-hidden="true"></div>
+            <h3>入口已经记住了</h3>
+            <p>你找到了一句清楚的开始，保存了 Cue，并从别处准确回到这里。下一课会用这个稳定入口听懂音乐怎样一段一段展开。</p>
+            <div class="result-row"><span>找到清楚入口</span><span>保存 1 个 Cue</span><span>验证准确返回</span></div>
+            <div class="sheet-actions"><button type="button">再做一次</button><button type="button">02 听懂音乐结构 →</button></div>
+            <p class="sheet-note">“再做一次”直接回到寻找入口，不重复显示开场提问弹窗。</p>
+          </section>
+
+          <section class="notes" aria-labelledby="notes-title">
+            <h2 id="notes-title">制作前必须确认</h2>
+            <div class="notes-grid">
+              <div class="note"><strong>先定音乐，再定 cueTarget</strong><p>试听最终曲目后选择完整乐句入口，把精确时间写入课程数据；不能先猜 00:08 再硬套音乐。</p></div>
+              <div class="note"><strong>唱盘微调是真操作</strong><p>拖动唱盘必须改变 currentTime 并发出短促 scrub 声音，不能只移动一张装饰波形。</p></div>
+              <div class="note"><strong>Cue 行为保持单一</strong><p>暂停时保存当前位置；播放时回到已保存位置并暂停。本课程不实现按住临时试听。</p></div>
+            </div>
+          </section>
+        </section>
+      </div>
+    </section>
+  </main>
+<script src="course-concept-highlights.js"></script>
+</body>
+</html>

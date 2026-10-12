@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>FIRST MIX｜05 让转场保持清晰</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../ac-unified.css?v=20261010-ac-5">
+  <style>
+    .lesson{background:rgba(255,255,255,.88)!important}
+    body{visibility:hidden}
+    .controller{height:auto!important;min-height:0!important;padding:10px 12px 14px!important;position:relative}
+    .controller.touring:after{content:"";position:absolute;inset:0;border-radius:24px;background:rgba(20,17,27,.38);pointer-events:none;z-index:3}
+    .mix-console{display:grid;grid-template-columns:minmax(0,1fr) 74px minmax(0,1fr);gap:9px;padding:9px 9px 14px;border-radius:20px;background:#eee9df;overflow:hidden}
+    .channel-strip{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;padding:8px 9px;border-radius:16px;background:#f8f4ec}
+    .channel-name{font-size:11px;letter-spacing:.09em;color:#5d5060}
+    .track-name{width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;font-size:10px;color:#6d5361}
+    .meter{display:grid;grid-template-columns:12px 1fr;gap:7px;align-items:center;width:100%}
+    .meter-track{position:relative;height:50px;border-radius:7px;background:#27222d;overflow:hidden}
+    .meter-fill{position:absolute;left:0;right:0;bottom:0;height:5%;border-radius:6px;background:#c8ff32;transition:height 160ms ease-out,background 160ms ease}
+    .meter-fill.hot{background:#ff6d7e}
+    .meter-value{font:800 9px/1.2 ui-monospace,monospace;color:#352c39;font-variant-numeric:tabular-nums}
+    .knob-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;width:100%}
+    .knob-wrap{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;padding:4px 2px;border-radius:12px}
+    .knob-label{font-size:8px;font-weight:800;color:#56485a;letter-spacing:.05em}
+    .knob{position:relative;width:46px;height:46px;border:4px solid #49444f;border-radius:50%;background:#e5e0d8;box-shadow:0 7px 14px rgba(42,32,46,.15);touch-action:none;user-select:none;cursor:default}
+    .knob:before{content:"";position:absolute;inset:8px;border:2px solid #99909f;border-radius:50%}
+    .knob-mark{position:absolute;left:50%;top:5px;width:4px;height:15px;margin-left:-2px;border-radius:4px;background:#c8ff32;transform-origin:2px 18px;transform:rotate(var(--angle,0deg));box-shadow:0 1px 5px rgba(83,125,0,.45)}
+    .knob-value{min-height:12px;font:800 9px/1 ui-monospace,monospace;color:#3e3242;font-variant-numeric:tabular-nums}
+    .knob.active{cursor:grabbing;box-shadow:0 0 0 4px #7952cf,0 8px 16px rgba(42,32,46,.18)}
+    .ready{background:#c8ff32!important;color:#17131d!important}
+    .tour-highlight{position:relative;z-index:4;outline:3px solid #c8ff32!important;outline-offset:1px;box-shadow:0 0 0 3px rgba(200,255,50,.2)!important}
+    .center-strip{display:flex;flex-direction:column;align-items:center;gap:7px;padding:8px 3px;border-radius:14px;background:#ded8cf}
+    .monitor-title{font-size:9px;font-weight:800;color:#5d5060;letter-spacing:.06em}
+    .monitor-status{display:grid;place-items:center;min-height:40px;width:100%;padding:4px 2px;border-radius:10px;background:#17131d;color:#fff;text-align:center;font-size:8px;line-height:1.35}
+    .eq-note{font-size:8px;line-height:1.35;text-align:center;color:#6d626f}
+    .cross-area{grid-column:1/-1;padding:6px 10px 9px;border-top:1px solid #d6cec3;min-width:0}
+    .cross-labels{display:flex;justify-content:space-between;margin-bottom:5px;font-size:9px;font-weight:900;color:#4e414f}
+    .cross-track{position:relative;height:20px;border-radius:12px;background:#c5bec5;touch-action:none}
+    .cross-track:before{content:"";position:absolute;left:50%;top:4px;bottom:4px;width:2px;background:#93899a}
+    .cross-handle{position:absolute;left:50%;top:50%;width:32px;height:20px;border-radius:8px;background:#27222d;transform:translate(-50%,-50%);box-shadow:0 5px 10px rgba(27,20,31,.24);cursor:default;touch-action:none}
+    .cross-handle.active{background:#7952cf;cursor:grabbing}
+    .beat-guide{margin:0 0 10px;padding:9px 10px;border-radius:14px;background:#17131d;color:#fff}
+    .beat-guide-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;font-size:10px}
+    .beat-guide-head strong{color:#c8ff32}
+    .beat-cells{display:grid;grid-template-columns:repeat(16,minmax(0,1fr));gap:3px}
+    .beat-cells i{display:grid;place-items:center;height:22px;border-radius:6px;background:#61576b;color:#fff;font:700 8px/1 system-ui;font-style:normal}
+    .beat-cells i:nth-child(4n+1){box-shadow:inset 2px 0 0 #9a7de2}
+    .beat-cells i.on{background:#c8ff32;color:#17131d;transform:translateY(-2px)}
+    .beat-cells i.done{background:#7952cf}
+    .beat-hint{margin:6px 0 0;font-size:9px;color:#d6cfda}
+    .deck-button{width:100%;min-width:0;padding:9px 5px!important;font-size:10px!important}
+    .deck-button.armed{background:#7952cf!important;color:#fff!important}
+    .feedback.concept{background:#eee5f7;box-shadow:inset 0 0 0 2px #7952cf}
+    .feedback.concept strong{color:#7952cf}
+    .actions button[hidden]{display:none}
+    @media(max-width:390px){
+      .mix-console{grid-template-columns:minmax(0,1fr) 58px minmax(0,1fr);gap:5px;padding:7px 6px 12px}
+      .channel-strip{padding:7px 6px}.knob{width:40px;height:40px}.knob-mark{transform-origin:2px 15px;height:12px}.knob-row{gap:8px}.eq-note{font-size:7px}
+      .beat-cells{gap:2px}.beat-cells i{height:20px;font-size:7px}.meter{grid-template-columns:10px 1fr;gap:4px}
+    }
+  </style>
+  <link rel="stylesheet" href="../sheet-swipe-dismiss.css?v=20261011-1">
+  <script defer src="../sheet-swipe-dismiss.js?v=20261011-1"></script>
+</head>
+<body>
+<main class="frame">
+  <div class="ambient"></div>
+  <div class="app">
+    <header class="topbar">
+      <a class="icon-button" href="../index.html?view=learning" aria-label="返回学习页">←</a>
+      <div class="logo">FIRST MIX</div>
+      <button class="icon-button" id="resetAll" aria-label="重新开始">↻</button>
+    </header>
+    <div class="course-stack">
+      <div class="question-bubble" id="bubble" hidden><span class="avatar"><img src="../assets/characters/dj-question-avatar-v1.png" alt=""></span><strong>拍点已经对上，为什么两首叠起来还是会浑？</strong></div>
+      <section class="lesson">
+        <nav class="progress"><span class="current">新控件</span><span>对比</span><span>GAIN</span><span>B LOW</span><span>LOW 交换</span><span>推向 B</span></nav>
+        <header class="lesson-head"><h1>05 让转场保持清晰</h1><span class="step-count" id="stepCount">01 / 06</span></header>
+        <div class="instruction"><span class="instruction-icon" id="instructionIcon">看</span><span><strong id="instructionTitle">STEP 1 · 认识 GAIN 与 LOW</strong><span id="instructionCopy">GAIN 对齐基础音量；LOW 决定底鼓和贝斯留给哪一首。</span></span></div>
+        <section class="controller" id="controller">
+          <div class="beat-guide" aria-label="十六拍低频交接标尺">
+            <div class="beat-guide-head"><strong id="beatTitle">LOW 交接</strong><span id="beatStatus">等待开始</span></div>
+            <div class="beat-cells" id="beatCells"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>10</i><i>11</i><i>12</i><i>13</i><i>14</i><i>15</i><i>16</i></div>
+            <p class="beat-hint" id="beatHint">MID 与 HIGH 保持中央，这一课只练基础音量与低频交换。</p>
+          </div>
+          <div class="mix-console">
+            <section class="channel-strip" id="channelA">
+              <span class="channel-name" id="channelNameA">CHANNEL A</span>
+              <div class="meter"><div class="meter-track"><span class="meter-fill" id="meterFillA"></span></div><span class="meter-value" id="meterA">-- dB</span></div>
+              <div class="knob-row">
+                <div class="knob-wrap" id="gainWrapA"><span class="knob-label">GAIN</span><div class="knob" id="gainA" aria-label="A GAIN"><span class="knob-mark"></span></div><span class="knob-value" id="gainValueA">0.0 dB</span></div>
+                <div class="knob-wrap" id="lowWrapA"><span class="knob-label">LOW</span><div class="knob" id="lowA" aria-label="A LOW"><span class="knob-mark"></span></div><span class="knob-value" id="lowValueA">0.0 dB</span></div>
+              </div>
+              <span class="track-name">Nujabes · Beat Laments</span>
+              <button class="deck-button" id="playA" disabled>PLAY A</button>
+            </section>
+            <section class="center-strip">
+              <span class="monitor-title">MIXER</span>
+              <div class="monitor-status" id="monitorStatus">MID / HIGH<br>保持中央</div>
+              <span class="eq-note">本课不操作<br>MID / HIGH</span>
+            </section>
+            <section class="channel-strip" id="channelB">
+              <span class="channel-name" id="channelNameB">CHANNEL B</span>
+              <div class="meter"><div class="meter-track"><span class="meter-fill" id="meterFillB"></span></div><span class="meter-value" id="meterB">-- dB</span></div>
+              <div class="knob-row">
+                <div class="knob-wrap" id="gainWrapB"><span class="knob-label">GAIN</span><div class="knob" id="gainB" aria-label="B GAIN"><span class="knob-mark"></span></div><span class="knob-value" id="gainValueB">+4.0 dB</span></div>
+                <div class="knob-wrap" id="lowWrapB"><span class="knob-label">LOW</span><div class="knob" id="lowB" aria-label="B LOW"><span class="knob-mark"></span></div><span class="knob-value" id="lowValueB">0.0 dB</span></div>
+              </div>
+              <span class="track-name">黄金年代 · 十年</span>
+              <button class="deck-button" id="playB" disabled>PLAY B</button>
+            </section>
+            <div class="cross-area" id="crossArea"><div class="cross-labels"><span>A</span><span>CROSSFADER</span><span>B</span></div><div class="cross-track" id="crossTrack"><span class="cross-handle" id="crossHandle"></span></div></div>
+          </div>
+        </section>
+        <div class="feedback concept" id="feedbackCard"><div><strong id="feedbackTitle">GAIN｜基础电平</strong><p id="feedbackText">先框住真实旋钮：GAIN 用来校准歌曲进入混音器时的基础强度。</p></div><div class="actions"><button id="retry" hidden>重试当前段</button><button id="skip" hidden>跳过试听</button><button class="primary ready" id="action">继续看 LOW</button></div></div>
+      </section>
+    </div>
+  </div>
+  <section class="overlay" id="overlay"><div class="question-card"><img class="question-character" src="../assets/characters/dj-question-thinking-v1.png" alt="DJ 角色思考"><h2>拍点已经对上，为什么两首叠起来还是会浑？</h2><p>两个底鼓和贝斯同时占满低频，总音量也会叠高。这一课亲手把低频从 A 交给 B。</p><button id="start">学习频段交接</button></div></section>
+  <section class="success" id="success" hidden><div class="success-sheet"><img class="success-character" src="../assets/characters/dj-feedback-avatar-v1.png" alt="DJ 角色庆祝完成"><h2>低频已经平稳交给 B</h2><p>你匹配了基础音量，让 B 收低频进入，并用 16 拍完成 LOW 与声音重心的交接。</p><div class="results"><span>GAIN 实测对齐</span><span>16 拍交换 LOW</span><span>声音重心到 B</span></div><div class="sheet-actions"><button class="repeat" id="repeat">再做一次</button><a class="next" id="nextCourse" href="course-06-playable.html">进入 06</a></div></div></section>
+  <audio id="audioA" preload="auto" src="../assets/tracks/course-04-beat-laments.mp3"></audio>
+  <audio id="audioB" preload="auto" src="../assets/tracks/course-04-ten-years.mp3"></audio>
+</main>
+<script src="../course-activity.js?v=20261012-1"></script>
+<script src="../progress-step-navigation.js?v=20261012-1"></script>
+<script>
+(async()=>{
+  try{
+    const source=await fetch('course-03-playable.html').then(r=>r.text());
+    const doc=new DOMParser().parseFromString(source,'text/html');
+    const baseStyle=doc.querySelector('style');
+    if(baseStyle)document.head.insertBefore(baseStyle.cloneNode(true),document.head.querySelector('style'));
+  }finally{document.body.style.visibility='visible'}
+})();
+</script>
+<script>
+(()=>{
+  const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+  const BEAT=60/93,LEAD=16*BEAT,A_CUE=20,B_CUE=20.85-LEAD,A_TARGET=A_CUE+LEAD,B_TARGET=B_CUE+LEAD;
+  const a=$('#audioA'),b=$('#audioB'),cells=$$('#beatCells i'),progress=$$('.progress span');
+  const info=[
+    ['STEP 1 · 认识 GAIN 与 LOW','GAIN 对齐基础音量；LOW 决定底鼓和贝斯留给哪一首。','看'],
+    ['STEP 2 · 先听两个版本','先听低频打架，再听低频只由一边主导。','听'],
+    ['STEP 3 · 匹配基础音量','A 是参考，转动 B GAIN，让两侧真实电平接近。','量'],
+    ['STEP 4 · 让 B 收低频进入','先把 B LOW 收到 -12 dB，再在马上出现的第一拍启动 B。','低'],
+    ['STEP 5 · 用 16 拍交换 LOW','前 8 拍收 A LOW，后 8 拍恢复 B LOW。','换'],
+    ['STEP 6 · 把声音交给 B','持续推动 Crossfader，随后回听 24 秒真实成果。','推']
+  ];
+  let ctx,sourceA,sourceB,inputA,inputB,lowFilterA,lowFilterB,analyserA,analyserB,masterAnalyser,faderA,faderB,master,limiter;
+  let step=0,timers=[],raf=0,compareNormalize=false,dbA=-60,dbB=-60,stableSince=0;
+  let gainDbA=0,gainDbB=4,trackTrimB=0,lowDbA=0,lowDbB=0,cross=0;
+  let introStage=0,lowReady=false,entryBeatShown=0,exchangeHalf=0,exchangeStart=0,faderStart=0,replayStart=0,replaying=false;
+  let lowAEvents=[],lowBEvents=[],crossEvents=[],activeDrag=null;
+  let meterPowerA=0,meterPowerB=0,meterPaintAt=0,gainReadyAt=0,gainFeedbackAt=0,gainFeedbackKey='',gainPassed=false,gainTargetDb=null,loopWindow=null;
+
+  const feedback=(title,copy)=>{const heading=$('#feedbackTitle'),body=$('#feedbackText');if(heading.textContent!==title)heading.textContent=title;if(body.textContent!==copy)body.textContent=copy};
+  const later=(fn,ms)=>{const id=setTimeout(fn,ms);timers.push(id);return id};
+  const clearTimers=()=>{timers.forEach(clearTimeout);timers=[]};
+  const dbToGain=db=>Math.pow(10,db/20);
+  const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
+  const formatDb=db=>(db>0?'+':'')+db.toFixed(1)+' dB';
+  const setParam=(param,value)=>{if(!ctx)return;param.cancelScheduledValues(ctx.currentTime);param.setValueAtTime(value,ctx.currentTime)};
+  const stopAudio=()=>{a.pause();b.pause();$('#playA').textContent='PLAY A';$('#playB').textContent='PLAY B'};
+  const playSafe=async audio=>{try{await audio.play();return true}catch(e){feedback('播放没有启动','再按一次按钮。');return false}};
+  function initAudio(){
+    if(ctx){ctx.resume();return}
+    ctx=new (window.AudioContext||window.webkitAudioContext)();
+    sourceA=ctx.createMediaElementSource(a);sourceB=ctx.createMediaElementSource(b);
+    inputA=ctx.createGain();inputB=ctx.createGain();lowFilterA=ctx.createBiquadFilter();lowFilterB=ctx.createBiquadFilter();
+    analyserA=ctx.createAnalyser();analyserB=ctx.createAnalyser();faderA=ctx.createGain();faderB=ctx.createGain();master=ctx.createGain();masterAnalyser=ctx.createAnalyser();limiter=ctx.createDynamicsCompressor();
+    lowFilterA.type=lowFilterB.type='lowshelf';lowFilterA.frequency.value=lowFilterB.frequency.value=160;
+    analyserA.fftSize=analyserB.fftSize=masterAnalyser.fftSize=1024;
+    limiter.threshold.value=-2;limiter.knee.value=0;limiter.ratio.value=20;limiter.attack.value=.003;limiter.release.value=.12;
+    master.gain.value=.7;
+    sourceA.connect(inputA).connect(analyserA).connect(lowFilterA).connect(faderA).connect(master);
+    sourceB.connect(inputB).connect(analyserB).connect(lowFilterB).connect(faderB).connect(master);
+    master.connect(masterAnalyser).connect(limiter).connect(ctx.destination);
+    applyGain('A',gainDbA);applyGain('B',gainDbB);applyLow('A',lowDbA);applyLow('B',lowDbB);applyCross(cross);
+  }
+  function applyGain(label,db,record=true){
+    db=clamp(db,-12,12);if(label==='A')gainDbA=db;else gainDbB=db;
+    const node=label==='A'?inputA:inputB;if(node)setParam(node.gain,dbToGain(db+(label==='B'?trackTrimB:0)));
+    const angle=-135+(db+12)/24*270;$('#gain'+label).style.setProperty('--angle',angle+'deg');$('#gainValue'+label).textContent=(db>0?'+':'')+db.toFixed(1)+' dB';
+    if(record&&step===2)evaluateGain();
+  }
+  function applyLow(label,db,record=true){
+    db=clamp(db,-24,6);if(step===4&&exchangeHalf===1&&label==='B'){db=Math.min(db,0);if(db>=-.4)db=0}if(label==='A')lowDbA=db;else lowDbB=db;
+    const node=label==='A'?lowFilterA:lowFilterB;if(node)setParam(node.gain,db);
+    const angle=-135+(db+24)/30*270;$('#low'+label).style.setProperty('--angle',angle+'deg');$('#lowValue'+label).textContent=(db>0?'+':'')+db.toFixed(1)+' dB';
+    if(record&&step===3&&label==='B')evaluateLowReady();
+    if(record&&step===4){const target=label==='A'?lowAEvents:lowBEvents;const base=exchangeStart||performance.now();if(!target.length||performance.now()-target.at(-1).stamp>55)target.push({stamp:performance.now(),t:(performance.now()-base)/1000,db})}
+  }
+  function paintLowVisual(label,db){
+    db=clamp(db,-24,6);if(label==='A')lowDbA=db;else lowDbB=db;
+    const angle=-135+(db+24)/30*270;$('#low'+label).style.setProperty('--angle',angle+'deg');$('#lowValue'+label).textContent=(db>0?'+':'')+db.toFixed(1)+' dB';
+  }
+  function applyCross(value,record=true){
+    cross=clamp(value,-1,1);const theta=(cross+1)*Math.PI/4;
+    if(faderA){setParam(faderA.gain,Math.cos(theta));setParam(faderB.gain,Math.sin(theta))}
+    $('#crossHandle').style.left=((cross+1)*50)+'%';
+    if(record&&step===5&&faderStart){if(!crossEvents.length||performance.now()-crossEvents.at(-1).stamp>55)crossEvents.push({stamp:performance.now(),t:(performance.now()-faderStart)/1000,value:cross})}
+  }
+  function paintCrossVisual(value){cross=clamp(value,-1,1);$('#crossHandle').style.left=((cross+1)*50)+'%'}
+  function rmsDb(analyser){
+    if(!analyser)return -60;const data=new Float32Array(analyser.fftSize);analyser.getFloatTimeDomainData(data);let sum=0;for(const v of data)sum+=v*v;const rms=Math.sqrt(sum/data.length);return rms>0?20*Math.log10(rms):-60;
+  }
+  function meter(label,db){
+    const pct=clamp((db+54)/54*100,3,100),fill=$('#meterFill'+label);fill.style.height=pct+'%';fill.classList.toggle('hot',db>-1);$('#meter'+label).textContent=(db<=-59?'--':db.toFixed(1))+' dB';
+  }
+  function resetMeterAverage(){meterPowerA=0;meterPowerB=0;dbA=dbB=-60;meterPaintAt=0}
+  function routeGainPreview(){if(!faderA)return;setParam(faderA.gain,1);setParam(faderB.gain,0)}
+  function setCourseLoop(startA,startB,beats){loopWindow={startA,startB,duration:beats*BEAT}}
+  function keepCourseLoop(){
+    if(!loopWindow)return;const endA=loopWindow.startA+loopWindow.duration,endB=loopWindow.startB+loopWindow.duration;
+    if((!a.paused&&a.currentTime>=endA)||(!b.paused&&b.currentTime>=endB)){
+      const playA=!a.paused,playB=!b.paused;a.currentTime=loopWindow.startA;b.currentTime=loopWindow.startB;if(playA)a.play().catch(()=>{});if(playB)b.play().catch(()=>{});resetMeterAverage();gainReadyAt=performance.now()+700;
+    }
+  }
+  function setStep(next){
+    step=next;clearTimers();stableSince=0;compareNormalize=false;replaying=false;loopWindow=null;
+    const data=info[step];$('#instructionTitle').textContent=data[0];$('#instructionCopy').textContent=data[1];$('#instructionIcon').textContent=data[2];$('#stepCount').textContent='0'+(step+1)+' / 06';
+    progress.forEach((el,i)=>{el.classList.toggle('done',i<step);el.classList.toggle('current',i===step)});
+    $$('.tour-highlight').forEach(el=>el.classList.remove('tour-highlight'));$('#controller').classList.remove('touring');
+    $$('.knob').forEach(el=>{el.classList.remove('active','ready');el.style.cursor='default'});$('#crossHandle').classList.remove('active','ready');$('#crossHandle').style.cursor='default';
+    $('#playB').disabled=true;$('#playB').classList.remove('ready','armed');$('#retry').hidden=true;$('#skip').hidden=true;$('#action').hidden=true;$('#feedbackCard').classList.toggle('concept',step===0);
+    cells.forEach(el=>el.classList.remove('on','done'));
+    if(step===0)startIntro();
+    if(step===1)startCompare();
+    if(step===2)startGain();
+    if(step===3)startLowEntry();
+    if(step===4)startExchange();
+    if(step===5)startFader();
+  }
+  function startIntro(){
+    stopAudio();introStage=0;$('#controller').classList.add('touring');$('#gainWrapB').classList.add('tour-highlight');feedback('GAIN｜先校准基础音量','看电平表，转动 B GAIN，让两首歌进入混音器时的强度接近。');$('#action').hidden=false;$('#action').textContent='继续看 LOW';
+  }
+  function introNext(){
+    if(introStage===0){introStage=1;$('#gainWrapB').classList.remove('tour-highlight');$('#lowWrapA').classList.add('tour-highlight');$('#lowWrapB').classList.add('tour-highlight');feedback('LOW｜把低频交给一首歌','逆时针会减少底鼓和贝斯。两首叠加时，LOW 只让一边主导。');$('#action').textContent='听两个版本'}else setStep(1);
+  }
+  async function startCompare(){
+    initAudio();stopAudio();applyGain('A',0,false);applyGain('B',0,false);applyLow('A',0,false);applyLow('B',0,false);applyCross(0,false);master.gain.value=.68;
+    a.currentTime=A_TARGET;b.currentTime=B_CUE;a.loop=b.loop=false;compareNormalize=true;$('#skip').hidden=false;$('#beatTitle').textContent='响度匹配对比';$('#beatStatus').textContent='浑浊版 · 两边 LOW 全开';feedback('先听浑浊版','两边低频同时全开。注意底鼓边缘和总音量。');
+    await Promise.all([playSafe(a),playSafe(b)]);
+    later(()=>{applyLow('B',-12,false);$('#beatStatus').textContent='清晰版 · B LOW 收起';feedback('现在听清晰版','B 先收低频，A 的底鼓保持清楚；两个版本的整体响度已匹配。')},16*BEAT*1000);
+    later(()=>{stopAudio();$('#skip').hidden=true;setStep(2)},32*BEAT*1000);
+  }
+  function skipCompare(){clearTimers();stopAudio();$('#skip').hidden=true;setStep(2)}
+  async function startGain(){
+    initAudio();stopAudio();gainPassed=false;gainTargetDb=null;gainFeedbackKey='';gainFeedbackAt=0;trackTrimB=0;resetMeterAverage();applyGain('A',0,false);applyGain('B',4,false);applyLow('A',0,false);applyLow('B',-12,false);applyCross(0,false);routeGainPreview();master.gain.value=.68;
+    setParam(master.gain,.68);a.currentTime=A_TARGET;b.currentTime=B_TARGET;await Promise.all([playSafe(a),playSafe(b)]);
+    setCourseLoop(A_TARGET,B_TARGET,32);gainReadyAt=performance.now()+1800;$('#channelNameA').textContent='CHANNEL A · 参考';$('#channelNameB').textContent='CHANNEL B · 调整';$('#gainB').classList.add('ready');$('#gainB').style.cursor='grab';$('#monitorStatus').innerHTML='正在测量<br>对齐 A';$('#beatTitle').textContent='32 拍预听片段';$('#beatStatus').textContent='以 A 为标准 · B 仅预听';feedback('让 B 电平对齐 A','约 21 秒的片段会循环播放，不是整首歌；目标测出后再调整 B GAIN。');$('#retry').hidden=false;$('#retry').textContent='重置 GAIN';
+  }
+  function evaluateGain(){
+    if(step!==2||gainPassed||performance.now()<gainReadyAt)return;const now=performance.now();
+    const show=(key,title,copy)=>{if(key!==gainFeedbackKey||now-gainFeedbackAt>650){gainFeedbackKey=key;gainFeedbackAt=now;feedback(title,copy)}};
+    if(gainTargetDb===null){if(dbA<=-35||dbB<=-35){gainReadyAt=now+300;show('measuring','继续测量','等待代表性声音进入，目标出现后再转动旋钮。');return}const baseA=dbA-gainDbA,baseB=dbB-gainDbB-trackTrimB;trackTrimB=clamp(baseA-baseB,-24,24);gainTargetDb=0;applyGain('B',gainDbB,false);resetMeterAverage();gainReadyAt=now+900;stableSince=0;$('#monitorStatus').innerHTML='对齐 A<br>0.0 dB';$('#beatStatus').textContent='B 对齐 A：-0.5 dB ～ +0.5 dB';feedback('A 是参考，目标已测出','把 B GAIN 转到 0.0 dB，就会与 A 的代表性电平对齐。');return}
+    const offset=gainDbB-gainTargetDb,abs=Math.abs(offset);$('#monitorStatus').innerHTML=`对齐 A ${formatDb(gainTargetDb)}<br>B 当前 ${formatDb(gainDbB)}`;
+    if(abs<=.5){if(!stableSince)stableSince=now;show('hold','已经进入目标范围','保持 1 秒确认旋钮位置。');if(now-stableSince>=1000){gainPassed=true;loopWindow=null;stopAudio();$('#monitorStatus').innerHTML='GAIN 已对齐<br>进入 B LOW';$('#gainB').classList.remove('ready');$('#gainB').style.cursor='default';$('#retry').hidden=true;$('#action').hidden=false;$('#action').textContent='下一步：B LOW';feedback('GAIN 已对齐','短片段已停止。点击下一步，先降低 B 的低频。')}}
+    else{stableSince=0;show(offset>0?'high':'low',offset>0?'B 比 A 还高':'B 比 A 还低',`B 当前 ${formatDb(gainDbB)}；对齐 A 的目标是 ${formatDb(gainTargetDb)}，请${offset>0?'逆时针降低':'顺时针提高'}。`)}
+  }
+  function resetGain(){gainPassed=false;gainTargetDb=null;gainFeedbackKey='';stableSince=0;trackTrimB=0;resetMeterAverage();applyGain('B',4,false);routeGainPreview();a.currentTime=A_TARGET;b.currentTime=B_TARGET;Promise.all([playSafe(a),playSafe(b)]);setCourseLoop(A_TARGET,B_TARGET,32);gainReadyAt=performance.now()+1800;$('#monitorStatus').innerHTML='正在测量<br>对齐 A';$('#gainB').classList.add('ready');$('#gainB').style.cursor='grab';$('#action').hidden=true;feedback('GAIN 已重置','约 21 秒的片段从头开始；A 仍是参考，系统会重新给出 B 的固定目标。')}
+  function startLowEntry(){
+    initAudio();stopAudio();lowReady=false;entryBeatShown=0;$('#channelNameA').textContent='CHANNEL A';$('#channelNameB').textContent='CHANNEL B';$('#monitorStatus').innerHTML='MID / HIGH<br>保持中央';applyLow('A',0,false);applyLow('B',0,false);applyCross(0,false);a.currentTime=A_TARGET-BEAT*4;b.currentTime=B_CUE;$('#lowB').classList.add('ready');$('#lowB').style.cursor='grab';$('#beatTitle').textContent='B 进入前的准备';$('#beatStatus').textContent='先把 B LOW 收到 -12 dB';feedback('先收起 B LOW','逆时针转动 B LOW，暂时减少它的底鼓和贝斯。');$('#retry').hidden=false;$('#retry').textContent='重置 B LOW';
+  }
+  async function evaluateLowReady(){
+    if(step!==3||lowReady||lowDbB>-12)return;lowReady=true;entryBeatShown=13;$('#lowB').classList.remove('ready');$('#lowB').style.cursor='default';a.currentTime=A_TARGET-BEAT*4;await playSafe(a);setCourseLoop(A_TARGET-BEAT*4,B_CUE,16);$('#playB').disabled=false;$('#playB').classList.remove('ready');$('#playB').classList.add('armed');$('#beatStatus').textContent='当前第 13 拍 · 等待回到 1';feedback('看上方拍子判断','拍子会从 13 走到 16，再回到 1；第 1 格亮起时按 PLAY B。按钮不会变色提示答案。')
+  }
+  async function enterB(){
+    if(step!==3||!lowReady)return;
+    if(entryBeatShown!==1){const pressedBeat=entryBeatShown||'—';a.currentTime=A_TARGET-BEAT*4;entryBeatShown=13;feedback(`按在第 ${pressedBeat} 拍`,`上方亮起的是第 ${pressedBeat} 拍。已回到第 13 拍，等第 1 格亮起再按。`);return}
+    b.currentTime=B_CUE;await playSafe(b);$('#playB').disabled=true;$('#playB').classList.remove('armed');feedback('B 在第 1 拍进入','你是看着拍子标尺完成判断的；A 保留低频，B 的中高频开始进入。');later(()=>setStep(4),650);
+  }
+  function resetLowEntry(){stopAudio();lowReady=false;entryBeatShown=0;applyLow('B',0,false);$('#playB').disabled=true;$('#playB').classList.remove('ready','armed');$('#lowB').classList.add('ready');$('#lowB').style.cursor='grab';feedback('B LOW 已重置','重新逆时针转到 -12 dB 以下。')}
+  async function startExchange(){
+    initAudio();if(a.paused){a.currentTime=A_TARGET;await playSafe(a)}if(b.paused){b.currentTime=B_CUE;await playSafe(b)}setCourseLoop(A_TARGET,B_CUE,16);applyLow('A',0,false);applyLow('B',-12,false);applyCross(0,false);exchangeHalf=0;exchangeStart=performance.now();lowAEvents=[{stamp:exchangeStart,t:0,db:0}];lowBEvents=[];unlockExchangeKnob();$('#beatTitle').textContent='16 拍 LOW 交接';$('#beatStatus').textContent='1–8 拍 · 收下 A LOW';feedback('前 8 拍 · 收 A LOW','沿圆周逆时针转动 A LOW，到第 8 拍降至 -12 dB。');$('#retry').hidden=false;$('#retry').textContent='重试当前 8 拍';
+  }
+  function unlockExchangeKnob(){
+    $('#lowA').classList.toggle('ready',exchangeHalf===0);$('#lowB').classList.toggle('ready',exchangeHalf===1);$('#lowA').style.cursor=exchangeHalf===0?'grab':'default';$('#lowB').style.cursor=exchangeHalf===1?'grab':'default';
+  }
+  function checkExchange(){
+    if(step!==4)return;const elapsed=(performance.now()-exchangeStart)/1000;if(elapsed<8*BEAT)return;
+    if(exchangeHalf===0){
+      if(lowDbA<=-12){if(activeDrag?.kind==='knob'){activeDrag.el.classList.remove('active');activeDrag=null}exchangeHalf=1;exchangeStart=performance.now();lowBEvents=[{stamp:exchangeStart,t:0,db:lowDbB}];unlockExchangeKnob();$('#beatStatus').textContent='9–16 拍 · 恢复 B LOW';feedback('后 8 拍 · 恢复 B LOW','沿圆周顺时针把 B LOW 转回中央。')}
+      else{exchangeStart=performance.now();lowAEvents=[{stamp:exchangeStart,t:0,db:lowDbA}];feedback('A LOW 还没有收够','保留当前位置，重新走这 8 拍；继续逆时针转到 -12 dB。')}
+    }else{
+      if(Math.abs(lowDbB)<=1.5){if(activeDrag?.kind==='knob'){activeDrag.el.classList.remove('active');activeDrag=null}$('#lowB').classList.remove('ready');$('#lowB').style.cursor='default';$('#action').hidden=false;$('#action').textContent='把声音交给 B';feedback('LOW 交换完成','A 的低频退出，B 的低频已经接手。下一步推动 Crossfader。');exchangeStart=0}
+      else{exchangeStart=performance.now();lowBEvents=[{stamp:exchangeStart,t:0,db:lowDbB}];unlockExchangeKnob();feedback('B LOW 还没回到中央',lowDbB>0?'已经越过中央，请逆时针回到 0.0 dB。':'保留当前位置，重新走后 8 拍；继续顺时针恢复到 0.0 dB。')}
+    }
+  }
+  function retryExchange(){if(activeDrag?.kind==='knob'){activeDrag.el.classList.remove('active');activeDrag=null}exchangeStart=performance.now();if(exchangeHalf===0)lowAEvents=[{stamp:exchangeStart,t:0,db:lowDbA}];else{if(lowDbB>0)applyLow('B',0,false);lowBEvents=[{stamp:exchangeStart,t:0,db:lowDbB}]}unlockExchangeKnob();feedback(exchangeHalf===0?'重新走前 8 拍':'重新走后 8 拍',exchangeHalf===0?'继续收 A LOW。':'顺时针恢复到 0.0 dB；旋钮会在中央停住。')}
+  function startFader(){
+    initAudio();applyCross(0,false);faderStart=0;crossEvents=[];$('#crossHandle').classList.add('ready');$('#crossHandle').style.cursor='grab';$('#beatTitle').textContent='8 拍推向 B';$('#beatStatus').textContent='按住推子帽持续推动';feedback('把声音重心交给 B','按住推子帽，至少用 4 拍从中央持续推到 B。');$('#retry').hidden=false;$('#retry').textContent='重试推子';
+  }
+  function finishFader(){
+    if(step!==5||!faderStart)return;const duration=(performance.now()-faderStart)/1000;
+    if(cross>=.9&&duration>=4*BEAT){$('#crossHandle').classList.remove('ready');$('#crossHandle').style.cursor='default';$('#retry').hidden=true;feedback('交接动作完成','现在回放你刚才的 GAIN、LOW 与 Crossfader 自动化。');startReplay()}
+    else if(cross>=.9){feedback('推得太快','这次不到 4 拍。点击“重试推子”，再让声音重心平稳移动。')}
+    else feedback('还没有推到 B','继续把推子送到右侧 B 端。');
+  }
+  function resetFader(){faderStart=0;crossEvents=[];applyCross(0,false);$('#crossHandle').classList.add('ready');$('#crossHandle').style.cursor='grab';feedback('推子已回到中央','至少用 4 拍持续推向 B。')}
+  function scheduleEvents(param,events,startTime,offset,mapper=v=>v){
+    if(!events.length)return;const duration=Math.max(events.at(-1).t,.1);events.forEach((event,i)=>{const t=startTime+offset+event.t;const value=mapper(event.db??event.value);if(i===0)param.setValueAtTime(value,t);else param.linearRampToValueAtTime(value,t)});
+    return duration;
+  }
+  async function startReplay(){
+    replaying=true;loopWindow=null;stopAudio();clearTimers();a.currentTime=A_TARGET;b.currentTime=B_CUE;applyLow('A',0,false);applyLow('B',-12,false);applyCross(0,false);master.gain.value=.7;
+    await Promise.all([playSafe(a),playSafe(b)]);const now=ctx.currentTime+.05;
+    const normalizedA=lowAEvents.map(e=>({...e,t:e.t/Math.max(lowAEvents.at(-1)?.t||1,.1)*(8*BEAT)}));
+    const normalizedB=lowBEvents.map(e=>({...e,t:e.t/Math.max(lowBEvents.at(-1)?.t||1,.1)*(8*BEAT)}));
+    const normalizedCross=crossEvents.map(e=>({...e,t:e.t/Math.max(crossEvents.at(-1)?.t||1,.1)*clamp(crossEvents.at(-1)?.t||4*BEAT,4*BEAT,8*BEAT)}));
+    scheduleEvents(lowFilterA.gain,normalizedA,now,0,e=>e);scheduleEvents(lowFilterB.gain,normalizedB,now,8*BEAT,e=>e);
+    normalizedCross.forEach((e,i)=>{const theta=(e.value+1)*Math.PI/4,t=now+16*BEAT+e.t;if(i===0){faderA.gain.setValueAtTime(Math.cos(theta),t);faderB.gain.setValueAtTime(Math.sin(theta),t)}else{faderA.gain.linearRampToValueAtTime(Math.cos(theta),t);faderB.gain.linearRampToValueAtTime(Math.sin(theta),t)}});
+    replayStart=performance.now();window.__replay={a:normalizedA,b:normalizedB,c:normalizedCross};$('#beatTitle').textContent='你的 24 秒成果';$('#beatStatus').textContent='正在回放真实操作';feedback('正在回放成果','先听 A 低频退出，再听 B 低频接手，最后声音重心到 B。');later(finishCourse,24000);
+  }
+  function sample(events,time,key){if(!events.length)return key==='value'?0:0;let prev=events[0],next=events.at(-1);for(const e of events){if(e.t<=time)prev=e;if(e.t>=time){next=e;break}}if(next.t===prev.t)return prev[key];const p=clamp((time-prev.t)/(next.t-prev.t),0,1);return prev[key]+(next[key]-prev[key])*p}
+  function paintReplay(){
+    if(!replaying||!window.__replay)return;const t=(performance.now()-replayStart)/1000,{a:ea,b:eb,c:ec}=window.__replay;
+    if(t<=8*BEAT)paintLowVisual('A',sample(ea,t,'db'));else if(t<=16*BEAT)paintLowVisual('B',sample(eb,t-8*BEAT,'db'));else paintCrossVisual(sample(ec,t-16*BEAT,'value'));
+  }
+  function finishCourse(){replaying=false;stopAudio();localStorage.setItem('first-mix-course-05-complete','true');$('#success').hidden=false}
+  function knobBinding(id,label,type){
+    const el=$('#'+id);let last=0,lastX=0;
+    const angle=e=>{const r=el.getBoundingClientRect();return Math.atan2(e.clientY-(r.top+r.height/2),e.clientX-(r.left+r.width/2))};
+    const delta=(x,y)=>{let d=y-x;while(d>Math.PI)d-=Math.PI*2;while(d<-Math.PI)d+=Math.PI*2;return d};
+    el.addEventListener('pointerdown',e=>{const allowed=(step===2&&type==='gain'&&label==='B'&&$('#action').hidden)||(step===3&&type==='low'&&label==='B'&&!lowReady)||(step===4&&exchangeStart&&type==='low'&&((exchangeHalf===0&&label==='A')||(exchangeHalf===1&&label==='B')));if(!allowed)return;e.preventDefault();activeDrag={kind:'knob',el,label,type};last=angle(e);lastX=e.clientX;el.setPointerCapture(e.pointerId);el.classList.add('active')});
+    window.addEventListener('pointermove',e=>{if(activeDrag?.el!==el)return;e.preventDefault();const now=angle(e),dx=e.clientX-lastX;let d=delta(last,now);last=now;lastX=e.clientX;if(Math.abs(d)<.004&&Math.abs(dx)>0)d=dx/el.getBoundingClientRect().width*Math.PI*2;const change=d*180/Math.PI/270*(type==='gain'?24:30);if(type==='gain')applyGain(label,(label==='A'?gainDbA:gainDbB)+change);else applyLow(label,(label==='A'?lowDbA:lowDbB)+change)});
+    window.addEventListener('pointerup',()=>{if(activeDrag?.el!==el)return;el.classList.remove('active');activeDrag=null;if(step===2)evaluateGain()});
+  }
+  knobBinding('gainB','B','gain');knobBinding('lowA','A','low');knobBinding('lowB','B','low');
+  $('#crossHandle').addEventListener('pointerdown',e=>{if(step!==5||replaying)return;e.preventDefault();activeDrag={kind:'cross'};faderStart=performance.now();crossEvents=[{stamp:faderStart,t:0,value:cross}];$('#crossHandle').classList.add('active');$('#crossHandle').setPointerCapture(e.pointerId)});
+  window.addEventListener('pointermove',e=>{if(activeDrag?.kind!=='cross')return;e.preventDefault();const r=$('#crossTrack').getBoundingClientRect();applyCross(clamp((e.clientX-r.left)/r.width*2-1,-1,1))});
+  window.addEventListener('pointerup',()=>{if(activeDrag?.kind!=='cross')return;$('#crossHandle').classList.remove('active');activeDrag=null;finishFader()});
+  $('#crossTrack').addEventListener('click',e=>{if(e.target===$('#crossTrack')){e.preventDefault();feedback('请拖动推子帽','按住黑色推子帽横向推动，不能点击轨道跳位。')}});
+  $('#playB').addEventListener('click',enterB);
+  $('#start').addEventListener('click',()=>{initAudio();$('#overlay').hidden=true;$('#bubble').hidden=false;setStep(0)});
+  $('#action').addEventListener('click',()=>{if(step===0)introNext();else if(step===2)setStep(3);else if(step===4)setStep(5)});
+  $('#skip').addEventListener('click',skipCompare);
+  $('#retry').addEventListener('click',()=>{if(step===2)resetGain();else if(step===3)resetLowEntry();else if(step===4)retryExchange();else if(step===5)resetFader()});
+  $('#resetAll').addEventListener('click',()=>{clearTimers();stopAudio();compareNormalize=false;replaying=false;activeDrag=null;loopWindow=null;window.__replay=null;$('#success').hidden=true;$('#overlay').hidden=false;$('#bubble').hidden=true;$$('.tour-highlight').forEach(el=>el.classList.remove('tour-highlight'));$('#controller').classList.remove('touring');gainDbA=0;gainDbB=4;trackTrimB=0;lowDbA=lowDbB=0;cross=0;applyGain('A',0,false);applyGain('B',4,false);applyLow('A',0,false);applyLow('B',0,false);applyCross(0,false)});
+  $('#repeat').addEventListener('click',()=>{$('#success').hidden=true;$('#overlay').hidden=true;$('#bubble').hidden=false;setStep(2)});
+  function render(){
+    const rawA=rmsDb(analyserA),rawB=rmsDb(analyserB),powerA=Math.pow(10,rawA/10),powerB=Math.pow(10,rawB/10);meterPowerA=meterPowerA?meterPowerA*.97+powerA*.03:powerA;meterPowerB=meterPowerB?meterPowerB*.97+powerB*.03:powerB;dbA=10*Math.log10(Math.max(meterPowerA,1e-6));dbB=10*Math.log10(Math.max(meterPowerB,1e-6));if(performance.now()>=meterPaintAt){meterPaintAt=performance.now()+100;meter('A',dbA);meter('B',dbB)}keepCourseLoop();
+    if(compareNormalize&&master){const combined=Math.sqrt(Math.pow(dbToGain(dbA),2)+Math.pow(dbToGain(dbB),2)),target=dbToGain(-16),wanted=clamp(target/Math.max(combined,.001),.45,.9);master.gain.setTargetAtTime(wanted,ctx.currentTime,.12)}
+    if(step===2)evaluateGain();
+    if(step===3&&lowReady&&!a.paused){const phase=((a.currentTime-A_CUE)%LEAD+LEAD)%LEAD,beat=Math.floor(phase/BEAT)+1;entryBeatShown=beat;$('#beatCells').dataset.currentBeat=String(beat);cells.forEach((el,i)=>{el.classList.toggle('on',i+1===beat);el.classList.toggle('done',i+1<beat)});$('#beatStatus').textContent=beat===1?'第 1 拍现在 · 按 PLAY B':`当前第 ${beat} 拍 · 等待回到 1`}
+    if(step===4&&exchangeStart){const local=(performance.now()-exchangeStart)/1000,base=exchangeHalf===0?0:8,beat=base+Math.min(8,Math.floor(local/BEAT)+1);cells.forEach((el,i)=>{el.classList.toggle('on',i+1===beat);el.classList.toggle('done',i+1<beat)});checkExchange()}
+    if(step===5&&faderStart&&!replaying){const beat=Math.min(8,Math.floor((performance.now()-faderStart)/1000/BEAT)+1);cells.forEach((el,i)=>{el.classList.toggle('on',i+1===beat);el.classList.toggle('done',i+1<beat)});$('#beatStatus').textContent=`推向 B · 第 ${beat} / 8 拍`}
+    if(replaying){paintReplay();const beat=(Math.floor((performance.now()-replayStart)/1000/BEAT)%16)+1;cells.forEach((el,i)=>{el.classList.toggle('on',i+1===beat);el.classList.toggle('done',i+1<beat)})}
+    raf=requestAnimationFrame(render);
+  }
+  applyGain('A',0,false);applyGain('B',4,false);applyLow('A',0,false);applyLow('B',0,false);applyCross(0,false);window.FirstMixProgressNavigation.bind({go:setStep,stop:stopAudio});render();
+})();
+</script>
+</body>
+</html>

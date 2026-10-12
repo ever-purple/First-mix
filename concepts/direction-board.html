@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FIRST MIX｜视觉方向板</title>
+  <style>
+    @font-face{font-family:Inter;src:url('../fonts/Inter-400.woff2') format('woff2');font-weight:400;font-display:swap}
+    @font-face{font-family:Inter;src:url('../fonts/Inter-600.woff2') format('woff2');font-weight:600;font-display:swap}
+    @font-face{font-family:GochiHand;src:url('../fonts/GochiHand.woff2') format('woff2');font-weight:400;font-display:swap}
+    @font-face{font-family:SmileySans;src:url('../fonts/SmileySans-Oblique.woff2') format('woff2');font-weight:400;font-display:swap}
+    :root{--ink:#17151b;--paper:#f4f1ea;--violet:#7352c7;--lime:#a7f238;--line:rgba(23,21,27,.16);--radius-frame:28px;--radius-panel:16px;--radius-control:14px;color-scheme:light}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:#111014;color:#f6f3ef;font-family:Inter,"Microsoft YaHei UI",sans-serif;-webkit-font-smoothing:antialiased}
+    button,a{font:inherit}
+    a{color:inherit;text-decoration:none}
+    ::selection{background:#a7f238;color:#17151b}
+    :focus-visible{outline:3px solid #a7f238;outline-offset:4px}
+    .shell{width:min(1440px,100%);margin:auto;padding:0 34px 80px}
+    .masthead{min-height:88vh;display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,.52fr);align-items:end;gap:7vw;padding:12vh 0 9vh}
+    .brand{font-family:GochiHand,cursive;font-size:clamp(2rem,4vw,4.4rem);line-height:.86;letter-spacing:.01em}
+    .masthead h1{font-family:SmileySans,"Microsoft YaHei UI",sans-serif;font-size:clamp(3.4rem,8vw,6rem);line-height:.95;letter-spacing:-.03em;font-weight:400;max-width:9ch;margin:12vh 0 30px}
+    .masthead h1 span{display:block;color:#a7f238}
+    .masthead-copy{max-width:34rem;color:#c9c4ce;font-size:1.05rem;line-height:1.8;margin:0}
+    .masthead-side{align-self:end;border-top:1px solid rgba(255,255,255,.22);padding-top:24px;display:grid;gap:30px}
+    .masthead-side p{margin:0;color:#dcd7e0;line-height:1.75}
+    .jump{display:flex;flex-wrap:wrap;gap:10px}
+    .jump a{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.26);border-radius:999px;padding:11px 15px;color:#fff;transition:background .2s ease,border-color .2s ease}
+    .jump a:hover{background:#fff;color:#111014;border-color:#fff}
+    .jump i{width:8px;height:8px;border-radius:50%;background:var(--dot);display:block}
+    .board{position:relative;min-height:940px;margin:0 0 46px;border-radius:var(--radius-frame);overflow:hidden;isolation:isolate}
+    .board-grid{min-height:940px;display:grid;grid-template-columns:minmax(270px,.35fr) minmax(600px,.65fr)}
+    .board-copy{padding:58px 30px 48px 54px;display:flex;flex-direction:column;position:relative;z-index:2}
+    .board-title{font-family:SmileySans,"Microsoft YaHei UI",sans-serif;font-weight:400;font-size:clamp(2.7rem,4.7vw,5rem);line-height:1;letter-spacing:-.03em;margin:0 0 24px;max-width:8ch;word-break:keep-all}
+    .board-copy>.desc{font-size:1rem;line-height:1.75;max-width:31rem;margin:0 0 42px}
+    .principles{display:grid;gap:0;margin-top:auto}
+    .principle{display:grid;grid-template-columns:7rem 1fr;gap:12px;padding:16px 0;border-top:1px solid currentColor}
+    .principle strong{font-size:.75rem;letter-spacing:.09em;text-transform:uppercase}
+    .principle span{font-size:.9rem;line-height:1.55}
+    .palette{display:flex;gap:8px;margin-top:28px}
+    .swatch{height:22px;flex:1;background:var(--c);border:1px solid rgba(0,0,0,.12)}
+    .verdict{margin-top:24px;font-size:.84rem;line-height:1.6;opacity:.75}
+    .board-stage{position:relative;min-height:940px;display:grid;place-items:center;padding:54px}
+    .phone{width:min(430px,100%);aspect-ratio:390/844;position:relative;overflow:hidden;box-shadow:0 38px 80px rgba(0,0,0,.25),0 6px 16px rgba(0,0,0,.12)}
+    .phone svg{display:block}
+    .icon-button{display:grid;place-items:center;width:42px;height:42px;border:0;background:transparent;color:inherit;border-radius:50%}
+    .icon-button svg{width:22px;height:22px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+    .wave{height:104px;display:flex;align-items:center;gap:4px;padding:0 16px;position:relative}
+    .wave i{display:block;flex:1;height:var(--h);min-width:2px;background:currentColor;border-radius:999px;opacity:var(--o,.7)}
+    .wave-marker{position:absolute;top:10px;bottom:10px;left:58%;width:2px;background:currentColor}
+    .wave-marker:before{content:"";position:absolute;left:50%;top:-1px;translate:-50% 0;width:13px;height:13px;border-radius:50%;background:currentColor}
+    .mini-sheet{position:absolute;left:8%;right:8%;bottom:3%;height:21%;padding:24px;z-index:4}
+    .mini-sheet h3{font-size:1.2rem;margin:0 0 7px}
+    .mini-sheet p{font-size:.78rem;line-height:1.5;margin:0;max-width:27ch}
+    .mini-sheet img{position:absolute;right:5%;bottom:87%;width:32%;height:auto;object-fit:contain;filter:drop-shadow(0 16px 18px rgba(0,0,0,.18))}
+    .concept-label{position:absolute;right:22px;top:22px;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;opacity:.6}
+
+    /* A — Acetate workbook */
+    .board-a{background:#ece8dc;color:#19171c}
+    .board-a .board-copy{background:#b8ef53}
+    .board-a .board-stage{background:linear-gradient(145deg,#cfe3ec,#e8e1ef 54%,#f3e6d5)}
+    .board-a .phone{background:#f7f3e9;border-radius:30px;color:#1b1920;border:1px solid rgba(255,255,255,.78)}
+    .a-ui{height:100%;padding:22px 20px 26px;display:grid;grid-template-rows:auto auto auto 1fr auto;gap:22px;position:relative}
+    .a-ui:after{content:"";position:absolute;inset:8.5% -2% 36% 11%;background:rgba(202,188,239,.36);border:1px solid rgba(79,53,126,.15);z-index:0;transform:rotate(-1.4deg);pointer-events:none}
+    .a-ui>*{position:relative;z-index:1}
+    .a-head{display:flex;justify-content:space-between;align-items:center}
+    .a-logo{font-family:GochiHand,cursive;font-size:1.65rem}
+    .a-progress{font-size:.68rem;font-variant-numeric:tabular-nums;color:#5f566a}
+    .a-title{padding-top:18px}
+    .a-title small{font-size:.72rem;letter-spacing:.1em;color:#6f647d}
+    .a-title h2{font-family:SmileySans,"Microsoft YaHei UI",sans-serif;font-size:2.6rem;font-weight:400;line-height:1.08;letter-spacing:-.03em;margin:9px 0 12px}
+    .a-title p{font-size:.88rem;line-height:1.65;margin:0;color:#645f67;max-width:31ch}
+    .a-song{display:grid;grid-template-columns:52px 1fr auto;align-items:center;gap:12px;border-top:1px solid rgba(27,25,32,.22);border-bottom:1px solid rgba(27,25,32,.22);padding:12px 0}
+    .a-cover{width:52px;height:52px;background:#211d29;display:grid;place-items:center;color:#b8ef53;font-family:GochiHand,cursive;font-size:1.1rem;border-radius:13px;transform:rotate(-3deg)}
+    .a-song strong,.a-song span{display:block}
+    .a-song strong{font-size:.82rem}.a-song span{font-size:.69rem;color:#746e77;margin-top:5px}
+    .a-song time{font-size:.72rem;font-variant-numeric:tabular-nums}
+    .a-wave{align-self:start;color:#7653c7;background:rgba(255,255,255,.66);border-radius:var(--radius-panel);padding:26px 14px 16px;box-shadow:0 18px 42px rgba(75,52,108,.11)}
+    .a-wave .wave{height:120px}
+    .a-wave-meta{display:flex;justify-content:space-between;font-size:.68rem;color:#5e5665;padding:0 16px 8px}
+    .a-action{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+    .a-action p{font-size:.75rem;line-height:1.45;margin:0;color:#625b65}
+    .a-action button{border:0;background:#19171c;color:#fff;border-radius:999px;padding:14px 20px;font-weight:600;white-space:nowrap}
+    .a-tabs{position:absolute;right:-2px;top:20%;display:grid;gap:5px;z-index:3}
+    .a-tabs b{display:block;background:#ebe5dc;border-radius:8px 0 0 8px;padding:9px 5px;font-size:.58rem;writing-mode:vertical-rl;letter-spacing:.08em}
+    .a-tabs b.on{background:#b8ef53}
+    .board-a .mini-sheet{background:rgba(250,248,242,.92);border:1px solid rgba(20,18,23,.12);border-radius:14px;color:#1d1a22;box-shadow:0 18px 42px rgba(56,45,72,.2)}
+
+    /* B — Editorial */
+    .board-b{background:#f1eee7;color:#111014}
+    .board-b .board-copy{background:#f1eee7}
+    .board-b .board-title{max-width:7ch}
+    .board-b .board-stage{background:#17151b}
+    .board-b .phone{background:#f3f0e8;color:#151318;border-radius:2px;box-shadow:18px 30px 0 #805ad6,0 42px 85px rgba(0,0,0,.34)}
+    .b-ui{height:100%;display:grid;grid-template-rows:auto auto 1fr auto;padding:22px 20px 20px}
+    .b-head{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #151318;padding-bottom:13px}
+    .b-logo{font-family:GochiHand,cursive;font-size:1.55rem}
+    .b-head span{font-size:.64rem;letter-spacing:.1em}
+    .b-title{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end;border-bottom:1px solid #151318;padding:30px 0 20px}
+    .b-title h2{font-family:SmileySans,"Microsoft YaHei UI",sans-serif;font-size:3.2rem;font-weight:400;line-height:.88;letter-spacing:-.03em;margin:0;white-space:nowrap}
+    .b-title strong{font-family:Inter,sans-serif;font-size:3.6rem;line-height:.8;color:#7952c7;letter-spacing:-.04em}
+    .b-work{display:grid;grid-template-columns:42px 1fr;gap:20px;padding:18px 0 0}
+    .b-rail{border-right:1px solid #151318;display:flex;justify-content:center}
+    .b-rail span{font-size:.62rem;letter-spacing:.12em;writing-mode:vertical-rl}
+    .b-main{display:grid;grid-template-rows:auto 1fr auto;gap:16px}
+    .b-main p{font-size:.82rem;line-height:1.6;margin:0;max-width:27ch}
+    .b-wave{background:#151318;color:#a7f238;padding:9px 7px}
+    .b-wave .wave{height:150px}
+    .b-wave-meta{display:flex;justify-content:space-between;color:#f3f0e8;font-size:.62rem;padding:0 14px 10px}
+    .b-action{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #151318;padding-top:15px}
+    .b-action span{font-size:.7rem;max-width:17ch;line-height:1.4}
+    .b-action button{border:0;background:#a7f238;color:#151318;border-radius:0;padding:14px 18px;font-weight:600}
+    .b-foot{display:flex;justify-content:space-between;align-items:end;padding-top:16px;border-top:1px solid #151318}
+    .b-foot b{font-family:SmileySans,"Microsoft YaHei UI",sans-serif;font-weight:400;font-size:1.2rem}
+    .b-foot span{font-size:.63rem;letter-spacing:.12em}
+    .board-b .mini-sheet{background:#805ad6;color:#fff;border-radius:2px;box-shadow:0 18px 42px rgba(0,0,0,.3)}
+    .board-b .mini-sheet img{width:29%;filter:drop-shadow(0 12px 12px rgba(0,0,0,.28))}
+
+    /* C — Player */
+    .board-c{background:#dfe9f3;color:#17151b}
+    .board-c .board-copy{background:#dfe9f3}
+    .board-c .board-stage{background:linear-gradient(145deg,#9bc9e6,#c9b8ed 55%,#f3d9c7)}
+    .board-c .phone{background:linear-gradient(180deg,rgba(255,255,255,.62),rgba(245,243,249,.9));color:#18151c;border-radius:30px;border:1px solid rgba(255,255,255,.76)}
+    .c-ui{height:100%;padding:20px;display:grid;grid-template-rows:auto auto auto 1fr auto;gap:18px;position:relative;overflow:hidden}
+    .c-ui:before{content:"";position:absolute;width:320px;height:320px;border-radius:44% 56% 58% 42%;background:linear-gradient(145deg,#afed55,#a17ae4 62%,#f3a56d);filter:blur(28px);opacity:.42;right:-35%;top:18%;transform:rotate(22deg)}
+    .c-ui>*{position:relative;z-index:1}
+    .c-head{display:flex;align-items:center;justify-content:space-between}
+    .c-logo{font-family:GochiHand,cursive;font-size:1.55rem}
+    .c-progress{font-size:.68rem;font-variant-numeric:tabular-nums;color:#5f566a}
+    .c-track{display:grid;grid-template-columns:96px 1fr;gap:16px;align-items:end;margin-top:14px}
+    .c-cover{width:96px;aspect-ratio:1;background:#231f2b;color:#a7f238;display:grid;place-items:center;border-radius:13px;box-shadow:0 16px 32px rgba(72,50,101,.22);font-family:GochiHand,cursive;font-size:1.6rem;transform:rotate(-2deg)}
+    .c-track h2{font-family:SmileySans,"Microsoft YaHei UI",sans-serif;font-size:2.25rem;line-height:1.06;letter-spacing:-.03em;font-weight:400;margin:0 0 9px}
+    .c-track p{font-size:.73rem;color:#665f6c;margin:0;line-height:1.5}
+    .c-prompt{font-size:.85rem;line-height:1.65;margin:0;padding:15px;background:rgba(255,255,255,.42);border-radius:var(--radius-panel)}
+    .c-wave{align-self:start;background:rgba(255,255,255,.56);border-radius:16px;padding:14px 10px;color:#714dc3;box-shadow:0 18px 42px rgba(75,52,108,.13)}
+    .c-wave .wave{height:150px}
+    .c-wave-meta{display:flex;justify-content:space-between;padding:0 15px 9px;font-size:.65rem;color:#5f566a}
+    .c-player{display:grid;grid-template-columns:52px 1fr auto;align-items:center;gap:12px;background:#fff;border-radius:16px;padding:10px 12px;box-shadow:0 14px 28px rgba(82,61,111,.14)}
+    .c-play{display:grid;place-items:center;width:48px;height:48px;border:0;border-radius:50%;background:#1c1822;color:#fff}
+    .c-play svg{width:18px;height:18px;fill:currentColor}
+    .c-player strong{display:block;font-size:.78rem}.c-player span{display:block;font-size:.66rem;color:#706878;margin-top:4px}
+    .c-player button:last-child{border:0;background:#a7f238;color:#18151c;border-radius:999px;padding:11px 14px;font-size:.72rem;font-weight:600}
+    .board-c .mini-sheet{background:rgba(251,250,252,.92);color:#1a1720;border-radius:18px;box-shadow:0 22px 48px rgba(62,44,88,.21)}
+
+    .compare{padding:70px 0 10px}
+    .compare h2{font-family:SmileySans,"Microsoft YaHei UI",sans-serif;font-size:clamp(2.5rem,5vw,4.5rem);font-weight:400;letter-spacing:-.03em;margin:0 0 28px}
+    .compare-table{width:100%;border-collapse:collapse;color:#ddd7e1}
+    .compare-table th,.compare-table td{text-align:left;vertical-align:top;padding:18px 16px;border-top:1px solid rgba(255,255,255,.18);line-height:1.55}
+    .compare-table th{font-size:.74rem;letter-spacing:.08em;color:#fff}
+    .compare-table td{font-size:.9rem}
+    .compare-table td:first-child{color:#a7f238;font-weight:600;width:20%}
+    .decision{display:grid;grid-template-columns:1fr auto;align-items:center;gap:30px;margin-top:50px;padding:30px 0;border-top:1px solid rgba(255,255,255,.2);border-bottom:1px solid rgba(255,255,255,.2)}
+    .decision h3{font-size:1.3rem;margin:0 0 8px}.decision p{color:#bdb7c2;margin:0;line-height:1.6}
+    .decision-options{display:flex;gap:10px}
+    .decision-options button{border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;border-radius:999px;padding:13px 18px;cursor:pointer}
+    .decision-options button:hover,.decision-options button[aria-pressed="true"]{background:#a7f238;color:#151318;border-color:#a7f238}
+    .selection-note{min-height:24px;margin:18px 0 0;color:#a7f238;font-size:.9rem}
+    footer{display:flex;justify-content:space-between;gap:20px;color:#89838e;font-size:.74rem;padding-top:70px}
+    @media(max-width:960px){
+      .shell{padding:0 18px 60px}.masthead{grid-template-columns:1fr;gap:50px;min-height:auto;padding:70px 0}.masthead h1{margin:70px 0 24px}.board-grid{grid-template-columns:1fr}.board-copy{padding:44px 26px}.board-stage{min-height:850px;padding:42px 24px}.board-title{max-width:none}.principles{margin-top:22px}.board{min-height:0}.decision{grid-template-columns:1fr}.compare-table{display:block;overflow-x:auto}.compare-table th,.compare-table td{min-width:180px}
+    }
+    @media(max-width:520px){
+      .masthead h1{font-size:3.1rem}.masthead-copy{font-size:.95rem}.board{border-radius:15px}.board-copy{padding:36px 20px}.board-stage{min-height:720px;padding:34px 14px}.phone{max-width:350px}.principle{grid-template-columns:5.6rem 1fr}.decision-options{flex-wrap:wrap}footer{display:block;line-height:1.8}
+    }
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.jump a{transition:none}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="masthead">
+      <div>
+        <div class="brand">FIRST MIX</div>
+        <h1>三种声音，<span>同一堂课。</span></h1>
+        <p class="masthead-copy">这不是三套换色皮肤。每个方向都用“在歌曲里找到起点并保存 Cue”这个相同任务，检验信息层级、操作焦点、音乐气质与学习感是否同时成立。</p>
+      </div>
+      <div class="masthead-side">
+        <p>现有页面保持冻结。选定方向后，只先制作课程 00 的一张关键静态稿；确认后才扩展其他页面，更不会先接回功能。</p>
+        <nav class="jump" aria-label="跳转到视觉方向">
+          <a href="#direction-a" style="--dot:#a7f238"><i></i>A 透明练习册</a>
+          <a href="#direction-b" style="--dot:#805ad6"><i></i>B 音乐编辑部</a>
+          <a href="#direction-c" style="--dot:#9bc9e6"><i></i>C 随身播放器</a>
+        </nav>
+      </div>
+    </header>
+
+    <section class="board board-a" id="direction-a">
+      <div class="board-grid">
+        <div class="board-copy">
+          <h2 class="board-title">透明声音<br>练习册</h2>
+          <p class="desc">它不是另一套主题，而是 C 的柔和声音环境进入专注状态：圆角学习面板展开，透明页只覆盖当前知识点，设备与波形始终是主角。</p>
+          <div class="principles">
+            <div class="principle"><strong>核心气质</strong><span>轻、精确、有触感；不是儿童练习册。</span></div>
+            <div class="principle"><strong>界面语言</strong><span>保留 C 的环境底色，增加米白面板、透明覆页和章节标签。</span></div>
+            <div class="principle"><strong>最适合</strong><span>课程内页、知识点进度、区域高亮和完成标记。</span></div>
+            <div class="principle"><strong>主要风险</strong><span>透明层太多会重新变成玻璃卡片，必须严格限量。</span></div>
+          </div>
+          <div class="palette" aria-label="配色">
+            <span class="swatch" style="--c:#f7f3e9"></span><span class="swatch" style="--c:#1b1920"></span><span class="swatch" style="--c:#b8ef53"></span><span class="swatch" style="--c:#cabbec"></span>
+          </div>
+          <p class="verdict">已确定用于学习内页：与 C 共用圆角、声音组件和环境色，只提升专注度与教学密度。</p>
+        </div>
+        <div class="board-stage">
+          <span class="concept-label">Course 00 · key frame</span>
+          <div class="phone" aria-label="透明声音练习册课程示意">
+            <div class="a-ui">
+              <header class="a-head">
+                <button class="icon-button" aria-label="返回"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+                <span class="a-logo">FIRST MIX</span>
+                <div class="a-progress" aria-label="第 2 步，共 5 步">02 / 05</div>
+              </header>
+              <div class="a-title"><small>歌曲起点 · 2 / 5</small><h2>把第一句<br>记在这里</h2><p>拖动波形，让绿线停在第一句人声开始的位置。</p></div>
+              <div class="a-song"><div class="a-cover">A</div><div><strong>Midnight Window</strong><span>练习片段 · 92 BPM</span></div><time>00:18</time></div>
+              <div class="a-wave">
+                <div class="wave" aria-hidden="true">
+                  <i style="--h:24%"></i><i style="--h:52%"></i><i style="--h:78%"></i><i style="--h:36%"></i><i style="--h:64%"></i><i style="--h:92%"></i><i style="--h:58%"></i><i style="--h:32%"></i><i style="--h:46%"></i><i style="--h:84%"></i><i style="--h:68%"></i><i style="--h:38%"></i><i style="--h:72%"></i><i style="--h:96%"></i><i style="--h:56%"></i><i style="--h:28%"></i><i style="--h:60%"></i><i style="--h:80%"></i><i style="--h:42%"></i><i style="--h:20%"></i><span class="wave-marker"></span>
+                </div>
+                <div class="a-wave-meta"><span>前奏</span><strong>第一句人声</strong><span>副歌</span></div>
+              </div>
+              <div class="a-action"><p>可以反复试听。确定后再保存，不会自动替你完成。</p><button type="button">存下这个点</button></div>
+              <div class="a-tabs" aria-hidden="true"><b>播放</b><b class="on">Cue</b><b>转场</b></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="board board-b" id="direction-b">
+      <div class="board-grid">
+        <div class="board-copy">
+          <h2 class="board-title">独立音乐<br>编辑部</h2>
+          <p class="desc">像一册正在播放的音乐杂志：排版负责制造节奏，黑色音频区负责聚焦，荧光绿只在真正可操作的位置出现。</p>
+          <div class="principles">
+            <div class="principle"><strong>核心气质</strong><span>大胆、直接、有文化感；最不像普通教育 App。</span></div>
+            <div class="principle"><strong>界面语言</strong><span>编辑式栅格、强字级、硬切色块、细分隔线。</span></div>
+            <div class="principle"><strong>最适合</strong><span>品牌首页、课程封面、风格课程与作品展示。</span></div>
+            <div class="principle"><strong>主要风险</strong><span>强排版可能抢过操作，需要始终保证波形与按钮优先。</span></div>
+          </div>
+          <div class="palette" aria-label="配色">
+            <span class="swatch" style="--c:#f3f0e8"></span><span class="swatch" style="--c:#151318"></span><span class="swatch" style="--c:#a7f238"></span><span class="swatch" style="--c:#805ad6"></span>
+          </div>
+          <p class="verdict">识别度最高的挑战方向：如果希望 FIRST MIX 更像一个音乐文化品牌，而不只是学习工具，它最有潜力。</p>
+        </div>
+        <div class="board-stage">
+          <span class="concept-label">Course 00 · key frame</span>
+          <div class="phone" aria-label="独立音乐编辑部课程示意">
+            <div class="b-ui">
+              <header class="b-head"><button class="icon-button" aria-label="返回"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><span class="b-logo">FIRST MIX</span><span>2 / 5</span></header>
+              <div class="b-title"><h2>把第一句<br>记在这里</h2><strong>CUE</strong></div>
+              <div class="b-work">
+                <div class="b-rail"><span>MIDNIGHT WINDOW · 92 BPM</span></div>
+                <div class="b-main">
+                  <p>拖动波形。把绿色标记放在第一句人声刚开始的位置，然后亲自试听。</p>
+                  <div class="b-wave">
+                    <div class="wave" aria-hidden="true">
+                      <i style="--h:28%"></i><i style="--h:48%"></i><i style="--h:74%"></i><i style="--h:40%"></i><i style="--h:88%"></i><i style="--h:58%"></i><i style="--h:34%"></i><i style="--h:68%"></i><i style="--h:94%"></i><i style="--h:52%"></i><i style="--h:36%"></i><i style="--h:76%"></i><i style="--h:62%"></i><i style="--h:84%"></i><i style="--h:46%"></i><i style="--h:30%"></i><i style="--h:70%"></i><i style="--h:98%"></i><i style="--h:54%"></i><i style="--h:24%"></i><span class="wave-marker"></span>
+                    </div>
+                    <div class="b-wave-meta"><span>00:00</span><strong>第一句人声</strong><span>00:34</span></div>
+                  </div>
+                  <div class="b-action"><span>先听准，再保存。没有操作就不会前进。</span><button type="button">存下 Cue</button></div>
+                </div>
+              </div>
+              <footer class="b-foot"><b>正在学习：歌曲起点</b><span>PLAY → FIND → SAVE</span></footer>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="board board-c" id="direction-c">
+      <div class="board-grid">
+        <div class="board-copy">
+          <h2 class="board-title">随身声音<br>播放器</h2>
+          <p class="desc">让歌曲而不是设备先出现。课程像一台专注的随身播放器：封面、曲名、乐句和听感构成主画面，教学藏在播放行为里。</p>
+          <div class="principles">
+            <div class="principle"><strong>核心气质</strong><span>柔和、沉浸、完成度高；最接近参考图里的高级移动应用。</span></div>
+            <div class="principle"><strong>界面语言</strong><span>大面积空气感、歌曲封面、独立播放条、少量柔光。</span></div>
+            <div class="principle"><strong>最适合</strong><span>作品页、音乐备忘、试听和课程中的歌曲比较。</span></div>
+            <div class="principle"><strong>主要风险</strong><span>容易被误认成播放器，需要靠任务语言保持学习目标。</span></div>
+          </div>
+          <div class="palette" aria-label="配色">
+            <span class="swatch" style="--c:#eaf0f5"></span><span class="swatch" style="--c:#17151b"></span><span class="swatch" style="--c:#9bc9e6"></span><span class="swatch" style="--c:#a984df"></span>
+          </div>
+          <p class="verdict">已确定为全站环境层：进入课程后仍保留在 A 面板外缘，让浏览、创作与学习属于同一个产品。</p>
+        </div>
+        <div class="board-stage">
+          <span class="concept-label">Course 00 · key frame</span>
+          <div class="phone" aria-label="随身声音播放器课程示意">
+            <div class="c-ui">
+              <header class="c-head"><button class="icon-button" aria-label="返回"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><span class="c-logo">FIRST MIX</span><span class="c-progress">02 / 05</span></header>
+              <div class="c-track"><div class="c-cover">A</div><div><h2>把第一句<br>记在这里</h2><p>Midnight Window<br>练习片段 · 92 BPM</p></div></div>
+              <p class="c-prompt">拖动波形，把标记放到第一句人声开始的位置。先听一次，确定后再保存。</p>
+              <div class="c-wave">
+                <div class="wave" aria-hidden="true">
+                  <i style="--h:24%"></i><i style="--h:42%"></i><i style="--h:70%"></i><i style="--h:46%"></i><i style="--h:82%"></i><i style="--h:54%"></i><i style="--h:32%"></i><i style="--h:74%"></i><i style="--h:96%"></i><i style="--h:56%"></i><i style="--h:38%"></i><i style="--h:68%"></i><i style="--h:88%"></i><i style="--h:76%"></i><i style="--h:48%"></i><i style="--h:28%"></i><i style="--h:66%"></i><i style="--h:90%"></i><i style="--h:50%"></i><i style="--h:22%"></i><span class="wave-marker"></span>
+                </div>
+                <div class="c-wave-meta"><span>前奏</span><strong>第一句人声</strong><span>副歌</span></div>
+              </div>
+              <div class="c-player">
+                <button class="c-play" type="button" aria-label="播放"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+                <div><strong>从标记试听</strong><span>00:18 / 00:34</span></div><button type="button">存下 Cue</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="compare">
+      <h2>怎么选，不看“哪张更漂亮”</h2>
+      <table class="compare-table">
+        <thead><tr><th>方向</th><th>用户第一印象</th><th>课程清晰度</th><th>品牌识别度</th><th>最适合继续验证</th></tr></thead>
+        <tbody>
+          <tr><td>A 透明练习册</td><td>这是一本可以亲手操作的声音课</td><td>最高</td><td>高</td><td>高亮教学、进度与完成弹窗</td></tr>
+          <tr><td>B 音乐编辑部</td><td>这是一个真正懂音乐文化的品牌</td><td>中高</td><td>最高</td><td>品牌首页、课程封面与作品页</td></tr>
+          <tr><td>C 随身播放器</td><td>这是一个舒服、想一直听下去的音乐产品</td><td>中</td><td>中高</td><td>作品、备忘、试听与沉浸氛围</td></tr>
+        </tbody>
+      </table>
+      <div class="decision">
+        <div><h3>已确定：同一体系，两种状态</h3><p>C 是全站的柔和环境层；进入课程后，课程卡扩展成 A 的圆角专注学习面板。不是换皮，也不会硬切。</p></div>
+        <div class="decision-options" aria-label="已确定的视觉架构">
+          <button type="button" aria-pressed="true">A · 教学内页</button><button type="button" aria-pressed="true">C · 其他页面</button>
+        </div>
+      </div>
+    </section>
+    <footer><span>FIRST MIX · Visual Direction Board</span><span>静态方案 · 不包含产品代码修改</span></footer>
+  </main>
+</body>
+</html>

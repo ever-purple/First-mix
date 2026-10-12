@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FIRST MIX｜00 第一次交接</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../ac-unified.css?v=20261010-ac-5">
+  <style>
+    .lesson{background:rgba(255,255,255,.88)!important}
+    @font-face{font-family:Inter;src:url('../fonts/Inter-400.woff2') format('woff2');font-weight:400;font-display:swap}
+    @font-face{font-family:Inter;src:url('../fonts/Inter-600.woff2') format('woff2');font-weight:600;font-display:swap}
+    @font-face{font-family:GochiHand;src:url('../fonts/GochiHand.woff2') format('woff2');font-weight:400;font-display:swap}
+    :root{--ink:#1c1821;--muted:#6a626e;--paper:#f7f3eb;--white:#fffdf8;--violet:#7753c8;--violet-soft:#e5dcf1;--lime:#a9ef3d;--lime-soft:#e8f7ce;--line:rgba(28,24,33,.14);color-scheme:light}
+    *{box-sizing:border-box}
+    html,body{margin:0;width:100%;height:100%;overflow:hidden}
+    body{display:grid;place-items:center;background:#151218;color:var(--ink);font-family:Inter,"Microsoft YaHei UI","PingFang SC",sans-serif;-webkit-font-smoothing:antialiased}
+    button,input{font:inherit}button{color:inherit}::selection{background:var(--lime);color:var(--ink)}
+    :focus-visible{outline:3px solid var(--lime);outline-offset:3px}
+    .frame{position:relative;width:min(430px,100vw);height:min(900px,100dvh);min-height:650px;overflow:hidden;background:#c8e5e6;box-shadow:0 40px 90px rgba(0,0,0,.4)}
+    .ambient{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+    .ambient:before,.ambient:after{content:"";position:absolute;width:310px;height:300px;border-radius:48% 52% 58% 42%;filter:blur(42px);opacity:.55}
+    .ambient:before{left:-42%;top:-14%;background:#b8ef62}.ambient:after{right:-43%;bottom:-15%;background:#a88ade;transform:rotate(22deg)}
+    .app{position:relative;height:100%;display:grid;grid-template-rows:54px minmax(0,1fr);padding:0 9px 9px}
+    .topbar{display:grid;grid-template-columns:42px 1fr 42px;align-items:center;padding:0 3px;translate:0 8px}
+    .icon-button{width:40px;height:40px;border:0;border-radius:50%;background:rgba(255,255,255,.58);display:grid;place-items:center;text-decoration:none}
+    .icon-button svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .logo{justify-self:center;font-family:GochiHand,cursive;font-size:1.5rem}
+    .course-stack{position:relative;width:100%;height:min(650px,calc(100% - 24px));min-height:0;place-self:center;translate:0 30px}
+    .question-strip{position:absolute;left:calc(50% + 24px);bottom:calc(100% + 14px);z-index:4;translate:-50% 0;width:calc(100% - 110px);min-height:42px;display:flex;align-items:center;padding:7px 14px 7px 16px;border-radius:18px 18px 18px 7px;background:#7652c5;color:#fff;box-shadow:0 12px 26px rgba(35,26,42,.18)}
+    .question-strip:before{content:"";position:absolute;left:-12px;top:50%;width:14px;height:18px;translate:0 -50%;background:#7652c5;clip-path:polygon(100% 0,100% 100%,0 50%)}
+    .question-strip[hidden]{display:none}.question-strip strong{font-size:.78rem;line-height:1.4;letter-spacing:.005em}
+    .question-avatar{position:absolute;left:-78px;top:50%;z-index:2;translate:0 -50%;width:72px;height:72px;pointer-events:none}
+    .question-avatar img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 7px 10px rgba(35,26,42,.22))}
+    .lesson{width:calc(100% - 12px);height:100%;min-height:0;margin:0 auto;display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;gap:12px;padding:14px;background:rgba(248,245,238,.94);border-radius:24px;box-shadow:0 18px 38px rgba(0,0,0,.18);overflow:hidden}
+    .progress{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:2px 3px 0}
+    .progress span{position:relative;padding-top:13px;text-align:center;color:#77707b;font-size:.7rem;line-height:1.15;white-space:nowrap}
+    .progress span:before{content:"";position:absolute;left:50%;top:0;width:8px;height:8px;translate:-50% 0;border-radius:50%;background:#d4ced5}
+    .progress span:not(:last-child):after{content:"";position:absolute;left:calc(50% + 6px);right:calc(-50% + 6px);top:3px;height:1px;background:#d4ced5}
+    .progress span.done{color:#5d5561}.progress span.done:before,.progress span.done:after{background:var(--violet)}
+    .progress span.current{color:var(--ink);font-weight:600}.progress span.current:before{width:19px;border-radius:99px;background:var(--lime)}
+    .lesson-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:start;padding:5px 4px 3px}
+    .lesson-head h1{font-size:1.55rem;line-height:1.12;letter-spacing:-.025em;margin:0}
+    .step-count{font-size:.7rem;letter-spacing:.08em;color:#665d6a;font-variant-numeric:tabular-nums;padding-top:4px}
+    .stage{min-height:0;display:grid;grid-template-rows:auto auto minmax(0,1fr);gap:10px}
+    .instruction{min-height:58px;display:grid;grid-template-columns:38px minmax(0,1fr);align-items:center;gap:12px;padding:9px 4px 11px;border-bottom:1px solid var(--line)}
+    .instruction-icon{width:38px;height:38px;border-radius:12px;background:var(--violet);color:#fff;display:grid;place-items:center}
+    .instruction-icon svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .instruction strong{display:block;font-size:.8rem;line-height:1.35;margin-bottom:2px}
+    .instruction span{display:block;font-size:.75rem;line-height:1.35;color:#675f6b}
+    .sound-path{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+    .sound-path span{min-height:28px;display:grid;place-items:center;border-radius:8px;background:#e8e3e7;color:#5d5661;font-size:.7rem;font-weight:600;transition:background .22s ease,color .22s ease,transform .22s ease}
+    .sound-path span.active{background:var(--lime);color:#253309;transform:translateY(-1px)}
+    .controller-shell{position:relative;min-height:0;display:grid;align-items:start;justify-items:center}
+    .controller{position:relative;width:100%;max-height:100%;aspect-ratio:1.25/1;border-radius:22px;background:#eee9df;box-shadow:0 16px 28px rgba(41,32,47,.18),inset 0 1px 0 rgba(255,255,255,.9);padding:9px;display:grid;grid-template-rows:58px minmax(0,1fr) 52px;gap:7px;overflow:hidden}
+    .screen{border-radius:12px;background:#18151d;color:#fff;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;padding:8px 9px}
+    .wave{height:30px;display:flex;align-items:center;gap:2px;color:var(--lime);overflow:hidden}
+    .wave.b{color:#a98add}.wave i{display:block;flex:1;height:var(--h);border-radius:99px;background:currentColor;transform-origin:center;animation:wave 1.05s ease-in-out infinite alternate;animation-play-state:paused}
+    .wave.playing i{animation-play-state:running}.wave i:nth-child(2n){animation-delay:-.33s}.wave i:nth-child(3n){animation-delay:-.68s}
+    @keyframes wave{to{scale:1 .46}}
+    .screen-status{text-align:center;min-width:60px;font-size:.7rem;line-height:1.32;color:#c6c0cb}
+    .screen-status b{display:block;color:#fff;font-size:.72rem;margin-bottom:2px;font-variant-numeric:tabular-nums}
+    .hardware{display:grid;grid-template-columns:minmax(0,1fr) 64px minmax(0,1fr);gap:7px;min-height:0;overflow:hidden}
+    .deck{min-width:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:5px;padding:4px;border-radius:14px;transition:filter .2s ease,opacity .2s ease,box-shadow .2s ease}
+    .deck-label{text-align:center;font-size:.7rem;letter-spacing:.07em;color:#5d5561}
+    .deck>div:nth-child(2){min-height:0;display:grid;grid-template-rows:minmax(0,1fr) auto;align-items:center;overflow:hidden}
+    .platter{position:relative;width:auto;height:min(86px,100%);max-width:84%;aspect-ratio:1;margin:auto;border-radius:50%;background:radial-gradient(circle,#a88ade 0 8%,#efeadf 9% 30%,#85808a 31% 34%,#f9f5ec 35% 54%,#423d47 55% 58%,#d7d1c8 59% 70%,#28242d 71% 74%,#eee9df 75%);box-shadow:0 7px 13px rgba(36,29,42,.16);transition:transform .3s ease}
+    .deck.is-playing .platter{animation:spin 4.8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+    .platter:after{content:"";position:absolute;left:50%;top:50%;width:17px;height:17px;translate:-50% -50%;border-radius:50%;background:var(--lime);box-shadow:0 0 0 3px rgba(255,255,255,.75)}
+    .track-name{text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#514a55;font-size:.7rem}
+    .play{min-height:32px;border:0;border-radius:10px;background:#29242f;color:#fff;display:flex;align-items:center;justify-content:center;gap:5px;font-size:.75rem;font-weight:600;cursor:pointer;transition:transform .16s ease,background .2s ease,box-shadow .2s ease}
+    .play svg{width:11px;height:11px;fill:currentColor}.play:active{transform:scale(.97)}
+    .mixer{display:grid;grid-template-rows:auto 1fr;min-width:0;padding:4px 0}
+    .mixer-label{text-align:center;font-size:.7rem;letter-spacing:.06em;color:#665f69}
+    .mixer-body{display:grid;grid-template-columns:1fr 1fr;gap:9px;justify-items:center;padding:5px 8px 0}
+    .channel{display:flex;flex-direction:column;align-items:center;gap:4px}
+    .knob{width:14px;height:14px;border-radius:50%;background:linear-gradient(135deg,#615a64,#29252d);position:relative}.knob:after{content:"";position:absolute;left:50%;top:2px;width:1px;height:5px;background:#fff}
+    .fader{width:4px;flex:1;min-height:42px;border-radius:99px;background:#c2bcc0;position:relative}.fader:after{content:"";position:absolute;left:50%;top:45%;translate:-50% -50%;width:14px;height:8px;border-radius:4px;background:#554e58}
+    .handoff{position:relative;display:grid;grid-template-columns:12px 1fr 12px;align-items:center;gap:7px;padding:2px 13% 4px;border-radius:12px;transition:box-shadow .2s ease,background .2s ease}
+    .handoff label{font-size:.56rem;color:#615a65;text-align:center;font-weight:600}
+    .cross{width:100%;accent-color:var(--violet);cursor:pointer}
+    .countdown{position:absolute;left:50%;top:50%;z-index:8;translate:-50% -50%;width:72px;height:72px;border-radius:50%;background:#211c27;color:#fff;display:grid;place-items:center;font-size:2rem;font-weight:600;box-shadow:0 14px 28px rgba(28,24,33,.3);opacity:0;scale:.84;pointer-events:none;transition:opacity .18s ease,scale .18s ease}
+    .countdown.show{opacity:1;scale:1}.countdown.go{background:var(--lime);color:#182007}
+    .beat-dots{position:absolute;left:50%;top:calc(50% + 49px);z-index:8;translate:-50% 0;display:flex;gap:5px;opacity:0}.beat-dots.show{opacity:1}.beat-dots i{width:6px;height:6px;border-radius:50%;background:#cfc8d2}.beat-dots i.on{background:var(--lime)}
+    .controller[data-focus="demo"] .screen,.controller[data-focus="a"] .deck-a,.controller[data-focus="b"] .deck-b,.controller[data-focus="cross"] .handoff{position:relative;z-index:5;box-shadow:0 0 0 4px rgba(169,239,61,.72),0 11px 22px rgba(0,0,0,.16)}
+    .controller:after{content:"";position:absolute;inset:0;z-index:3;border-radius:22px;background:rgba(27,23,31,.42);pointer-events:none;opacity:1;transition:opacity .2s ease}
+    .controller[data-focus="none"]:after{opacity:0}
+    .controller[data-focus="a"] .deck-a,.controller[data-focus="b"] .deck-b,.controller[data-focus="cross"] .handoff{background-color:#f1eddf}
+    .feedback{min-height:72px;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;padding:13px 14px;border-radius:15px;background:rgba(255,255,255,.77)}
+    .feedback strong{display:block;font-size:.8rem;line-height:1.35;margin-bottom:3px}.feedback p{font-size:.75rem;line-height:1.4;color:#645c68;margin:0}
+    .primary{min-width:88px;min-height:38px;border:0;border-radius:11px;background:var(--violet);color:#fff;font-size:.75rem;font-weight:600;padding:0 12px;cursor:pointer}
+    .primary[hidden]{display:none}.license{font-size:.75rem;color:#6d6571;margin-top:2px}
+    .shake{animation:shake .3s ease}@keyframes shake{25%{transform:translateX(-4px)}50%{transform:translateX(4px)}75%{transform:translateX(-2px)}}
+    .success{position:absolute;inset:0;z-index:20;background:rgba(24,20,28,.42);display:flex;align-items:flex-end;opacity:1;transition:opacity .22s ease}
+    .success[hidden]{display:none}
+    .success-sheet{position:relative;width:100%;min-height:330px;padding:94px 20px 18px;background:#7652c5;color:#fff;border-radius:28px 28px 0 0;box-shadow:0 -18px 42px rgba(35,26,42,.24)}
+    .success-character{position:absolute;right:16px;top:-92px;width:178px;height:178px;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 12px 18px rgba(28,20,35,.25))}
+    .success-sheet h2{font-size:1.7rem;line-height:1.12;letter-spacing:-.025em;margin:0 0 8px;max-width:10em}.success-sheet p{font-size:.78rem;line-height:1.5;color:#eee9f7;margin:0 0 14px;max-width:31em}
+    .results{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:15px}.results span{padding:6px 8px;border-radius:8px;background:rgba(255,255,255,.15);font-size:.7rem;font-weight:600}
+    .sheet-actions{display:grid;grid-template-columns:1fr 1.3fr;gap:8px}.sheet-actions button,.sheet-actions a{min-height:42px;border:0;border-radius:12px;font-size:.7rem;font-weight:600;display:grid;place-items:center;text-align:center;text-decoration:none}.repeat{background:#211c28;color:#fff}.next{background:var(--lime);color:#192108}
+    .next-note{margin:9px 0 0!important;color:#f4effa!important;font-size:.75rem!important}.next-note[hidden]{display:none}
+    .question-overlay{position:absolute;inset:0;z-index:14;display:grid;place-items:center;padding:118px 20px 30px;background:rgba(24,20,28,.42)}
+    .question-overlay[hidden]{display:none}
+    .question-card{position:relative;width:min(360px,100%);padding:108px 22px 23px;border-radius:26px;background:#7652c5;color:#fff;box-shadow:0 24px 52px rgba(35,26,42,.28)}
+    .question-character{position:absolute;right:8px;top:-132px;width:224px;height:224px;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 14px 18px rgba(28,20,35,.24));pointer-events:none}
+    .question-card h2{font-size:1.5rem;line-height:1.12;letter-spacing:-.025em;margin:0 0 9px;max-width:11em}.question-card p{font-size:.78rem;line-height:1.5;color:#eee8f8;margin:0 0 17px;max-width:29em}.question-card button{min-height:43px;border:0;border-radius:12px;background:var(--lime);color:#192108;padding:0 15px;font-size:.75rem;font-weight:600}
+    .question-transition{position:fixed;z-index:19;pointer-events:none;background:#7652c5;border-radius:26px;box-shadow:0 24px 52px rgba(35,26,42,.28);will-change:left,top,width,height,border-radius,box-shadow}
+    @media(max-width:520px){.frame{width:100vw;height:100dvh;box-shadow:none}}
+    @media(max-height:800px){
+      .app{grid-template-rows:48px minmax(0,1fr);padding:0 7px 7px}.topbar{scale:.94;translate:0 7px}.course-stack{height:min(580px,calc(100% - 90px))}.question-strip{width:calc(100% - 104px);min-height:40px;padding:6px 11px 6px 14px}.question-avatar{left:-72px;width:66px;height:66px}.lesson{padding:11px;gap:9px}.progress span{font-size:.7rem}.lesson-head{padding:3px 3px 2px}.lesson-head h1{font-size:1.36rem}.stage{gap:8px}.instruction{min-height:50px;padding:7px 3px 9px}.instruction-icon{width:34px;height:34px}.controller{grid-template-rows:50px minmax(0,1fr) 46px;gap:5px;padding:7px}.screen{padding:6px 8px}.platter{height:min(70px,100%);max-width:79%}.play{min-height:28px}.feedback{min-height:62px;padding:10px 11px}.question-overlay{padding-top:100px}.question-card{padding-top:92px}.question-character{top:-112px;width:194px;height:194px}.success-sheet{min-height:300px;padding-top:82px}.success-character{width:154px;height:154px;top:-78px}
+    }
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}.wave i,.deck.is-playing .platter{animation:none!important}}
+  </style>
+  <link rel="stylesheet" href="../sheet-swipe-dismiss.css?v=20261011-1">
+  <script defer src="../sheet-swipe-dismiss.js?v=20261011-1"></script>
+</head>
+<body>
+  <main class="frame" aria-label="课程 00 第一次交接">
+    <div class="ambient" aria-hidden="true"></div>
+    <div class="app">
+      <header class="topbar">
+        <a class="icon-button" href="../index.html?view=learning" aria-label="返回学习页"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></a>
+        <div class="logo">FIRST MIX</div>
+        <button class="icon-button" id="resetTop" type="button" aria-label="重新开始"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 1-2.3-5.7L20 7"/><path d="M20 3v4h-4"/></svg></button>
+      </header>
+
+      <div class="course-stack" id="courseStack">
+        <div class="question-strip" id="questionStrip" hidden aria-live="polite">
+          <span class="question-avatar" aria-hidden="true"><img src="../assets/characters/dj-question-avatar-v1.png" alt=""></span>
+          <strong>怎样换到下一首，音乐不会突然断掉？</strong>
+        </div>
+
+        <section class="lesson" aria-labelledby="lessonTitle">
+        <nav class="progress" aria-label="本节课进度">
+          <span class="current">试听</span><span>A</span><span>B</span><span>相遇</span><span>交给 B</span><span>完成</span>
+        </nav>
+
+        <header class="lesson-head">
+          <h1 id="lessonTitle">00 第一次交接</h1>
+          <span class="step-count" id="stepCount">01 / 06</span>
+        </header>
+
+        <div class="stage">
+          <div class="instruction" id="instruction">
+            <span class="instruction-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+            <span><strong id="promptTitle">先听目标</strong><span id="promptText">注意听：先只有 A，中间两首一起，最后只剩 B。</span></span>
+          </div>
+
+          <div class="sound-path" aria-label="当前声音状态"><span class="active">只有 A</span><span>A + B</span><span>只有 B</span></div>
+
+          <div class="controller-shell">
+            <section class="controller" id="controller" data-focus="demo" aria-label="平面打碟台">
+              <div class="screen">
+                <div class="wave a" id="waveA" aria-hidden="true"><i style="--h:34%"></i><i style="--h:76%"></i><i style="--h:46%"></i><i style="--h:92%"></i><i style="--h:55%"></i><i style="--h:70%"></i><i style="--h:39%"></i><i style="--h:84%"></i></div>
+                <div class="screen-status"><b id="screenTime">00:00</b><span id="screenStatus">听一次目标</span></div>
+                <div class="wave b" id="waveB" aria-hidden="true"><i style="--h:62%"></i><i style="--h:35%"></i><i style="--h:88%"></i><i style="--h:48%"></i><i style="--h:78%"></i><i style="--h:43%"></i><i style="--h:94%"></i><i style="--h:54%"></i></div>
+              </div>
+
+              <div class="hardware">
+                <section class="deck deck-a" id="deckA" aria-label="Deck A">
+                  <div class="deck-label">DECK A</div>
+                  <div><div class="platter" aria-hidden="true"></div><div class="track-name">EDM At Midnight</div></div>
+                  <button class="play" id="playA" type="button" aria-label="播放 Deck A"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span>PLAY A</span></button>
+                </section>
+
+                <section class="mixer" aria-label="Mixer">
+                  <div class="mixer-label">MIXER</div>
+                  <div class="mixer-body" aria-hidden="true">
+                    <div class="channel"><span class="knob"></span><span class="knob"></span><span class="fader"></span></div>
+                    <div class="channel"><span class="knob"></span><span class="knob"></span><span class="fader"></span></div>
+                  </div>
+                </section>
+
+                <section class="deck deck-b" id="deckB" aria-label="Deck B">
+                  <div class="deck-label">DECK B</div>
+                  <div><div class="platter" aria-hidden="true"></div><div class="track-name">Rave Sound</div></div>
+                  <button class="play" id="playB" type="button" aria-label="播放 Deck B"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span>PLAY B</span></button>
+                </section>
+              </div>
+
+              <div class="handoff" id="handoff">
+                <label for="crossfader">A</label><input class="cross" id="crossfader" type="range" min="-100" max="100" value="-100" aria-label="Crossfader，从 A 推向 B"><label for="crossfader">B</label>
+              </div>
+              <div class="countdown" id="countdown" aria-live="assertive">4</div>
+              <div class="beat-dots" id="beatDots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+            </section>
+          </div>
+        </div>
+
+        <aside class="feedback" id="feedback" aria-live="polite">
+          <span><strong id="feedbackTitle">先建立听觉目标</strong><p id="feedbackText">播放示范，听清 A、两首一起、B 三个阶段。</p><small class="license">两段音乐：CC0 1.0</small></span>
+          <button class="primary" id="demoButton" type="button">播放示范</button>
+        </aside>
+        </section>
+      </div>
+    </div>
+
+    <section class="question-overlay" id="questionOverlay" role="dialog" aria-modal="true" aria-labelledby="questionTitle">
+      <div class="question-card">
+        <img class="question-character" src="../assets/characters/dj-question-thinking-v1.png" alt="DJ 角色托着下巴思考">
+        <h2 id="questionTitle">怎样换到下一首，音乐不会突然断掉？</h2>
+        <p>先听一次完整交接：开始只有 A，中间两首一起，最后只剩 B。</p>
+        <button id="startQuestion" type="button">先听一次交接</button>
+      </div>
+    </section>
+
+    <section class="success" id="success" hidden aria-labelledby="successTitle">
+      <div class="success-sheet">
+        <img class="success-character" src="../assets/characters/dj-feedback-avatar-v1.png" alt="DJ 角色竖起拇指表示完成">
+        <h2 id="successTitle">你把 A 交给了 B</h2>
+        <p>第一首已经退出，第二首正在继续。你亲手完成了一次最基础的交接。</p>
+        <div class="results"><span>启动两条 Deck</span><span>使用 Crossfader</span><span>完成 1 次交接</span></div>
+        <div class="sheet-actions"><button class="repeat" id="repeat" type="button">再做一次</button><a class="next" href="./course-01-playable.html">01 设置开始位置 →</a></div>
+      </div>
+    </section>
+
+    <audio id="audioA" preload="auto" src="../assets/tracks/audition/edm-at-midnight.mp3"></audio>
+    <audio id="audioB" preload="auto" src="../assets/tracks/audition/rave-sound.mp3"></audio>
+  </main>
+
+  <script src="../course-activity.js?v=20261012-1"></script>
+  <script src="../progress-step-navigation.js?v=20261012-1"></script>
+  <script>
+    const $ = selector => document.querySelector(selector);
+    const audioA = $('#audioA');
+    const audioB = $('#audioB');
+    const crossfader = $('#crossfader');
+    const controller = $('#controller');
+    const progress = [...document.querySelectorAll('.progress span')];
+    const soundPath = [...document.querySelectorAll('.sound-path span')];
+    const COUNT_BEAT_MS = 600;
+    const HIT_WINDOW_MS = COUNT_BEAT_MS * .8;
+    const CLIP_A = { start:0, end:16 };
+    const CLIP_B = { start:0, end:16 };
+    let step = 0;
+    let timers = [];
+    let raf = 0;
+    let countdownRaf = 0;
+    let targetAt = 0;
+    let centerHold = 0;
+    let finishHold = 0;
+    let demoRunning = false;
+
+    const lessonCopy = [
+      { title:'先听目标', text:'注意听：先只有 A，中间两首一起，最后只剩 B。', help:'播放 12 秒示范，听清三个声音阶段。', focus:'demo' },
+      { title:'让第一首先走起来', text:'按左边的 Play A。左边这条歌曲通道叫 Deck A。', help:'按下高亮的播放键，让 A 连续播放。', focus:'a' },
+      { title:'等到提示点，让 B 加入', text:'跟着 4、3、2、1，在“现在”亮起时按 Play B。', help:'B 已经准备好；你只需要在提示点启动它。', focus:'b' },
+      { title:'让两首短暂相遇', text:'拖动 Crossfader 到正中央，让 A 和 B 同时被听见。', help:'滑块到中央后停住，听两首歌一起出现。', focus:'cross' },
+      { title:'把声音交给 B', text:'继续把 Crossfader 推到最右边，让 A 平滑退出。', help:'保持同一方向，把横杆推到底。', focus:'cross' },
+      { title:'交接完成', text:'A 已退出，B 正在继续。', help:'你完成了第一次交接。', focus:'none' }
+    ];
+
+    function later(fn, delay){ const id = window.setTimeout(fn, delay); timers.push(id); return id; }
+    function clearScheduled(){ timers.forEach(clearTimeout); timers=[]; cancelAnimationFrame(raf); cancelAnimationFrame(countdownRaf); centerHold=0; finishHold=0; }
+    function formatTime(seconds){ const safe=Math.max(0,seconds||0); return `${String(Math.floor(safe/60)).padStart(2,'0')}:${String(Math.floor(safe%60)).padStart(2,'0')}`; }
+    function setPlaying(deck, playing){ $(`#deck${deck.toUpperCase()}`).classList.toggle('is-playing',playing); $(`#wave${deck.toUpperCase()}`).classList.toggle('playing',playing); }
+    function applyCross(value){
+      const x=Math.max(-100,Math.min(100,Number(value))); const n=(x+100)/200;
+      audioA.volume=Math.cos(n*Math.PI*.5)*.84; audioB.volume=Math.sin(n*Math.PI*.5)*.84;
+      crossfader.value=String(Math.round(x));
+      const zone=x<-28?0:x>28?2:1; soundPath.forEach((item,index)=>item.classList.toggle('active',index===zone));
+      $('#screenStatus').textContent=zone===0?'现在只有 A':zone===1?'两首一起':'现在只有 B';
+    }
+    function animateCross(from,to,duration){
+      cancelAnimationFrame(raf); const started=performance.now();
+      const frame=now=>{const t=Math.min(1,(now-started)/duration);const eased=1-Math.pow(1-t,3);applyCross(from+(to-from)*eased);if(t<1)raf=requestAnimationFrame(frame);};
+      raf=requestAnimationFrame(frame);
+    }
+    async function safePlay(audio){ try{await audio.play();return true;}catch(error){showFeedback('声音没有启动','请再次点击播放；浏览器需要一次明确操作才能发声。',true);return false;} }
+    function resetAudio(){ [[audioA,CLIP_A],[audioB,CLIP_B]].forEach(([audio,clip])=>{audio.pause();audio.currentTime=clip.start;audio.playbackRate=1;}); setPlaying('a',false);setPlaying('b',false);applyCross(-100); }
+    function showFeedback(title,text,isError=false){
+      $('#feedbackTitle').textContent=title;$('#feedbackText').textContent=text;$('#feedback').classList.toggle('is-error',isError);
+      if(isError){$('#feedback').classList.remove('shake');void $('#feedback').offsetWidth;$('#feedback').classList.add('shake');}
+    }
+    async function dismissQuestion(){
+      const overlay=$('#questionOverlay'),card=overlay.querySelector('.question-card'),strip=$('#questionStrip');
+      if(overlay.hidden){strip.hidden=false;return;}
+      strip.hidden=false;strip.style.visibility='hidden';
+      const start=card.getBoundingClientRect(),end=strip.getBoundingClientRect(),block=document.createElement('div');
+      block.className='question-transition';Object.assign(block.style,{left:`${start.left}px`,top:`${start.top}px`,width:`${start.width}px`,height:`${start.height}px`});document.body.append(block);
+      const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches,duration=reduced?0:420,options={duration,easing:'cubic-bezier(.22,1,.36,1)',fill:'forwards'};
+      const blockMotion=block.animate([{left:`${start.left}px`,top:`${start.top}px`,width:`${start.width}px`,height:`${start.height}px`,borderRadius:'26px',boxShadow:'0 24px 52px rgba(35,26,42,.28)'},{left:`${end.left}px`,top:`${end.top}px`,width:`${end.width}px`,height:`${end.height}px`,borderRadius:'16px',boxShadow:'0 12px 26px rgba(35,26,42,.18)'}],options);
+      const cardFade=card.animate([{opacity:1},{opacity:0}],{duration:reduced?0:130,fill:'forwards'}),overlayFade=overlay.animate([{backgroundColor:'rgba(24,20,28,.42)'},{backgroundColor:'rgba(24,20,28,0)'}],{duration:reduced?0:300,fill:'forwards'});
+      await blockMotion.finished.catch(()=>{});overlay.hidden=true;strip.style.visibility='';strip.animate([{opacity:0},{opacity:1}],{duration:reduced?0:120,easing:'ease-out'});block.remove();cardFade.cancel();overlayFade.cancel();
+    }
+    async function startFromQuestion(){if(demoRunning)return;$('#startQuestion').disabled=true;await dismissQuestion();$('#startQuestion').disabled=false;playDemo();}
+    function setStep(next){
+      step=next;clearScheduled();
+      const copy=lessonCopy[step];$('#promptTitle').textContent=copy.title;$('#promptText').textContent=copy.text;$('#stepCount').textContent=`${String(step+1).padStart(2,'0')} / 06`;controller.dataset.focus=copy.focus;
+      progress.forEach((item,index)=>{item.classList.toggle('done',index<step);item.classList.toggle('current',index===step);});
+      $('#demoButton').hidden=step!==0;crossfader.setAttribute('aria-disabled',step===3||step===4?'false':'true');
+      showFeedback(copy.title,copy.help);
+      if(step===2) later(startCountdown,650);
+      if(step===5) completeCourse();
+    }
+    async function playDemo(){
+      if(demoRunning)return;$('#questionOverlay').hidden=true;$('#questionStrip').hidden=false;demoRunning=true;$('#demoButton').disabled=true;$('#demoButton').textContent='试听中';resetAudio();
+      const readyA=await safePlay(audioA);const readyB=await safePlay(audioB);if(!readyA||!readyB){demoRunning=false;$('#demoButton').disabled=false;$('#demoButton').textContent='重新播放';return;}
+      setPlaying('a',true);setPlaying('b',true);controller.dataset.focus='none';showFeedback('现在只有 A','接下来会短暂听到两首一起，然后只剩 B。');
+      later(()=>{animateCross(-100,0,1200);showFeedback('两首一起','注意听 B 怎样进入，而 A 还没有突然消失。');},3900);
+      later(()=>{animateCross(0,100,1400);showFeedback('现在只有 B','A 已经退出，这就是本节要亲手完成的结果。');},7800);
+      later(()=>{resetAudio();demoRunning=false;$('#demoButton').disabled=false;$('#demoButton').textContent='播放示范';setStep(1);},11800);
+    }
+    async function startA(){
+      if(step!==1){wrongControl('这一步只需要操作当前高亮区域。');return;}
+      audioA.currentTime=CLIP_A.start;applyCross(-100);if(!await safePlay(audioA))return;setPlaying('a',true);showFeedback('现在只有 A','先听两秒稳定的 A，然后准备启动 B。');
+      later(()=>setStep(2),2100);
+    }
+    function startCountdown(){
+      if(step!==2)return;const countdown=$('#countdown'),dots=[...$('#beatDots').children];$('#beatDots').classList.add('show');countdown.classList.add('show');targetAt=performance.now()+COUNT_BEAT_MS*4;
+      const draw=now=>{const remaining=targetAt-now;if(remaining<=0){countdown.textContent='现在';countdown.classList.add('go');dots.forEach(dot=>dot.classList.add('on'));if(remaining<-HIT_WINDOW_MS){failTiming(remaining);return;}}else{const passed=Math.min(3,Math.floor((COUNT_BEAT_MS*4-remaining)/COUNT_BEAT_MS));countdown.textContent=String(Math.max(1,4-passed));dots.forEach((dot,index)=>dot.classList.toggle('on',index<=passed));}countdownRaf=requestAnimationFrame(draw);};
+      countdownRaf=requestAnimationFrame(draw);
+    }
+    function failTiming(delta){
+      cancelAnimationFrame(countdownRaf);$('#countdown').classList.remove('show','go');$('#beatDots').classList.remove('show');
+      const beats=Math.max(.1,Math.abs(delta)/COUNT_BEAT_MS).toFixed(1);showFeedback(delta>0?'按早了':'按晚了',`${delta>0?'早':'晚'}了 ${beats} 拍。听完四拍，再跟一次。`,true);later(startCountdown,1150);
+    }
+    async function startB(){
+      if(step!==2){wrongControl('还没到 B；先完成当前高亮的动作。');return;}
+      if(!targetAt){showFeedback('先听四拍','倒数出现后，在“现在”亮起时按 B。',true);return;}
+      const delta=targetAt-performance.now();if(Math.abs(delta)>HIT_WINDOW_MS){failTiming(delta);return;}
+      cancelAnimationFrame(countdownRaf);$('#countdown').classList.remove('show','go');$('#beatDots').classList.remove('show');audioB.currentTime=CLIP_B.start;if(!await safePlay(audioB))return;setPlaying('b',true);showFeedback('B 已经在走','Crossfader 还在 A 端，所以现在听到的仍然只有 A。');later(()=>setStep(3),850);
+    }
+    function wrongControl(text){showFeedback('看高亮的位置',text,true);controller.classList.remove('shake');void controller.offsetWidth;controller.classList.add('shake');}
+    function handleCross(){
+      if(step!==3&&step!==4){applyCross(-100);wrongControl('Crossfader 会在两首歌都启动后解锁。');return;}
+      const value=Number(crossfader.value);applyCross(value);
+      if(step===3){
+        if(Math.abs(value)<=10&&!centerHold){showFeedback('两首一起','停在中央，听清 A 和 B 同时出现。');centerHold=later(()=>setStep(4),1200);}else if(Math.abs(value)>10&&centerHold){clearTimeout(centerHold);centerHold=0;}
+      }else if(step===4){
+        if(value>=96&&!finishHold){showFeedback('现在只有 B','保持在 B 端，让结果自己证明交接成功。');finishHold=later(()=>setStep(5),1300);}else if(value<96&&finishHold){clearTimeout(finishHold);finishHold=0;}
+      }
+    }
+    function completeCourse(){
+      applyCross(100);setPlaying('a',false);localStorage.setItem('first-mix-course-00-complete','true');later(()=>{$('#success').hidden=false;},500);
+    }
+    function resetPractice(){clearScheduled();$('#success').hidden=true;$('#startQuestion').disabled=false;demoRunning=false;$('#demoButton').disabled=false;$('#demoButton').textContent='播放示范';resetAudio();}
+    function resetCourse(){resetPractice();$('#questionOverlay').hidden=false;$('#questionStrip').hidden=true;setStep(0);}
+    function repeatCourse(){resetPractice();$('#questionOverlay').hidden=true;$('#questionStrip').hidden=false;setStep(1);showFeedback('重新练习','直接从启动 A 开始；需要重听问题时，可点右上角重置。');}
+    function keepInsideClip(audio,clip){if(!audio.paused&&audio.currentTime>=clip.end)audio.currentTime=clip.start;}
+    function updateClock(){keepInsideClip(audioA,CLIP_A);keepInsideClip(audioB,CLIP_B);const useB=!audioB.paused,playing=useB?audioB:audioA,clip=useB?CLIP_B:CLIP_A;$('#screenTime').textContent=formatTime(Math.max(0,playing.currentTime-clip.start));requestAnimationFrame(updateClock);}
+
+    $('#demoButton').addEventListener('click',playDemo);
+    $('#startQuestion').addEventListener('click',startFromQuestion);
+    $('#playA').addEventListener('click',startA);
+    $('#playB').addEventListener('click',startB);
+    crossfader.addEventListener('input',handleCross);
+    $('#repeat').addEventListener('click',repeatCourse);
+    $('#resetTop').addEventListener('click',resetCourse);
+    [audioA,audioB].forEach(audio=>audio.addEventListener('error',()=>showFeedback('练习音乐没有载入','请刷新页面后再试；你的进度不会丢失。',true)));
+    setStep(0);window.FirstMixProgressNavigation.bind({go:setStep,stop:resetAudio});updateClock();
+  </script>
+</body>
+</html>

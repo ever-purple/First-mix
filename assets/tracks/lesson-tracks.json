@@ -1,0 +1,21 @@
+[
+  {"course":"intro","deck":"a","file":"assets/tracks/audition/edm-at-midnight.mp3","title":"EDM at Midnight","style":"课程 00 同款","version":"课程音源"},
+  {"course":"intro","deck":"b","file":"assets/tracks/audition/rave-sound.mp3","title":"Rave Sound","style":"课程 00 同款","version":"课程音源"},
+  {"course":"c00","deck":"a","file":"assets/tracks/audition/edm-at-midnight.mp3","title":"EDM at Midnight","style":"第一次交接","version":"课程音源"},
+  {"course":"c00","deck":"b","file":"assets/tracks/audition/rave-sound.mp3","title":"Rave Sound","style":"第一次交接","version":"课程音源"},
+  {"course":"c01","deck":"a","file":"assets/tracks/audition/venus.mp3","title":"Venus","style":"设置开始位置","version":"课程音源"},
+  {"course":"c01","deck":"b","file":"assets/tracks/audition/venus.mp3","title":"Venus · B 练习","style":"同曲双轨练习","version":"课程音源"},
+  {"course":"c02","deck":"a","file":"assets/tracks/audition/course-02-shiki-instrumental.wav","title":"Shiki · Instrumental","style":"听懂音乐结构","version":"课程音源"},
+  {"course":"c02","deck":"b","file":"assets/tracks/audition/course-02-so-far-to-go-vocal.wav","title":"So Far to Go · Vocal","style":"听懂音乐结构","version":"课程音源"},
+  {"course":"c03","deck":"a","file":"assets/tracks/course-03-beat-a.wav","title":"鼓组 A","style":"让两首歌对齐","bpm":93,"version":"课程音源"},
+  {"course":"c03","deck":"b","file":"assets/tracks/course-03-beat-b.wav","title":"伴奏 B","style":"让两首歌对齐","bpm":80,"version":"课程音源"},
+  {"course":"c04","deck":"a","file":"assets/tracks/course-04-beat-laments.mp3","title":"Beat Laments the World","artist":"Nujabes","style":"在正确时间接入","bpm":93,"version":"完整版"},
+  {"course":"c04","deck":"b","file":"assets/tracks/course-04-ten-years.mp3","title":"十年","artist":"黄金年代","style":"在正确时间接入","bpm":93,"version":"完整版"},
+  {"course":"c05","deck":"a","file":"assets/tracks/course-04-beat-laments.mp3","title":"Beat Laments the World","artist":"Nujabes","style":"让转场保持清晰","bpm":93,"version":"完整版"},
+  {"course":"c05","deck":"b","file":"assets/tracks/course-04-ten-years.mp3","title":"十年","artist":"黄金年代","style":"让转场保持清晰","bpm":93,"version":"完整版"},
+  {"course":"c06","deck":"a","file":"assets/tracks/course-06-a-madoromi.mp3","title":"Madoromi","style":"你的第一段 Mix","bpm":72,"version":"完整版"},
+  {"course":"c06","deck":"b","file":"assets/tracks/course-06-b2-all-night.mp3","title":"All Night","style":"你的第一段 Mix","bpm":77,"version":"完整版"},
+  {"course":"c06","deck":"b","file":"assets/tracks/course-06-b1-wo-zhi-zai-hu-ni.mp3","title":"我只在乎你","style":"你的第一段 Mix · 备用 B","bpm":70,"version":"完整版","autoLoad":false},
+  {"course":"c07","deck":"a","file":"assets/tracks/course-06-a-madoromi.mp3","title":"Madoromi","style":"技巧玩法","bpm":72,"version":"完整版"},
+  {"course":"c07","deck":"b","file":"assets/tracks/course-06-b1-wo-zhi-zai-hu-ni.mp3","title":"我只在乎你","style":"技巧玩法","bpm":70,"version":"完整版"}
+]

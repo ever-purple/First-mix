@@ -1,0 +1,192 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FIRST MIX｜04 在正确时间接入</title><style>.beat-guide{margin-top:10px;padding:10px 12px;border-radius:14px;background:#17131d;color:#fff}.beat-guide-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;font-size:11px}.beat-guide-head strong{color:#c8ff32}.beat-cells{display:grid;grid-template-columns:repeat(16,1fr);gap:3px}.beat-cells i{display:grid;place-items:center;height:22px;border-radius:6px;background:#61576b;color:#fff;font:700 9px/1 system-ui;font-style:normal}.beat-cells i:nth-child(4n+1){box-shadow:inset 2px 0 0 #c8ff32}.beat-cells i.on{background:#c8ff32;color:#17131d;transform:translateY(-2px)}.beat-cells i.done{background:#7952cf;color:#fff}.beat-cells i:last-child:after{content:"→ 主段";position:absolute;white-space:nowrap;transform:translate(29px,0);color:#c8ff32}.beat-cells i:last-child{position:relative}.beat-hint{margin:7px 0 0;font-size:10px;color:#d6cfda}.cue-readout{width:100%;margin:-2px 0 4px;padding:4px 6px;border-radius:8px;background:#27222d;color:#fff;font:700 10px/1.2 ui-monospace,monospace;text-align:center;font-variant-numeric:tabular-nums}.platter{transform:rotate(var(--turn,0deg));touch-action:none}.platter.active{transition:none!important}@media(max-width:390px){.beat-cells{gap:2px}.beat-cells i{height:20px;font-size:8px}.beat-cells i:last-child:after{display:none}.cue-readout{font-size:9px}}</style></head>
+<body style="visibility:hidden"><style>.platter{position:relative;overflow:hidden;cursor:grab;user-select:none}.platter:active{cursor:grabbing}.platter-groove{position:absolute;inset:9%;border-radius:50%;border:1px solid rgba(39,34,45,.32);box-shadow:0 0 0 5px rgba(39,34,45,.08),0 0 0 10px rgba(39,34,45,.12),0 0 0 15px rgba(39,34,45,.07)}.platter-mark{position:absolute;left:50%;top:4px;width:5px;height:22px;margin-left:-2.5px;border-radius:4px;background:#c8ff32;box-shadow:0 1px 5px rgba(85,130,0,.55)}.platter-scratch{position:absolute;left:15%;right:15%;top:48%;height:1px;background:rgba(255,255,255,.55);transform:rotate(22deg)}.platter-scratch.s2{left:24%;right:9%;top:59%;opacity:.55;transform:rotate(-31deg)}.platter.turning{filter:brightness(1.05)}.platter.turning .platter-mark{box-shadow:0 0 0 4px rgba(200,255,50,.2),0 1px 8px rgba(85,130,0,.7)}.cue-readout.turning{background:#7952cf;color:#fff}.cue-readout.correct{background:#c8ff32;color:#17131d}.cue-readout.wrong{background:#8b3543;color:#fff}.controller .tempo-wrap{display:none}.decks{align-items:start!important}.deck{min-width:0;gap:6px!important}.deck .track{width:100%;max-width:100%;min-height:16px;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;font-size:10px!important;line-height:16px}.deck-actions{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:5px!important}.deck-actions button{width:100%;min-width:0!important;padding:10px 3px!important;white-space:nowrap;font-size:10px!important}.cue-readout{margin:0 0 2px!important;padding:5px 3px!important;font-size:9px!important;letter-spacing:0!important}.mixer{min-width:58px}.mixer .sync{padding-inline:5px!important;font-size:10px!important}.beat-guide{clear:both}</style><main class="frame"><div class="ambient"></div><div class="app">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="../ac-unified.css?v=20261010-ac-5">
+<header class="topbar"><a class="icon-button" href="../index.html?view=learning" aria-label="返回学习页">←</a><div class="logo">FIRST MIX</div><button class="icon-button" id="reset" aria-label="重新开始">↻</button></header>
+<div class="course-stack"><div class="question-bubble" id="bubble" hidden><span class="avatar"><img src="../assets/characters/dj-question-avatar-v1.png" alt=""></span><strong>怎样让 B 段的主段在计划位置准时出现？</strong></div>
+<section class="lesson"><nav class="progress"><span class="current">唱盘微调</span><span>试听</span><span>Cue B</span><span>Cue A</span><span>接入</span><span>确认</span></nav><header class="lesson-head"><h1>04 在正确时间接入</h1><span class="step-count" id="count">01 / 06</span></header>
+<div class="instruction"><span class="instruction-icon" id="instructionIcon">调</span><span><strong id="title">STEP 1 · 转动唱盘微调</strong><span id="copy">顺时针推进 B，逆时针拖慢 B；松手后恢复原速，只改变拍点位置。</span></span></div>
+<section class="controller"><style>.controller{height:auto!important;min-height:0!important;padding-bottom:12px!important}.beat-guide{margin:0 0 12px!important}.beat-cells{align-items:stretch;grid-template-columns:repeat(16,minmax(0,1fr))!important}.beat-cells i{box-sizing:border-box;width:100%;height:24px!important;transform:none!important}.beat-cells i:nth-child(4n+1){box-shadow:none!important;border:2px solid #c8ff32}.beat-cells i:last-child:after{display:none!important}.decks{height:auto!important;min-height:0!important;align-items:start!important;margin-bottom:0!important;padding-bottom:0!important}.deck,.mixer{height:auto!important;min-height:0!important}.mixer{align-self:start!important;display:flex!important;flex-direction:column!important}.mixer .channels{height:112px!important;min-height:112px!important;flex:none!important}.mixer .channel{height:100%!important}.feedback{margin-top:10px!important}</style><div hidden><b id="stateA"></b><span id="time"></span><div id="waveB"></div><b id="stateB"></b><span id="phase"></span></div><div class="beat-guide" aria-label="十六拍提前量标尺"><div class="beat-guide-head"><strong>B CUE · 引入第一拍</strong><span>16 拍后进入主段</span></div><div class="beat-cells" id="beatCells"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>10</i><i>11</i><i>12</i><i>13</i><i>14</i><i>15</i><i>16</i></div><p class="beat-hint"><strong>提前量：</strong>B 从 Cue 走到主段需要 16 拍。每 4 拍是一小节；第 16 拍走完，主段在下一个第一拍出现。</p></div>
+<div class="decks"><div class="deck" id="deckA"><span class="deck-label">DECK A</span><div class="bpm"><span>93.0</span> BPM</div><div class="platter" id="platterA"><span class="platter-groove"></span><span class="platter-mark"></span><span class="platter-scratch s1"></span><span class="platter-scratch s2"></span></div><div class="cue-readout" id="readoutA">等待第 1 拍</div><div class="track" title="Beat Laments the World · Nujabes">Nujabes · Beat Laments</div><div class="deck-actions"><button id="playA" disabled>PLAY</button><button id="cueA" disabled>CUE</button></div></div><div class="mixer"><span>MIXER</span><div class="channels"><i class="channel"></i><i class="channel"></i></div><button class="sync" id="syncB" disabled>SYNC</button></div><div class="deck deck-b" id="deckB"><span class="deck-label">DECK B</span><div class="bpm"><span>93.0</span> BPM</div><div class="platter" id="platterB"><span class="platter-groove"></span><span class="platter-mark"></span><span class="platter-scratch s1"></span><span class="platter-scratch s2"></span></div><div class="cue-readout" id="readoutB">等待“93 年我来到……”</div><div class="track" title="十年 · 黄金年代">黄金年代 · 十年</div><div class="deck-actions"><button id="playB" disabled>PLAY</button><button id="cueB" disabled>CUE</button></div></div></div>
+<div class="tempo-wrap"><label id="phraseLabel">先认识唱盘微调，再开始操作</label><input class="tempo" id="phraseProgress" type="range" min="0" max="16" step="1" value="0" disabled></div></section>
+<div class="feedback" id="feedbackCard"><div><strong id="feedbackTitle">B 唱盘微调</strong><p id="feedbackText">B 晚了就顺时针推进，B 早了就逆时针拖慢。</p></div><div class="actions"><button id="cueReset" hidden>重置位置</button><button id="skipPreview" hidden>跳过试听</button><button class="primary ready" id="action">开始练习</button></div></div></section></div></div>
+<section class="overlay" id="overlay"><div class="question-card"><img class="question-character" src="../assets/characters/dj-question-thinking-v1.png" alt="DJ 角色思考"><h2>两首歌速度一样，为什么拍点还会错开？</h2><p>Sync 统一速度后，拍点仍可能一前一后。这一课用唱盘短推、短拉，把 B 的拍点贴回 A。</p><button id="start">学习唱盘微调</button></div></section>
+<section class="success" id="success" hidden><div class="success-sheet"><img class="success-character" src="../assets/characters/dj-feedback-avatar-v1.png" alt="DJ 角色庆祝完成"><h2>B 段在目标位置接入了</h2><p>你完成了 Cue、第一拍和唱盘贴拍；系统随后用低、中、高频自动完成成熟交接。</p><div class="results"><span>Cue 与第一拍准确</span><span>唱盘相位对齐</span><span>自动频段交接</span></div><div class="sheet-actions"><button class="repeat" id="repeat">再做一次</button><button class="next" onclick="location.href='course-05-playable.html'">05 让转场保持清晰 →</button></div></div></section>
+<audio id="audioA" preload="auto" src="../assets/tracks/course-04-beat-laments.mp3"></audio><audio id="audioB" preload="auto" src="../assets/tracks/course-04-ten-years.mp3"></audio></main>
+<script src="../course-activity.js?v=20261012-1"></script>
+<script src="../progress-step-navigation.js?v=20261012-1"></script>
+<script>
+const courseSurfaceStyle=document.createElement('style');courseSurfaceStyle.textContent='.lesson{background:rgba(255,255,255,.88)!important}';document.head.append(courseSurfaceStyle);
+(async()=>{const source=await fetch('course-03-playable.html').then(r=>r.text()),doc=new DOMParser().parseFromString(source,'text/html');document.head.append(doc.querySelector('style').cloneNode(true));const extra=document.createElement('style');extra.textContent='.feedback.concept{background:#eee5f7;box-shadow:inset 0 0 0 2px var(--violet)}.feedback.concept strong{color:var(--violet)}.deck-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;width:100%}.deck-actions button{min-width:0;padding-inline:7px}.platter.ready{box-shadow:0 0 0 4px var(--lime)}.platter.active{box-shadow:0 0 0 4px var(--violet)}button.ready{background:var(--lime)!important;color:#17131d!important}.sync.active{background:var(--violet)!important;color:white!important}.tour-highlight{position:relative;z-index:4;outline:4px solid var(--lime)!important;outline-offset:4px;box-shadow:0 0 0 8px rgba(200,255,50,.22)!important}.controller.touring:after{content:"";position:absolute;inset:0;background:rgba(20,17,27,.34);border-radius:24px;pointer-events:none;z-index:3}.controller{position:relative}.controller .screen,.controller .decks,.controller .tempo-wrap{position:relative}.tour-highlight{pointer-events:none}@media(max-width:390px){.deck-actions{grid-template-columns:1fr}.deck-actions button{font-size:10px}}';document.head.append(extra);document.body.style.visibility='visible';const $=s=>document.querySelector(s),a=$('#audioA'),b=$('#audioB'),progress=[...document.querySelectorAll('.progress span')],BEAT=60/93,LEAD=16*BEAT,A_CUE=20,B_VOCAL=20.85,B_CUE=B_VOCAL-LEAD;let step=0,timers=[],syncReady=false,aReady=false,tour=0;const info=[['STEP 1 · 认识操作区域','正式练习前，先看 CUE、唱盘和 SYNC 在模型上的位置与作用。','看'],['STEP 2 · 先确定交接目标','先听 A 的交接位置，再听 B 希望出现的主段。此时只听，不操作。','听'],['STEP 3 · 找到 B Cue','从 B 主段往前找 16 拍。转动右侧唱盘，停在引入第一拍。','B'],['STEP 4 · 找到 A Cue','从 A 的目标交接点往前找 16 拍。转动左侧唱盘，停在第一拍。','A'],['STEP 5 · Sync 后启动','先按 SYNC B，再播放 A；在 A 的第一拍按 PLAY B。','进'],['STEP 6 · 在 16 拍内微调','前 4 拍听位置，轻微偏差就短推或短拉 B 唱盘。','调']];
+const later=(fn,ms)=>{const x=setTimeout(fn,ms);timers.push(x)},clear=()=>{timers.forEach(clearTimeout);timers=[]},stop=()=>{a.pause();b.pause();$('#deckA').classList.remove('playing');$('#deckB').classList.remove('playing')};function feedback(t,c){$('#feedbackTitle').textContent=t;$('#feedbackText').textContent=c}function setStep(n){step=n;clear();const x=info[n];$('#title').textContent=x[0];$('#copy').textContent=x[1];$('#instructionIcon').textContent=x[2];$('#count').textContent=`0${n+1} / 06`;progress.forEach((el,i)=>{el.classList.toggle('done',i<n);el.classList.toggle('current',i===n)});['playA','playB','cueA','cueB','syncB'].forEach(id=>{$('#'+id).disabled=true;$('#'+id).classList.remove('ready')});$('#playA').textContent='PLAY';$('#playB').textContent='PLAY';$('#action').hidden=n!==0;$('#feedbackCard').classList.toggle('concept',n===0);$('#platterA').classList.toggle('ready',false);$('#platterB').classList.toggle('ready',n===5);$('#platterA').style.cursor='default';$('#platterB').style.cursor=n===5?'grab':'default';if(n===0){stop();feedback('B 唱盘微调','B 晚了就顺时针推进，B 早了就逆时针拖慢。');$('#action').textContent='开始练习'}if(n===1)previewTargets();if(n===2){stop();b.currentTime=Math.max(0,B_VOCAL-BEAT*4);$('#playB').disabled=false;$('#playB').classList.add('ready');feedback('先播放 B 段','听到“93 年我来到 Westcoast，开始听到 Hiphop”开口时再次按 PLAY 暂停。')}if(n===3){stop();document.querySelectorAll('#beatCells i').forEach(el=>el.classList.remove('done','on'));$('.beat-guide-head span').textContent='第 1 拍马上出现';a.currentTime=Math.max(0,A_CUE+LEAD-BEAT*.75);$('#playA').disabled=false;$('#playA').classList.add('ready');feedback('A 的第一拍马上出现','按 PLAY 后不到 1 拍；标尺亮回第 1 拍时立即按 PAUSE。')}if(n===4){a.currentTime=Number($('#platterA').dataset.savedCue||$('#platterA').dataset.cueTime||A_CUE);b.currentTime=Number($('#platterB').dataset.savedCue||$('#platterB').dataset.cueTime||B_CUE);syncReady=false;aReady=false;$('#syncB').disabled=false;$('#syncB').classList.add('ready');feedback('按顺序准备','先 SYNC B，再 PLAY A，最后在第一拍 PLAY B。')}if(n===5){nudgeCorrection=0;resultScheduled=false;feedback('B 接入偏慢 · 转动唱盘','顺时针短推 B 唱盘；真实相位误差对齐后才会进入成果试听。')}}
+function previewTargets(){const skip=$('#skipPreview'),CLIP=16;stop();skip.hidden=false;feedback('完整试听 A 段','先听完课程使用的 A 段，再完整听 B 段；听过两段后才找 Cue。');a.currentTime=A_CUE;a.volume=.9;a.play();$('#deckA').classList.add('playing');later(()=>{a.pause();$('#deckA').classList.remove('playing');feedback('完整试听 B 段','现在听完课程使用的 B 段，注意引入与主段的位置。');b.currentTime=B_CUE;b.volume=.9;b.play();$('#deckB').classList.add('playing')},CLIP*1000);later(()=>{skip.hidden=true;stop();setStep(2)},CLIP*2000);skip.onclick=()=>{skip.hidden=true;stop();setStep(2)}}
+function angle(el,e){const r=el.getBoundingClientRect();return Math.atan2(e.clientY-(r.top+r.height/2),e.clientX-(r.left+r.width/2))}function deltaAngle(a,b){let d=b-a;while(d>Math.PI)d-=Math.PI*2;while(d<-Math.PI)d+=Math.PI*2;return d}function bindCue(el,audio,at,label,target,button){let down=false,last=0,total=0;const readout=$('#readout'+label);function draw(){const dir=total>.03?'顺时针':total<-.03?'逆时针':'未转动';const deg=Math.round(Math.abs(total*180/Math.PI));el.style.setProperty('--turn',`${Math.round(total*180/Math.PI)}deg`);readout.textContent=`00:${String(audio.currentTime.toFixed(1)).padStart(4,'0')} · ${dir} ${deg}°`}el.onpointerdown=e=>{if(step!==at)return;if(!audio.paused){feedback('先暂停歌曲','快到目标位置时再次按 PLAY 暂停，然后才能转动唱盘。');return}down=true;last=angle(el,e);total=0;button.disabled=true;button.classList.remove('ready');readout.className='cue-readout turning';el.setPointerCapture(e.pointerId);el.classList.add('active','turning');draw()};el.onpointermove=e=>{if(!down)return;const now=angle(el,e),d=deltaAngle(last,now);last=now;total+=d;audio.currentTime=Math.max(0,audio.currentTime+d*.38);draw();feedback(total>=0?'顺时针 · 时间向前':'逆时针 · 时间向后',`当前 ${audio.currentTime.toFixed(1)} 秒，目标 Cue 是 ${target.toFixed(1)} 秒。`)};el.onpointerup=()=>{if(!down)return;down=false;el.classList.remove('active','turning');const diff=audio.currentTime-target,ok=Math.abs(diff)<=.25;readout.className=`cue-readout ${ok?'correct':'wrong'}`;if(ok){button.disabled=false;button.classList.add('ready');feedback('已经对准 Cue 点',`当前 ${audio.currentTime.toFixed(1)} 秒。现在按绿色 CUE ${label} 保存。`)}else{feedback(diff>0?'已经转过目标':'还没到目标',`距离 Cue 还差 ${Math.abs(diff).toFixed(1)} 秒，请继续转动唱盘。`)}}}$('#cueB').onclick=()=>{if(step!==2||$('#cueB').disabled)return;const saved=Number($('#platterB').dataset.cueTime||B_CUE);$('#platterB').dataset.savedCue=String(saved);b.currentTime=saved;feedback('B Cue 已保存','从这里走 16 拍，B 段主段会在目标位置出现。');later(()=>setStep(3),650)};$('#cueA').onclick=()=>{if(step!==3||$('#cueA').disabled)return;const saved=Number($('#platterA').dataset.cueTime||A_CUE);$('#platterA').dataset.savedCue=String(saved);a.currentTime=saved;feedback('A Cue 已保存','从这里走 16 拍，A 会到达计划交接点。');later(()=>setStep(4),650)};
+$('#syncB').onclick=()=>{if(step!==4)return;syncReady=true;$('#syncB').classList.add('active');$('#syncB').disabled=true;$('#playA').disabled=false;$('#playA').classList.add('ready');feedback('Sync 已准备','Sync 在播放前完成。现在按 PLAY A。')};$('#playA').onclick=()=>{if(step===3){if(a.paused){a.volume=.9;a.play();$('#deckA').classList.add('playing');$('#playA').textContent='PAUSE';feedback('正在寻找 A 的第一拍','上方标尺回到第 1 拍时按 PAUSE。')}else{a.pause();$('#deckA').classList.remove('playing');$('#playA').textContent='PLAY';$('#platterA').classList.add('ready');$('#platterA').style.cursor='grab';feedback('已找到 A 的第一拍','逆时针转动 A 唱盘，回退 16 拍。')}return}if(step!==4||!syncReady)return;a.currentTime=Number($('#platterA').dataset.savedCue||$('#platterA').dataset.cueTime||A_CUE);a.volume=.84;a.play();aReady=true;$('#deckA').classList.add('playing');$('#playA').disabled=true;$('#playA').classList.remove('ready');$('#playB').disabled=false;$('#playB').classList.add('ready');feedback('A 已从 Cue 启动','现在按 PLAY B，让两段 16 拍提前量一起前进。')};$('#playB').onclick=()=>{if(step===2){if(b.paused){b.volume=.9;b.play();$('#deckB').classList.add('playing');$('#playB').textContent='PAUSE';feedback('正在寻找目标歌词','听到“93 年我来到 Westcoast，开始听到 Hiphop”开口时按 PAUSE。')}else{b.pause();$('#deckB').classList.remove('playing');$('#playB').textContent='PLAY';$('#platterB').classList.add('ready');$('#platterB').style.cursor='grab';feedback('已标记目标歌词','逆时针转动 B 唱盘，向前回退 16 拍。')}return}if(step!==4||!aReady)return;b.currentTime=Math.max(0,Number($('#platterB').dataset.savedCue||$('#platterB').dataset.cueTime||B_CUE)-.22);b.volume=.84;b.play();$('#deckB').classList.add('playing');$('#waveB').classList.remove('off');$('#playB').classList.remove('ready');setStep(5);feedback('B 晚了一点','请顺时针转动 B 唱盘，把拍点向前推进。')};
+let adjust=false,lastAngle=0,lastNudgeX=0,turn=0,nudgeCorrection=0,resultScheduled=false;
+$('#platterB').addEventListener('pointerdown',e=>{
+  if(step!==5||resultScheduled)return;
+  e.preventDefault();
+  adjust=true;
+  turn=0;
+  lastAngle=angle($('#platterB'),e);
+  lastNudgeX=e.clientX;
+  $('#platterB').setPointerCapture(e.pointerId);
+  $('#platterB').classList.add('active','turning');
+  $('#platterB').style.animationPlayState='paused';
+  $('#readoutB').textContent='拖动唱盘进行微调';
+});
+window.addEventListener('pointermove',e=>{
+  if(!adjust)return;
+  e.preventDefault();
+  const now=angle($('#platterB'),e),dx=e.clientX-lastNudgeX;
+  let d=deltaAngle(lastAngle,now);
+  lastAngle=now;
+  lastNudgeX=e.clientX;
+  if(Math.abs(d)<.004&&Math.abs(dx)>0)d=dx/$('#platterB').getBoundingClientRect().width*Math.PI*2;
+  turn+=d;
+  const shift=d*.08;
+  nudgeCorrection+=shift;
+  b.currentTime=Math.max(0,b.currentTime+shift);
+  $('#platterB').style.setProperty('--turn',`${turn*180/Math.PI}deg`);
+  $('#readoutB').textContent=turn>=0?'顺时针推进 B':'逆时针拖慢 B';
+  feedback(turn>=0?'正在顺时针推进 B':'正在逆时针拖慢 B',turn>=0?'继续短推后松手，听拍点是否贴回 A。':'B 原本偏慢，逆时针会让它更晚。');
+});
+window.addEventListener('pointerup',()=>{
+  if(!adjust)return;
+  adjust=false;
+  $('#platterB').classList.remove('active','turning');
+  $('#platterB').style.animationPlayState='';
+  const phaseError=.22-nudgeCorrection;
+  if(Math.abs(phaseError)<=BEAT*.08){
+    $('#readoutB').textContent='拍点已对齐 · 正在试听';
+    feedback('拍点已经对齐','系统正在自动完成低、中、高频交接；继续听 24 秒完整融合结果。');
+    resultScheduled=true;
+    $('#platterB').style.cursor='default';
+    window.course04AutoMix?.();
+    later(finish,24000);
+  }else if(phaseError>0){
+    $('#readoutB').textContent='仍然偏慢 · 继续顺推';
+    feedback('B 仍然偏慢','继续顺时针短推；只有真实相位误差进入范围才会通过。');
+  }else{
+    $('#readoutB').textContent='推过头了 · 轻轻回拉';
+    feedback('B 已经偏早','逆时针轻拉一点；回到对齐范围后才会通过。');
+  }
+});
+function finish(){stop();localStorage.setItem('first-mix-course-04-complete','true');$('#success').hidden=false}$('#action').onclick=()=>setStep(1);$('#start').onclick=()=>{$('#overlay').hidden=true;$('#bubble').hidden=false;setStep(0)};$('#reset').onclick=()=>{clear();stop();$('#platterA').dataset.savedCue='';$('#platterB').dataset.savedCue='';window.course04StopAutoMix?.();$('#overlay').hidden=false;$('#bubble').hidden=true;$('#success').hidden=true;setStep(0)};$('#repeat').onclick=()=>{clear();stop();$('#platterA').dataset.savedCue='';$('#platterB').dataset.savedCue='';window.course04StopAutoMix?.();$('#success').hidden=true;$('#overlay').hidden=true;$('#bubble').hidden=false;setStep(1)};let nearPrompt='';function render(){const savedA=Number($('#platterA').dataset.savedCue||A_CUE),t=Math.max(0,(a.currentTime||savedA)-savedA);$('#time').textContent=`00:${String(t.toFixed(1)).padStart(4,'0')}`;$('#phraseProgress').value=Math.min(16,Math.round(t/BEAT));$('#phraseLabel').textContent=step===5?`提前量：${Math.min(16,Math.round(t/BEAT))} / 16 拍`:'按当前提示完成操作';$('#stateA').textContent=a.paused?'A · 停止':'A · 播放';$('#stateB').textContent=b.paused?'B · 停止':'B · 播放';if(step===2&&!b.paused&&b.currentTime>=B_CUE-1&&nearPrompt!=='B'){nearPrompt='B';$('#playB').classList.add('ready');feedback('继续听目标歌词','听到“93 年我来到 Westcoast，开始听到 Hiphop”开口时按 PAUSE。')}if(step===3&&!a.paused&&a.currentTime>=A_CUE+LEAD-BEAT*.45&&nearPrompt!=='A'){nearPrompt='A';$('#playA').classList.add('ready');feedback('第 1 拍马上到','标尺亮回第 1 拍时立即按 PAUSE。')}requestAnimationFrame(render)}setStep(0);window.FirstMixProgressNavigation.bind({go:n=>{setStep(n);$('.controller').classList.toggle('touring',n===0);$('#platterB').classList.toggle('tour-highlight',n===0)},stop:()=>{stop();window.course04StopAutoMix?.()}});render()})();
+</script>
+<script>
+(()=>{const controller=document.querySelector('.controller'),platter=document.querySelector('#platterB'),start=document.querySelector('#start'),action=document.querySelector('#action'),reset=document.querySelector('#reset');function show(){controller.classList.add('touring');platter.classList.add('tour-highlight');document.querySelector('#title').textContent='STEP 1 · 转动唱盘微调';document.querySelector('#copy').textContent='顺时针推进 B，逆时针拖慢 B；松手后恢复原速，只改变拍点位置。';document.querySelector('#feedbackTitle').textContent='B 唱盘微调';document.querySelector('#feedbackText').textContent='B 晚了就顺时针推进，B 早了就逆时针拖慢。';action.textContent='开始练习'}function hide(){controller.classList.remove('touring');platter.classList.remove('tour-highlight')}start.addEventListener('click',()=>setTimeout(show,0));action.addEventListener('click',hide);reset.addEventListener('click',hide)})();
+</script>
+<script>
+(()=>{
+  const a=document.querySelector('#audioA'),b=document.querySelector('#audioB'),start=document.querySelector('#start'),playB=document.querySelector('#playB'),reset=document.querySelector('#reset'),repeat=document.querySelector('#repeat'),cells=[...document.querySelectorAll('#beatCells i')],status=document.querySelector('.beat-guide-head span'),BEAT=60/93,A_CUE=20,B_CUE=20.85-16*BEAT;
+  let ctx,sourceA,sourceB,entryBeat=0,mixTimers=[];
+  let gainA,aLow,aMid,aHigh,gainB,bLow,bMid,bHigh,bHighpass,master,limiter;
+  const style=document.createElement('style');
+  style.textContent='.beat-cells i.entry{outline:3px solid #b992ff;outline-offset:2px;position:relative}.beat-cells i.entry:before{content:"B IN";position:absolute;top:-13px;left:50%;transform:translateX(-50%);font:800 7px/1 system-ui;color:#b992ff;white-space:nowrap}.beat-guide-head span.entry-status{color:#b992ff;font-weight:800}';
+  document.head.append(style);
+
+  const setNow=(param,value)=>{param.cancelScheduledValues(ctx.currentTime);param.setValueAtTime(value,ctx.currentTime)};
+  const ramp=(nodeOrParam,value,beats)=>{const param=nodeOrParam.gain||nodeOrParam.frequency||nodeOrParam;param.linearRampToValueAtTime(value,ctx.currentTime+beats*BEAT)};
+  function resetMix(){
+    if(!ctx)return;
+    [[gainA,1],[aLow,0],[aMid,0],[aHigh,0],[gainB,.62],[bLow,-2],[bMid,.5],[bHigh,0],[bHighpass,90],[master,.78]].forEach(([param,value])=>setNow(param.gain||param.frequency||param,value));
+  }
+  function initMix(){
+    if(ctx){ctx.resume();return}
+    ctx=new (window.AudioContext||window.webkitAudioContext)();
+    sourceA=ctx.createMediaElementSource(a);sourceB=ctx.createMediaElementSource(b);
+    gainA=ctx.createGain();aLow=ctx.createBiquadFilter();aMid=ctx.createBiquadFilter();aHigh=ctx.createBiquadFilter();
+    gainB=ctx.createGain();bLow=ctx.createBiquadFilter();bMid=ctx.createBiquadFilter();bHigh=ctx.createBiquadFilter();bHighpass=ctx.createBiquadFilter();
+    master=ctx.createGain();limiter=ctx.createDynamicsCompressor();
+    aLow.type='lowshelf';aLow.frequency.value=140;aMid.type='peaking';aMid.frequency.value=1800;aMid.Q.value=.8;aHigh.type='highshelf';aHigh.frequency.value=6500;
+    bHighpass.type='highpass';bHighpass.Q.value=.7;bLow.type='lowshelf';bLow.frequency.value=150;bMid.type='peaking';bMid.frequency.value=2200;bMid.Q.value=.9;bHigh.type='highshelf';bHigh.frequency.value=6500;
+    limiter.threshold.value=-3;limiter.knee.value=0;limiter.ratio.value=20;limiter.attack.value=.003;limiter.release.value=.12;
+    sourceA.connect(aLow).connect(aMid).connect(aHigh).connect(gainA).connect(master);
+    sourceB.connect(bHighpass).connect(bLow).connect(bMid).connect(bHigh).connect(gainB).connect(master);
+    master.connect(limiter).connect(ctx.destination);
+    resetMix();
+  }
+  start.addEventListener('click',initMix,{once:true});
+
+  const message=(title,copy,beats)=>mixTimers.push(setTimeout(()=>{document.querySelector('#feedbackTitle').textContent=title;document.querySelector('#feedbackText').textContent=copy},beats*BEAT*1000));
+  window.course04StopAutoMix=()=>{mixTimers.forEach(clearTimeout);mixTimers=[];resetMix()};
+  window.course04AutoMix=()=>{
+    initMix();window.course04StopAutoMix();ctx.resume();
+    const now=ctx.currentTime;
+    [[gainA,1],[aLow,0],[aMid,0],[aHigh,0],[gainB,.54],[bLow,-12],[bMid,-1],[bHigh,-2],[bHighpass,105],[master,.78]].forEach(([param,value])=>{const p=param.gain||param.frequency||param;p.cancelScheduledValues(now);p.setValueAtTime(value,now)});
+    ramp(gainB,.61,4);ramp(bMid,1.7,4);ramp(bHigh,-.25,4);ramp(aMid,-1.5,4);
+    ramp(gainA,.94,8);ramp(aLow,-.75,8);ramp(aMid,-3.5,8);ramp(aHigh,-1.5,8);ramp(gainB,.67,8);ramp(bLow,-10,8);ramp(bMid,2.5,8);ramp(bHigh,.75,8);
+    ramp(gainA,.88,16);ramp(aLow,-1,16);ramp(aMid,-4,16);ramp(aHigh,-1,16);ramp(gainB,.7,16);ramp(bLow,-9,16);ramp(bMid,2,16);ramp(bHigh,.5,16);
+    message('先收住 B 的低频','避免两首歌的底鼓叠在一起；A 的伴奏保持主导。',0);
+    message('让 B 的人声进入','逐步打开 B 的中频，同时让 A 的中频留出空间。',4);
+    message('频段正在交换','A 保留伴奏骨架，B 的低频仍然收住，人声更清楚。',8);
+    message('频段交接完成','系统会继续保护总音量，听满 24 秒成果。',16);
+  };
+
+  function beatAt(audio,offset){const elapsed=audio.currentTime-offset;if(elapsed<0)return 0;return ((Math.floor(elapsed/BEAT)%16)+16)%16+1}
+  playB.addEventListener('click',()=>{if(a.paused)return;entryBeat=beatAt(a,Number(document.querySelector('#platterA').dataset.savedCue||A_CUE));status.textContent='B 在第 '+entryBeat+' 拍进入';status.classList.add('entry-status')});
+  function clearEntry(){entryBeat=0;status.textContent='等待 B 进入';status.classList.remove('entry-status')}
+  reset.addEventListener('click',clearEntry);repeat.addEventListener('click',clearEntry);
+  function paint(){const masterAudio=!a.paused?a:!b.paused?b:null,offset=masterAudio===a?Number(document.querySelector('#platterA').dataset.savedCue||A_CUE):Number(document.querySelector('#platterB').dataset.savedCue||B_CUE),beat=masterAudio?beatAt(masterAudio,offset):0;cells.forEach((el,i)=>{el.classList.toggle('done',!!masterAudio&&beat>0&&i+1<beat);el.classList.toggle('on',!!masterAudio&&i+1===beat);el.classList.toggle('entry',entryBeat===i+1)});requestAnimationFrame(paint)}
+  clearEntry();paint();
+})();
+</script>
+<script>
+(()=>{const BEAT=60/93,LEAD=16*BEAT,cells=[...document.querySelectorAll('#beatCells i')],status=document.querySelector('.beat-guide-head span'),feedback=(t,c)=>{document.querySelector('#feedbackTitle').textContent=t;document.querySelector('#feedbackText').textContent=c},currentStep=()=>document.querySelector('.progress .current')?.textContent.trim();function bind({buttonId,audioId,deckId,platterId,readoutId,stepLabel,label,target,title,listen,early,late}){const button=document.querySelector(buttonId),audio=document.querySelector(audioId),deck=document.querySelector(deckId),platter=document.querySelector(platterId),readout=document.querySelector(readoutId);let anchor=target,lastAngle=0,lastX=0,total=0,turning=false;const angle=e=>{const r=platter.getBoundingClientRect();return Math.atan2(e.clientY-(r.top+r.height/2),e.clientX-(r.left+r.width/2))},delta=(a,b)=>{let d=b-a;while(d>Math.PI)d-=Math.PI*2;while(d<-Math.PI)d+=Math.PI*2;return d};button.addEventListener('click',async e=>{if(currentStep()!==stepLabel)return;e.preventDefault();e.stopImmediatePropagation();if(audio.paused){try{platter.dataset.unlocked='false';await audio.play();deck.classList.add('playing');button.textContent='PAUSE';button.classList.add('ready');feedback(title,listen)}catch(err){feedback('播放没有启动','再按一次 PLAY。')}}else{audio.pause();deck.classList.remove('playing');button.textContent='PLAY';const diff=audio.currentTime-target,inTarget=label==='B'?(diff>=-.35&&diff<=1.15):Math.abs(diff)<=BEAT*.25;if(inTarget){anchor=audio.currentTime;platter.dataset.unlocked='true';platter.classList.add('ready');platter.style.cursor='grab';readout.textContent='已找到 · 回退 0 / 16 拍';feedback(label==='B'?'已标记目标歌词':'位置正确','现在逆时针转动唱盘，向前回退 16 拍。')}else{platter.dataset.unlocked='false';feedback('位置不对',diff<0?early:late);audio.currentTime=Math.max(0,target-(label==='A'?BEAT*.75:BEAT*4))}}},true);platter.addEventListener('pointerdown',e=>{if(currentStep()!==stepLabel)return;e.preventDefault();if(platter.dataset.unlocked!=='true'){feedback('先找到目标位置',listen);return}turning=true;lastAngle=angle(e);lastX=e.clientX;total=0;platter.setPointerCapture(e.pointerId)},true);window.addEventListener('pointermove',e=>{if(!turning)return;e.preventDefault();const now=angle(e),dx=e.clientX-lastX;let d=delta(lastAngle,now);lastAngle=now;lastX=e.clientX;if(Math.abs(d)<.004&&Math.abs(dx)>0)d=dx/platter.getBoundingClientRect().width*Math.PI*2;total+=d;const moved=Math.max(0,Math.min(20,-total/(Math.PI*2)*16));audio.currentTime=Math.max(0,anchor-moved*BEAT);platter.style.setProperty('--turn',`${total*180/Math.PI}deg`);platter.dataset.cueBeats=String(moved);platter.dataset.cueTime=String(audio.currentTime);readout.textContent=`已回退 ${moved.toFixed(1)} / 16 拍`;feedback(moved<16?'继续逆时针回退':'到达 16 拍位置',moved<16?`还差 ${(16-moved).toFixed(1)} 拍。`:'松手检查位置。')});window.addEventListener('pointerup',e=>{if(!turning)return;e.preventDefault();turning=false;const moved=Number(platter.dataset.cueBeats||0),ok=Math.abs(moved-16)<=.2,cue=document.querySelector(label==='B'?'#cueB':'#cueA');cue.disabled=!ok;cue.classList.toggle('ready',ok);readout.className=`cue-readout ${ok?'correct':'wrong'}`;feedback(ok?'16 拍位置正确':'还没有到 16 拍',ok?`按 CUE ${label} 保存。`:`当前回退 ${moved.toFixed(1)} 拍，请继续调整。`)})}bind({buttonId:'#playB',audioId:'#audioB',deckId:'#deckB',platterId:'#platterB',readoutId:'#readoutB',stepLabel:'Cue B',label:'B',target:20.85,title:'听 B 的目标歌词',listen:'听到“93 年我来到 Westcoast，开始听到 Hiphop”开口时按 PAUSE。',early:'继续播放，等待目标歌词。',late:'重新播放并听目标歌词。'});bind({buttonId:'#playA',audioId:'#audioA',deckId:'#deckA',platterId:'#platterA',readoutId:'#readoutA',stepLabel:'Cue A',label:'A',target:20+LEAD,title:'看 A 的第 1 拍',listen:'观察上方标尺；下一轮第 1 拍亮起时按 PAUSE。',early:'还没到下一轮第 1 拍，继续播放。',late:'已经错过第 1 拍，将从前面重新播放。'});function paintCue(){const step=currentStep(),platter=step==='Cue B'?document.querySelector('#platterB'):step==='Cue A'?document.querySelector('#platterA'):null,moved=Number(platter?.dataset.cueBeats||0);if(platter?.dataset.unlocked==='true'){const count=Math.max(0,Math.min(16,Math.round(moved)));cells.forEach((el,i)=>{el.classList.toggle('done',i<count);el.classList.toggle('on',i+1===count&&count>0)});status.textContent=`已回退 ${count} / 16 拍`}requestAnimationFrame(paintCue)}paintCue()})();
+</script>
+<script>
+(()=>{const a=document.querySelector('#audioA'),b=document.querySelector('#audioB'),ra=document.querySelector('#readoutA'),rb=document.querySelector('#readoutB'),title=document.querySelector('#feedbackTitle'),copy=document.querySelector('#feedbackText'),BEAT=60/93,A_TARGET=20+16*BEAT;function tick(){const step=document.querySelector('.progress .current')?.textContent.trim();if(step==='Cue B'&&document.querySelector('#platterB').dataset.unlocked!=='true'){rb.textContent=b.paused?'等待“93 年我来到……”':'正在听目标歌词';if(!b.paused){title.textContent='听 B 的目标歌词';copy.textContent='听到“93 年我来到 Westcoast，开始听到 Hiphop”开口时按 PAUSE。'}}if(step==='Cue A'&&document.querySelector('#platterA').dataset.unlocked!=='true'){const left=Math.max(0,(A_TARGET-a.currentTime)/BEAT);ra.textContent=a.paused?'等待第 1 拍':left>.08?`第 1 拍还有 ${left.toFixed(1)} 拍`:'第 1 拍现在';if(!a.paused){title.textContent=left>.08?'A 的第一拍马上出现':'第 1 拍现在';copy.textContent=left>.08?'看上方标尺，亮回 1 时立即按 PAUSE。':'现在按 PAUSE。'}}requestAnimationFrame(tick)}tick()})();
+</script><script>
+(()=>{
+  const BEAT=60/93,LEAD=16*BEAT,A_CUE=20,B_VOCAL=20.85;
+  const a=document.querySelector('#audioA'),b=document.querySelector('#audioB');
+  const playB=document.querySelector('#playB'),reset=document.querySelector('#cueReset');
+  const step=()=>document.querySelector('.progress .current')?.textContent.trim();
+  const feedback=(title,copy)=>{document.querySelector('#feedbackTitle').textContent=title;document.querySelector('#feedbackText').textContent=copy};
+  const clearCue=(label,audio,target)=>{
+    audio.pause();
+    const platter=document.querySelector('#platter'+label),readout=document.querySelector('#readout'+label),cue=document.querySelector('#cue'+label),play=document.querySelector('#play'+label),deck=document.querySelector('#deck'+label);
+    deck.classList.remove('playing');
+    platter.dataset.unlocked='false';
+    platter.dataset.cueBeats='0';
+    platter.dataset.cueTime='';
+    platter.dataset.savedCue='';
+    platter.style.setProperty('--turn','0deg');
+    platter.style.cursor='default';
+    platter.classList.remove('ready','active','turning');
+    readout.className='cue-readout';
+    readout.textContent=label==='B'?'等待“93 年我来到……”':'等待第 1 拍';
+    cue.disabled=true;
+    cue.classList.remove('ready');
+    play.disabled=false;
+    play.classList.add('ready');
+    play.textContent='PLAY';
+    audio.currentTime=Math.max(0,target);
+    document.querySelectorAll('#beatCells i').forEach(el=>el.classList.remove('done','on'));
+  };
+  reset.addEventListener('click',e=>{
+    e.preventDefault();
+    const s=step();
+    if(s==='Cue B'){
+      clearCue('B',b,B_VOCAL-BEAT*4);
+      feedback('B 位置已重置','重新播放，听到“93 年我来到 Westcoast，开始听到 Hiphop”开口时暂停。');
+    }else if(s==='Cue A'){
+      clearCue('A',a,A_CUE+LEAD-BEAT*.75);
+      feedback('A 位置已重置','重新播放；不到 1 拍后标尺亮回 1，立即暂停。');
+    }
+  });
+  playB.addEventListener('click',e=>{
+    if(step()!=='接入'||a.paused)return;
+    const elapsed=a.currentTime-Number(document.querySelector('#platterA').dataset.savedCue||A_CUE);
+    const cycle=((elapsed%LEAD)+LEAD)%LEAD;
+    const distance=Math.min(cycle,LEAD-cycle);
+    if(distance>BEAT*.25){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      feedback('还没到第 1 拍','看上方 16 拍标尺；亮回 1 时再按 PLAY B。');
+    }
+  },true);
+  function paintReset(){reset.hidden=step()!=='Cue B'&&step()!=='Cue A';requestAnimationFrame(paintReset)}
+  paintReset();
+})();
+</script><link rel="stylesheet" href="../sheet-swipe-dismiss.css?v=20261011-1"><script src="../sheet-swipe-dismiss.js?v=20261011-1"></script></body></html>

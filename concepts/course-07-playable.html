@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>FIRST MIX｜07 练习两种转场</title>
+  <link rel="stylesheet" href="../controller-3d.css">
+  <link rel="stylesheet" href="course-06-07-playable.css?v=20261012-orientation-choice-1">
+  <link rel="stylesheet" href="../sheet-swipe-dismiss.css?v=20261011-1">
+  <script defer src="../sheet-swipe-dismiss.js?v=20261011-1"></script>
+  <script defer src="../course-activity.js?v=20261012-course07-1"></script>
+  <script>
+    if (location.protocol === 'file:') {
+      const target = 'http://127.0.0.1:4177/concepts/course-07-playable.html' + location.search + location.hash;
+      const probe = new Image();
+      probe.onload = () => location.replace(target);
+      probe.onerror = () => setTimeout(() => {
+        if (!document.querySelector('#startChallenge')?.onclick) document.querySelector('#fileModeNotice').hidden = false;
+      }, 1000);
+      probe.src = 'http://127.0.0.1:4177/assets/characters/dj-feedback-avatar-v1.png?course07=1';
+    }
+  </script>
+</head>
+<body class="course-07 course-console">
+<div class="file-mode-notice" id="fileModeNotice" hidden><strong>请从学习页进入 07</strong><span>直接打开本地文件无法启用打碟台交互。请先打开 FIRST MIX，再从学习页进入本课。</span><a href="http://127.0.0.1:4177/index.html?view=learning">打开学习页</a></div>
+<main class="challenge-shell">
+  <header class="challenge-top">
+    <a class="round-button" href="../index.html?view=learning" aria-label="返回学习页" style="display:grid;place-items:center;text-decoration:none">←</a>
+    <div class="challenge-brand" aria-label="FIRST MIX">FIRST MIX</div>
+    <button class="round-button challenge-reset" id="resetCourse07" type="button" aria-label="重新开始课程" title="重新开始"><span aria-hidden="true">↻</span></button>
+  </header>
+  <span class="challenge-status" id="challengeStatus" role="status">16 拍引导准备</span>
+  <p class="orientation-note" role="status">横屏视野更完整，竖屏也可继续操作</p>
+  <footer class="guided-dock" id="guidedDock">
+    <div class="guided-copy"><b class="guided-context">16 拍短交接引导</b><strong id="guidedTitle">第一步：按 SYNC B</strong><span id="guidedCopy">B 只对齐速度，不会自动播放。</span></div>
+    <div class="guided-beats" id="guidedBeats" aria-label="16 拍进度"></div>
+    <button id="guidedLowSwap" class="guided-low-swap hidden" type="button" aria-label="一键交换低频：A LOW 降至负 12，B LOW 升至 0">一键交换 LOW</button>
+    <button id="retryGuided" class="primary hidden">重新开始</button>
+  </footer>
+  <footer class="challenge-dock hidden" id="challengeDock">
+    <div class="challenge-record-row">
+      <span class="record-time" id="recordTime"><i></i><span>00:00.0</span></span>
+      <span class="record-hint" id="recordHint" role="status">32 拍引导 · 按 PLAY A 自动录制</span>
+      <button id="listenMix" class="hidden">回听作品</button>
+      <button id="recordMix" class="primary hidden" disabled>开始录制</button>
+      <button id="stopMix" class="danger hidden">结束并保存作品</button>
+      <button id="submitMix" class="primary hidden">提交 AI 评分</button>
+    </div>
+    <ol class="long-guide" id="longGuide" aria-label="32 拍长混引导，从播放 B 开始计拍">
+      <li aria-label="1 到 8 拍：推子轻推向 B"><span>1–8</span><strong>推向 B</strong></li>
+      <li aria-label="9 到 16 拍：推子到中央，两首歌共存"><span>9–16</span><strong>居中</strong></li>
+      <li aria-label="17 到 24 拍：换低频，A LOW 降低，B LOW 提高"><span>17–24</span><strong>LOW A↓B↑</strong></li>
+      <li aria-label="25 到 32 拍：推子到 B 端，完成交接"><span>25–32</span><strong>推到 B</strong></li>
+    </ol>
+  </footer>
+  <button class="practice-guide-button" id="guideToggle" type="button" aria-label="使用教程" aria-controls="controlGuide" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5h10.5A2.5 2.5 0 0 1 18 7v13H7.5A2.5 2.5 0 0 1 5 17.5v-13Z"/><path d="M5 17.5A2.5 2.5 0 0 1 7.5 15H18M9 8h5M9 11h4"/></svg><span>使用教程</span></button>
+  <section class="deck-stage" id="deckStage" aria-label="3D 打碟机操作区">
+    <div id="mixer" class="hidden-controls" aria-hidden="true"></div>
+  </section>
+</main>
+
+<aside class="practice-guide" id="controlGuide" aria-labelledby="guideTitle" hidden>
+  <header><span id="guideProgress">1 / 9</span><button id="guideClose" type="button" aria-label="关闭使用教程">×</button></header>
+  <h2 id="guideTitle">PLAY</h2>
+  <p id="guideCopy">开始或暂停当前 Deck。</p>
+  <footer><button id="guidePrevious" type="button">上一步</button><button id="guideNext" type="button">下一步</button></footer>
+</aside>
+
+<section class="course-overlay question-overlay" id="challengeOverlay">
+  <div class="intro-card question-card">
+    <img src="../assets/characters/dj-question-thinking-v1.png" alt="DJ 角色正在思考">
+    <h2>先跟练 16 拍，再独立完成 32 拍</h2>
+    <p>第一次有拍段提示，不评分；第二次按 PLAY A 后自动录制，结束时自动保存为作品，再提交评分。</p>
+    <p id="challengeOrientationAsk" hidden>横屏可完整查看控台。是否切换以获得更好的操作体验？</p>
+    <label class="orientation-remember" id="challengeOrientationRemember" hidden><input id="rememberChallengeLandscape" type="checkbox">以后不再询问，默认横屏</label>
+    <div class="orientation-choices">
+      <button id="startChallenge" type="button">横屏开始</button>
+      <button id="startChallengePortrait" type="button" hidden>竖屏继续</button>
+    </div>
+  </div>
+</section>
+
+<section class="completion-overlay hidden" id="shortCompleteOverlay">
+  <div class="completion-sheet">
+    <img src="../assets/characters/dj-feedback-avatar-v1.png" alt="DJ 角色庆祝完成">
+    <h2>16 拍短交接完成</h2>
+    <p>接下来仍在这台横屏打碟台上做 32 拍长混。按 PLAY A 自动开始录制；结束时自动保存到「我的作品」。</p>
+    <div class="completion-facts"><span>A 3:40</span><span>B1 0:00</span><span>32 拍·AI 评分</span></div>
+    <div class="completion-actions"><button id="repeatShort">再练一次</button><button class="primary" id="startLongChallenge">开始 32 拍挑战</button></div>
+  </div>
+</section>
+
+<section class="score-overlay hidden" id="scoreOverlay">
+  <div class="score-panel">
+    <div class="score-head">
+      <div class="score-total"><strong id="scoreTotal">--</strong><span>/ 100</span></div>
+      <h2 id="scoreTitle">AI 正在评判</h2>
+      <img class="score-character" src="../assets/characters/dj-feedback-avatar-v1.png" alt="DJ 角色庆祝完成">
+      <p id="scoreSummary">正在读取真实操作与录音时间轴。</p>
+    </div>
+    <div class="score-list" id="scoreList"></div>
+    <div class="evidence" id="scoreEvidence"></div>
+    <div class="score-actions"><button id="closeScore">继续回听</button><button id="retryChallenge">重新挑战</button><button class="primary" id="saveMix">查看我的作品</button></div>
+  </div>
+</section>
+
+<audio id="mixPlayback" class="hidden" controls></audio>
+
+<section class="hidden-controls" aria-hidden="true">
+  <button id="playA" aria-pressed="false">播放 A</button><button id="playB" aria-pressed="false">播放 B</button>
+  <button id="cueA">Cue A</button><button id="cueB">Cue B</button><button id="syncB">Sync B</button><button id="restoreTraining">恢复</button>
+  <input id="fileA" type="file"><input id="fileB" type="file">
+  <input id="bpmInputA" type="number" value="72"><input id="bpmInputB" type="number" value="70">
+  <label>音量 A<input id="volumeA" type="range" min="0" max="100" value="80"></label><label>音量 B<input id="volumeB" type="range" min="0" max="100" value="80"></label>
+  <input id="lowA" type="range" min="-12" max="12" value="0"><input id="midA" type="range" min="-12" max="12" value="0"><input id="highA" type="range" min="-12" max="12" value="0"><input id="filterA" type="range" min="-100" max="100" value="0">
+  <input id="lowB" type="range" min="-12" max="12" value="0"><input id="midB" type="range" min="-12" max="12" value="0"><input id="highB" type="range" min="-12" max="12" value="0"><input id="filterB" type="range" min="-100" max="100" value="0">
+  <input id="crossfader" type="range" min="-100" max="100" value="-100">
+  <button data-pad="kick"></button><button data-pad="clap"></button><button data-pad="hat"></button><button data-pad="tone"></button>
+</section>
+
+<script type="module" src="course-07-playable.js?v=20261012-orientation-choice-1"></script>
+</body>
+</html>

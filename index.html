@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#F3F1EA" />
+  <meta name="description" content="FIRST MIX 是面向零基础用户的浏览器 DJ 混音互动体验。无需设备，边听边完成第一次转场。" />
+  <title>FIRST MIX｜零基础完成第一次混音</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script>document.documentElement.dataset.entryView = new URLSearchParams(location.search).get("view") || "";</script>
+  <style>
+    html[data-entry-view="learning"] .intro,
+    html[data-entry-view="practice"] .intro,
+    html[data-entry-view="my"] .intro,
+    html[data-entry-view="learning"] body > .masthead,
+    html[data-entry-view="practice"] body > .masthead,
+    html[data-entry-view="my"] body > .masthead { display: none !important; }
+  </style>
+  <link rel="stylesheet" href="./styles.css?v=20261012-entry-fix-1" />
+  <link rel="stylesheet" href="./ac-unified.css?v=20261012-entry-fix-1" />
+    <link rel="stylesheet" href="./my-archive.css?v=20261011-merged-blobs-1" />
+    <link rel="stylesheet" href="./waveform-polish.css?v=20261011-real-wave-3" />
+</head>
+<body>
+  <a class="skip-link" href="#mixer">跳到混音练习</a>
+  <header class="masthead">
+    <a class="wordmark" href="#top" aria-label="FIRST MIX 首页">FIRST MIX</a>
+    <div class="prototype-mark">音频原型 0.1</div>
+    <button class="tour-replay" id="replayTour" type="button">认识界面</button>
+    <button class="sound-gate" id="soundGate" type="button" aria-pressed="false">
+      <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 9v6h4l5 4V5L9 9H5Zm12.5.2a4 4 0 0 1 0 5.6M19.8 7a7 7 0 0 1 0 10"/></svg>
+      <span>启动声音</span>
+    </button>
+  </header>
+
+  <main id="top">
+    <section class="intro" aria-label="FIRST MIX 品牌首页">
+      <div class="intro-copy">
+        <span class="product-kicker">零基础 DJ 混音互动体验</span>
+        <div class="launch-lockup">
+          <h1 class="launch-title" aria-label="第一次，也能混得像样">
+            <span class="launch-title-default"><span class="slogan-line">第一次，</span><span class="slogan-line">也能混得</span><span class="slogan-line">像样</span></span>
+            <img class="launch-title-art" src="./assets/first-mix-title-kid.png" alt="" aria-hidden="true" />
+          </h1>
+          <p class="launch-tagline" lang="en">YOUR FIRST MIX, DONE RIGHT</p>
+        </div>
+        <p>零设备，两首歌，90 秒完成第一次转场。</p>
+        <ul class="product-facts" aria-label="产品特点">
+          <li>网页即开</li><li>自带练习音乐</li><li>边听边做</li>
+        </ul>
+        <button class="enter-app" id="enterApp" type="button">进入 FIRST MIX <span aria-hidden="true">→</span></button>
+      </div>
+      <div class="intro-visual">
+        <canvas class="home-wave-canvas" id="homeWaveCanvas" aria-hidden="true"></canvas>
+        <div class="hero-card" aria-hidden="true"><span>FIRST MIX</span><strong>01 / PLAY</strong></div>
+        <span class="beat-orbit" aria-hidden="true"></span>
+        <img class="hero-art" src="./assets/characters/dj-scratching-hero-v1.png" alt="淡紫色刺头、正在搓碟的手绘 DJ 人物" />
+        <div class="session-ticket" aria-label="本次练习信息">
+          <span>练习</span><strong>FIRST TRANSITION</strong>
+          <span>速度</span><strong>120 <span class="term" tabindex="0" data-tooltip="BPM：每分钟的节拍数。数字相同，两首歌才更容易对齐。">BPM</span></strong>
+          <span>目标</span><strong>A → B</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="unified-learning" id="unifiedLearning" aria-labelledby="learningTitle" hidden>
+      <div class="learning-environment" aria-hidden="true"><i></i><i></i></div>
+      <header class="learning-topbar">
+        <span class="learning-topbar-space" aria-hidden="true"></span>
+        <a class="wordmark learning-wordmark" id="learningWordmark" href="./index.html" aria-label="返回 FIRST MIX 开始页">FIRST MIX</a>
+      </header>
+
+      <div class="learning-main">
+        <article class="learning-goal" id="currentLesson">
+          <div class="learning-goal-copy">
+            <span class="current-state" id="currentState">今天从这里开始</span>
+            <h1 id="learningTitle"><span id="currentTitle">第一次交接</span></h1>
+            <p id="currentDescription">先认识机器，再亲手完成一次从 A 到 B 的交接。</p>
+            <a class="primary-action" id="currentAction" href="./concepts/course-00-playable.html">
+              <span>开始学习</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
+            </a>
+          </div>
+          <img src="./assets/characters/dj-scratching-hero-v1.png" alt="紫发 DJ 戴着耳机准备开始第一次交接" />
+          <span class="current-number" id="currentNumber" aria-hidden="true">00</span>
+          <div class="route-progress" aria-label="基础路线完成进度"><i id="routeProgress"></i></div>
+        </article>
+
+        <div class="stage-tabs" role="tablist" aria-label="学习阶段">
+          <button class="is-active" id="basicsTab" type="button" role="tab" aria-selected="true" aria-controls="basicsPanel">基础路线</button>
+          <button id="skillsTab" type="button" role="tab" aria-selected="false" aria-controls="skillsPanel">技巧玩法</button>
+        </div>
+
+        <section class="learning-panel" id="basicsPanel" role="tabpanel" aria-labelledby="basicsTab">
+          <header class="route-heading">
+            <h2>学习路线</h2>
+            <span class="route-count" id="routeCount">0 / 7</span>
+          </header>
+          <ol class="lesson-list" id="lessonList" aria-label="基础课程列表"></ol>
+        </section>
+
+        <section class="learning-panel skills-panel" id="skillsPanel" role="tabpanel" aria-labelledby="skillsTab" hidden>
+          <div class="skills-intro">
+            <h2>从声音效果开始</h2>
+            <p>先理解技巧的作用，再到打碟台上自由尝试。</p>
+          </div>
+          <ul class="skill-list" aria-label="技巧课程">
+            <li class="is-available">
+              <a class="skill-link" href="./index.html?view=practice&amp;skill=hot-cue" aria-label="进入 HOT CUE 技巧练习">
+                <div class="skill-art"><span class="skill-code">HOT CUE</span><span class="skill-number">01</span><i aria-hidden="true"></i></div>
+                <strong>每个打击垫保存一个定位点</strong><em>进入练习</em>
+              </a>
+            </li>
+            <li class="is-available">
+              <a class="skill-link" href="./index.html?view=practice&amp;skill=loop" aria-label="进入 LOOP 技巧练习">
+                <div class="skill-art"><span class="skill-code">LOOP</span><span class="skill-number">02</span><i aria-hidden="true"></i></div>
+                <strong>让 4 或 8 拍反复播放</strong><em>进入练习</em>
+              </a>
+            </li>
+            <li class="is-available">
+              <a class="skill-link" href="./index.html?view=practice&amp;skill=filter" aria-label="进入 FILTER 技巧练习">
+                <div class="skill-art"><span class="skill-code">FILTER</span><span class="skill-number">03</span><i aria-hidden="true"></i></div>
+                <strong>削去高频或低频，再回到原声</strong><em>进入练习</em>
+              </a>
+            </li>
+          </ul>
+        </section>
+      </div>
+    </section>
+
+    <nav class="course-catalog" aria-labelledby="courseTitle">
+      <div class="learning-diffuse" aria-hidden="true"><i></i><i></i><i></i></div>
+      <canvas class="hub-wave-canvas" id="hubWaveCanvas" aria-hidden="true"></canvas>
+      <div class="learning-stage-switch" role="tablist" aria-label="学习阶段">
+        <button class="is-active" id="stageBasics" type="button" role="tab" aria-selected="true">基础课程</button>
+        <button id="techniquesEntry" type="button" role="tab" aria-selected="false">技巧玩法</button>
+      </div>
+      <ol class="course-list" aria-label="学习内容，左右滑动浏览">
+        <li class="is-current"><button type="button" data-course="phrase" aria-current="step" aria-label="认识打碟台"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M27 4 10 27h12l-3 17 19-26H26Z"/></svg><span class="course-number">00</span><strong>认识打碟台</strong><canvas class="course-wave" width="136" height="34" aria-hidden="true"></canvas></button></li>
+        <li><button type="button" data-course="beat" aria-label="节拍与乐句"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 5 28 18 42 15 32 25 41 36 27 31 22 43 19 29 5 32 16 22 8 10 21 16Z"/></svg><span class="course-number">01</span><strong>节拍与乐句</strong><canvas class="course-wave" width="136" height="34" aria-hidden="true"></canvas></button></li>
+        <li><button type="button" data-course="prep" aria-label="找到第一拍"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 28V19a14 14 0 0 1 28 0v9M10 27c-5 0-5 15 2 15h5V27Zm28 0c5 0 5 15-2 15h-5V27Z"/></svg><span class="course-number">02</span><strong>找到第一拍</strong><canvas class="course-wave" width="136" height="34" aria-hidden="true"></canvas></button></li>
+        <li><button type="button" data-course="levels" aria-label="让两首同步"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M13 7v34M24 7v34M35 7v34M8 18h10M19 31h10M30 15h10"/><circle cx="13" cy="18" r="4"/><circle cx="24" cy="31" r="4"/><circle cx="35" cy="15" r="4"/></svg><span class="course-number">03</span><strong>让两首同步</strong><canvas class="course-wave" width="136" height="34" aria-hidden="true"></canvas></button></li>
+        <li><button type="button" data-course="eq" aria-label="音量与电平"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="17"/><circle cx="24" cy="24" r="5"/><path d="m24 7 4 12M9 29l12-3m18 9-11-8"/></svg><span class="course-number">04</span><strong>音量与电平</strong><canvas class="course-wave" width="136" height="34" aria-hidden="true"></canvas></button></li>
+        <li><button type="button" data-course="selection" aria-label="基础转场"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="18"/><circle cx="24" cy="24" r="5"/><path d="M24 6a18 18 0 0 1 18 18M11 37l9-9"/></svg><span class="course-number">05</span><strong>基础转场</strong><canvas class="course-wave" width="136" height="34" aria-hidden="true"></canvas></button></li>
+        <li><button type="button" data-course="final" aria-label="你的第一段 Mix"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M5 27c6-18 10 18 16-5s10 17 22-6"/><path d="M6 35c8-9 12 8 19-4s10 5 17-4"/></svg><span class="course-number">06</span><strong>你的第一段 Mix</strong><canvas class="course-wave" width="136" height="34" aria-hidden="true"></canvas></button></li>
+      </ol>
+      <button class="orbit-arrow orbit-prev" id="coursePrev" type="button" aria-label="上一个学习内容"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg></button>
+      <button class="orbit-arrow orbit-next" id="courseNext" type="button" aria-label="下一个学习内容"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button>
+      <button class="orbit-current" id="courseCarouselName" type="button"><strong>认识打碟台</strong><span>先认识机器，再试听它能带来的惊喜</span></button>
+      <div class="course-character"><img src="./assets/characters/dj-pointing-up-v1.png" alt="淡紫刺头的 DJ 角色伸手指向学习卡" /></div>
+    </nav>
+
+    <nav class="workspace-bar" id="workspaceBar" aria-label="学习导航" hidden>
+      <button class="workspace-back workspace-back-icon" id="backToCourses" type="button" aria-label="返回学习页" title="返回学习页"><span aria-hidden="true">←</span></button>
+      <div><span>正在学习</span><strong id="workspaceTitle">第一次转场</strong></div>
+      <span class="workspace-mode" id="workspaceMode">训练模式</span>
+    </nav>
+
+    <section class="course-widget" id="courseWidget" aria-label="本节互动小组件" hidden>
+      <div><strong id="courseWidgetTitle">听 A / B 的区别</strong><small id="courseWidgetHint">点一下，先听再学</small></div>
+      <div class="course-widget-controls" id="courseWidgetControls"></div>
+    </section>
+
+    <section class="count-sheet" aria-label="八拍计数">
+      <div class="count-label">COUNT</div>
+      <div class="count-grid" id="countGrid" aria-hidden="true">
+        <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span>
+      </div>
+      <div class="count-status" id="countStatus" aria-live="polite">等待启动</div>
+    </section>
+
+    <section class="lesson" id="lessonSection" aria-labelledby="lessonTitle">
+      <div class="lesson-progress" aria-label="练习进度">
+        <span class="is-current">播放 A</span>
+        <span>听四拍</span>
+        <span>同步 B</span>
+        <span>引入 B</span>
+        <span>交换低频</span>
+        <span>收掉 A</span>
+        <span>完成交接</span>
+        <span>完成</span>
+      </div>
+      <div class="lesson-copy">
+        <h2 id="lessonTitle">先让 Deck A 发声</h2>
+        <p id="lessonHint">按下 A 的播放键，先听声音。</p>
+      </div>
+      <div class="lesson-visual lesson-track-compare">
+        <button type="button" id="previewA"><b>A</b><span class="mini-track"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><small>鼓点骨架</small></button>
+        <button type="button" id="previewB"><b>B</b><span class="mini-track"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><small>旋律层</small></button>
+      </div>
+      <button class="lesson-primary-action" id="lessonPrimaryAction" type="button">播放 A</button>
+      <div class="lesson-utility-actions">
+        <button id="lessonPauseButton" class="text-button" type="button" disabled>暂停</button>
+        <button id="resetButton" class="text-button" type="button">重置</button>
+      </div>
+      <details class="lesson-why">
+        <summary>为什么这样做</summary>
+        <p id="lessonWhyText">先只听一首歌，耳朵更容易找到稳定的拍子。</p>
+      </details>
+      <div class="lesson-actions">
+        <span class="lesson-feedback-avatar pose-avatar pose-a" aria-hidden="true"></span>
+        <button id="hintButton" class="text-button" type="button">给我一句提示</button>
+        <p class="coach-message" id="coachMessage" role="status" hidden></p>
+      </div>
+    </section>
+
+    <section class="phrase-lesson" id="phraseLesson" aria-labelledby="phraseTitle" hidden>
+      <div class="phrase-copy">
+        <h2 id="phraseTitle">抓住乐句第一拍</h2>
+        <p>4 拍是 1 小节，4 小节组成 16 拍乐句。在新乐句第一拍进入 B，两个段落才会对齐。</p>
+      </div>
+      <div class="phrase-stage" aria-label="16拍乐句练习">
+        <div class="phrase-bars" id="phraseBars" aria-hidden="true">
+          <div><b>小节 1</b><span>1</span><span>2</span><span>3</span><span>4</span></div>
+          <div><b>小节 2</b><span>5</span><span>6</span><span>7</span><span>8</span></div>
+          <div><b>小节 3</b><span>9</span><span>10</span><span>11</span><span>12</span></div>
+          <div><b>小节 4</b><span>13</span><span>14</span><span>15</span><span>16</span></div>
+        </div>
+        <div class="phrase-readout"><span id="phraseModeLabel">第 1 遍 · 看着学</span><strong id="phraseReadout">等待播放</strong><span id="phraseCycles">抓对 0</span></div>
+        <div class="phrase-actions">
+          <button class="primary-button" id="startPhrase" type="button">播放 A 并开始数拍</button>
+          <button class="text-button phrase-control" id="pausePhrase" type="button" disabled>暂停</button>
+          <button class="text-button phrase-control" id="resetPhrase" type="button">重置</button>
+          <button class="phrase-hit" id="markPhrase" type="button" disabled>这是下一句第一拍</button>
+        </div>
+        <div class="character-feedback"><span class="pose-avatar pose-b" aria-hidden="true"></span><p class="phrase-feedback" id="phraseFeedback" role="status">第一遍看提示，第二遍盲听。</p></div>
+        <div class="phrase-success" id="phraseSuccess" hidden>
+          <svg aria-hidden="true" viewBox="0 0 48 48"><path d="m10 25 9 9 20-22"/></svg>
+          <div><strong id="phraseSuccessTitle">抓到乐句第一拍</strong><p>继续盲听，也可以进入下一步。</p></div>
+          <button class="phrase-next" id="phraseNext" type="button">继续：Cue、BPM 与 Sync</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="module-lesson" id="moduleLesson" aria-labelledby="moduleTitle" hidden>
+      <div class="module-copy">
+        <span class="module-label" id="moduleLabel"></span>
+        <h2 id="moduleTitle"></h2>
+        <p id="moduleIntro"></p>
+      </div>
+      <div class="module-progress" id="moduleProgress" aria-label="当前进度"></div>
+      <div class="module-stage" id="moduleStage"></div>
+      <div class="character-feedback"><span class="pose-avatar pose-c" aria-hidden="true"></span><p class="module-feedback" id="moduleFeedback" role="status" aria-live="polite"></p></div>
+      <div class="module-actions">
+        <button class="text-button" id="moduleRestart" type="button">重做本节</button>
+        <button class="primary-button" id="moduleAdvance" type="button" hidden>继续</button>
+      </div>
+      <div class="module-finish" id="moduleFinish" hidden role="dialog" aria-modal="true" aria-labelledby="moduleFinishTitle">
+        <img class="module-finish-character" src="./assets/characters/dj-feedback-avatar-v1.png" alt="紫发 DJ 靠在弹窗上方竖起拇指" />
+        <div class="module-finish-panel"><strong id="moduleFinishTitle">这节拿下</strong><p>这一步已经完成，可以继续下一节。</p><button class="primary-button" id="moduleNext" type="button">下一节</button></div>
+      </div>
+    </section>
+
+    <aside class="orientation-guide" id="orientationGuide" aria-label="手机练习显示建议">
+      <div><strong>横屏使用打碟台</strong><span>完整显示 Deck A、Mixer 和 Deck B。</span></div>
+      <button class="primary-button" id="enterConsole" type="button">横屏全屏练习</button>
+    </aside>
+
+    <div class="console-mode-bar" aria-label="控台显示选项">
+      <span>双通道训练控制台</span>
+      <button class="text-button" id="toggleConsole" type="button">进入全屏控台</button>
+      <button class="text-button" id="exitConsole" type="button" hidden>退出全屏</button>
+    </div>
+
+    <div class="practice-brand" aria-label="FIRST MIX 打碟台">
+      <a href="./index.html" aria-label="返回 FIRST MIX 开始页">FIRST MIX</a>
+    </div>
+    <button class="practice-guide-button" id="practiceGuideButton" type="button" aria-controls="practiceGuide" aria-expanded="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5h10.5A2.5 2.5 0 0 1 18 7v13H7.5A2.5 2.5 0 0 1 5 17.5v-13Z"/><path d="M5 17.5A2.5 2.5 0 0 1 7.5 15H18M9 8h5M9 11h4"/></svg>
+      <span>使用教程</span>
+    </button>
+    <button class="practice-landscape-button" id="practiceLandscape" type="button" aria-label="进入横屏打碟模式">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/><path d="m3 8 5-5m8 0 5 5M3 16l5 5m8 0 5-5"/></svg>
+      <span>横屏</span>
+    </button>
+    <section class="skill-lesson hot-cue-lesson" id="hotCueLesson" aria-labelledby="hotCueLessonTitle" hidden>
+      <div class="hot-cue-lesson-head">
+        <h2 id="hotCueLessonTitle">HOT CUE</h2>
+        <a href="./index.html?view=learning&amp;stage=skills">返回技巧玩法</a>
+      </div>
+      <div class="hot-cue-comparison" aria-label="CUE 与 HOT CUE 的区别">
+        <p><strong>CUE</strong><span>播放中按下：返回一个定位点并暂停</span></p>
+        <p><strong>HOT CUE</strong><span>每个打击垫保存一个 Cue 点；触发后跳转并继续播放</span></p>
+      </div>
+      <div class="hot-cue-lesson-action">
+        <p id="hotCueLessonStatus" role="status">使用内置曲目《Venus》。播放后，1、2 号打击垫各有一个示范 Cue 点。</p>
+        <button id="hotCueLessonStart" type="button">播放内置曲目</button>
+        <button id="hotCueDelete" class="skill-secondary-action" type="button" aria-pressed="false" hidden>删除 Cue 点</button>
+      </div>
+    </section>
+    <section class="skill-lesson" id="loopLesson" aria-labelledby="loopLessonTitle" hidden>
+      <div class="hot-cue-lesson-head">
+        <h2 id="loopLessonTitle">4 / 8 BEAT LOOP</h2>
+        <a href="./index.html?view=learning&amp;stage=skills">返回技巧玩法</a>
+      </div>
+      <div class="skill-explainer"><strong>LOOP</strong><span>点模型上的 LOOP，再按标有 4 或 8 的打击垫；按 OFF 恢复正常播放。</span></div>
+      <div class="skill-lesson-controls" id="loopControls" hidden>
+        <button type="button" data-loop-beats="4" aria-pressed="false">4 拍循环</button>
+        <button type="button" data-loop-beats="8" aria-pressed="false">8 拍循环</button>
+        <button type="button" id="loopExit" class="skill-secondary-action">退出循环</button>
+      </div>
+      <div class="hot-cue-lesson-action">
+        <p id="loopLessonStatus" role="status">播放内置曲目后，点模型上的 LOOP，再点 4 或 8 打击垫；点 OFF 退出。</p>
+        <button id="loopLessonStart" type="button">播放内置曲目</button>
+      </div>
+    </section>
+    <section class="skill-lesson" id="filterLesson" aria-labelledby="filterLessonTitle" hidden>
+      <div class="hot-cue-lesson-head">
+        <h2 id="filterLessonTitle">FILTER SWEEP</h2>
+        <a href="./index.html?view=learning&amp;stage=skills">返回技巧玩法</a>
+      </div>
+      <div class="skill-explainer"><strong>FILTER</strong><span>向左削去高频，向右削去低频；回到中间恢复原声。</span></div>
+      <div class="skill-filter-control" id="filterControls" hidden>
+        <label for="skillFilterSlider">滤波方向 <output id="skillFilterValue" for="skillFilterSlider">原声</output></label>
+        <input id="skillFilterSlider" type="range" min="-100" max="100" value="0" aria-label="Deck A 滤波方向，左侧低通，右侧高通" />
+        <div aria-hidden="true"><span>低通 · 削去高频</span><span>原声</span><span>高通 · 削去低频</span></div>
+      </div>
+      <div class="hot-cue-lesson-action">
+        <p id="filterLessonStatus" role="status">使用内置曲目《EDM at Midnight》。播放后拖动 FILTER，比较声音的变化。</p>
+        <button id="filterLessonStart" type="button">播放内置曲目</button>
+      </div>
+    </section>
+    <aside class="practice-guide" id="practiceGuide" aria-labelledby="practiceGuideTitle" hidden>
+      <header><span id="practiceGuideProgress">1 / 21</span><button id="practiceGuideClose" type="button" aria-label="关闭使用教程">×</button></header>
+      <h2 id="practiceGuideTitle">先认识打碟机</h2>
+      <p id="practiceGuideCopy">唱盘、播放键和中央推杆是主要操作区。</p>
+      <p class="practice-guide-tip"><span>试一试</span><span id="practiceGuideTry">跟着高亮位置，逐个认识机身控件。</span></p>
+      <footer><button id="practiceGuidePrevious" type="button">上一步</button><button id="practiceGuideNext" type="button">下一步</button></footer>
+    </aside>
+    <section class="practice-display" aria-label="打碟台电子屏">
+      <div class="practice-display-head"><strong>FIRST MIX</strong><span id="practiceDisplayStatus">准备播放</span><button type="button" id="practiceLoadA">载入 A</button><button type="button" id="practiceLoadB">载入 B</button></div>
+      <div class="practice-track-tools" aria-label="训练音乐与 BPM 校正">
+        <label><span>A BPM</span><input id="bpmInputA" type="number" min="60" max="200" step="0.1" value="120" /></label>
+        <label><span>B BPM</span><input id="bpmInputB" type="number" min="60" max="200" step="0.1" value="120" /></label>
+        <button type="button" id="restoreTraining">恢复训练音乐</button>
+        <input id="fileA" class="visually-hidden" type="file" accept="audio/*,.mp3,.wav,.m4a,.ogg" />
+        <input id="fileB" class="visually-hidden" type="file" accept="audio/*,.mp3,.wav,.m4a,.ogg" />
+        <span id="fileAStatus" class="visually-hidden">选择本地音频</span><span id="fileBStatus" class="visually-hidden">选择本地音频</span>
+      </div>
+      <canvas id="practiceScope" aria-label="实时输出声纹"></canvas>
+      <p id="practiceOrientation">横屏获得最佳体验 · 也可以竖屏继续操作</p>
+    </section>
+    <section class="mixer" id="mixer" aria-label="双 Deck 混音台">
+      <article class="deck deck-a" aria-labelledby="deckATitle">
+        <header class="deck-head">
+          <div>
+            <p>训练音乐</p>
+            <h2 id="deckATitle"><span class="term term-heading" tabindex="0" data-tooltip="Deck：一条独立的歌曲播放通道。A 和 B 可以同时播放。">Deck</span> A <span>雾中脉冲 · 朦胧心跳</span></h2>
+          </div>
+          <output id="timeA" aria-label="Deck A 当前时间">00:00.0</output>
+        </header>
+        <div class="platter" aria-hidden="true"><div class="platter-ring"><span>A</span><i></i></div><small>JOG / SCRUB</small></div>
+        <div class="wave" aria-hidden="true"><canvas id="waveA" width="800" height="112"></canvas><i id="playheadA"></i></div>
+        <div class="transport-row">
+          <button class="play-button is-next" id="playA" type="button" aria-pressed="false">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M8 5v14l11-7L8 5Z"/></svg>
+            <span>播放 A</span>
+          </button>
+          <button class="cue-button" id="cueA" type="button">CUE A</button>
+          <div class="deck-meta"><span id="bpmA">120</span><small><span class="term" tabindex="0" data-tooltip="BPM：每分钟的节拍数。两首训练曲都是 120 BPM。">BPM</span></small></div>
+          <div class="deck-meta"><span id="beatA">1</span><small><span class="term" tabindex="0" data-tooltip="Beat：你能跟着点头或数 1、2、3、4 的基本节拍。">BEAT</span></small></div>
+        </div>
+        <div class="control-bank advanced-controls" data-locked-label="完成转场后解锁 EQ">
+          <label>音量 <output for="volumeA">80%</output><input id="volumeA" type="range" min="0" max="100" value="80" /></label>
+          <label>低频 <output for="lowA">0 dB</output><input id="lowA" type="range" min="-12" max="12" value="0" /></label>
+          <label>中频 <output for="midA">0 dB</output><input id="midA" type="range" min="-12" max="12" value="0" /></label>
+          <label>高频 <output for="highA">0 dB</output><input id="highA" type="range" min="-12" max="12" value="0" /></label>
+          <label>滤波 <output for="filterA">0</output><input id="filterA" type="range" min="-100" max="100" value="0" /></label>
+        </div>
+      </article>
+
+      <div class="handoff is-locked" id="handoff" aria-label="转场控制">
+        <div class="handoff-title"><span>A</span><strong><span class="term term-dark" tabindex="0" data-tooltip="Crossfader：控制 A 和 B 谁更响的横向推杆。向右推，B 会逐渐出现。">CROSSFADER</span></strong><span>B</span></div>
+        <input id="crossfader" type="range" min="-100" max="100" value="-100" aria-label="Crossfader，从 Deck A 移动到 Deck B" />
+        <div class="handoff-scale" aria-hidden="true"><span id="zoneA" class="is-current">只听 A</span><span id="zoneMix">两首混合</span><span id="zoneB">只听 B</span></div>
+        <output id="crossOutput" for="crossfader" aria-live="polite">现在只有 A：朦胧心跳</output>
+      </div>
+
+      <article class="deck deck-b" aria-labelledby="deckBTitle">
+        <header class="deck-head">
+          <div>
+            <p>训练音乐</p>
+            <h2 id="deckBTitle"><span class="term term-heading" tabindex="0" data-tooltip="Deck：一条独立的歌曲播放通道。B 会在转场时接替 A。">Deck</span> B <span>回声玻璃 · 漂浮铃音</span></h2>
+          </div>
+          <output id="timeB" aria-label="Deck B 当前时间">00:00.0</output>
+        </header>
+        <div class="platter" aria-hidden="true"><div class="platter-ring"><span>B</span><i></i></div><small>JOG / SCRUB</small></div>
+        <div class="wave" aria-hidden="true"><canvas id="waveB" width="800" height="112"></canvas><i id="playheadB"></i></div>
+        <div class="transport-row">
+          <button class="play-button" id="playB" type="button" aria-pressed="false">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M8 5v14l11-7L8 5Z"/></svg>
+            <span>播放 B</span>
+          </button>
+          <button class="cue-button" id="cueB" type="button">CUE B</button>
+          <button class="sync-button" id="syncB" type="button" aria-describedby="syncHelp"><span class="term term-button" tabindex="-1" data-tooltip="Sync：让 B 跳到和 A 相同的节拍位置，使两首歌一起走。">SYNC</span> B</button>
+          <span id="syncHelp" class="visually-hidden">Sync 会让 Deck B 对齐到 Deck A 当前的节拍位置。</span>
+          <div class="deck-meta"><span id="bpmB">120</span><small><span class="term" tabindex="0" data-tooltip="BPM：导入后会自动估算，也可以手动校正。">BPM</span></small></div>
+          <div class="deck-meta"><span id="beatB">1</span><small><span class="term" tabindex="0" data-tooltip="Beat：音乐中的基本节拍。两边数字相同，说明位置已经对齐。">BEAT</span></small></div>
+        </div>
+        <div class="control-bank advanced-controls" data-locked-label="完成转场后解锁 EQ">
+          <label>音量 <output for="volumeB">80%</output><input id="volumeB" type="range" min="0" max="100" value="80" /></label>
+          <label>低频 <output for="lowB">0 dB</output><input id="lowB" type="range" min="-12" max="12" value="0" /></label>
+          <label>中频 <output for="midB">0 dB</output><input id="midB" type="range" min="-12" max="12" value="0" /></label>
+          <label>高频 <output for="highB">0 dB</output><input id="highB" type="range" min="-12" max="12" value="0" /></label>
+          <label>滤波 <output for="filterB">0</output><input id="filterB" type="range" min="-100" max="100" value="0" /></label>
+        </div>
+      </article>
+    </section>
+
+    <div class="practice-pads" aria-label="打击垫"><button type="button" data-pad="kick">底鼓</button><button type="button" data-pad="clap">拍手</button><button type="button" data-pad="hat">踩镲</button><button type="button" data-pad="tone">电子音</button></div>
+    <section class="proof" aria-labelledby="proofTitle">
+      <div><h2 id="proofTitle">原型正在验证什么</h2><p>所有声音都由浏览器实时合成。没有上传文件，也没有调用 AI。</p></div>
+      <dl>
+        <div><dt>双 Deck</dt><dd id="proofDecks">未启动</dd></div>
+        <div><dt>音频状态</dt><dd id="proofContext">未初始化</dd></div>
+        <div><dt>采样率</dt><dd id="proofRate">—</dd></div>
+        <div><dt>输出延迟</dt><dd id="proofLatency">—</dd></div>
+      </dl>
+    </section>
+
+    <section class="free-mix" id="freeMix" hidden aria-hidden="true"></section>
+
+    <section class="works-library my-library" id="worksLibrary" aria-labelledby="worksTitle" hidden>
+      <div class="my-environment" aria-hidden="true"><i></i><i></i></div>
+      <header class="my-topbar">
+        <span aria-hidden="true"></span>
+        <a class="wordmark my-wordmark" href="./index.html" aria-label="返回 FIRST MIX 开始页">FIRST MIX</a>
+        <span aria-hidden="true"></span>
+      </header>
+      <header class="my-heading"><h2 id="worksTitle">我的</h2><button class="my-record-once" id="myRecordOnce" type="button">去录制</button></header>
+      <nav class="my-tabs" aria-label="我的内容">
+        <button class="is-active" type="button" data-my-view="progress" aria-current="page">DJ 档案</button>
+        <button type="button" data-my-view="works">我的作品</button>
+      </nav>
+
+      <section class="my-panel my-progress-panel dj-profile" id="myProgressPanel" data-my-panel="progress" aria-labelledby="djProfileTitle">
+        <section class="practice-footprint" aria-labelledby="djProfileTitle">
+          <header class="practice-footprint-head">
+            <div>
+              <h3 id="djProfileTitle">本周练习足迹</h3>
+              <p id="djProfileSummary">每一次学习、录制和控制都会落在这里。</p>
+            </div>
+            <dl class="practice-footprint-stats" aria-label="DJ 档案摘要">
+              <div><dt>练习</dt><dd><span id="profileDays">0</span><small>天</small></dd></div>
+              <div><dt>作品</dt><dd><span id="profileWorks">0</span><small>段</small></dd></div>
+              <div><dt>常用</dt><dd><span id="profileBpm">120</span><small>BPM</small></dd></div>
+            </dl>
+          </header>
+        </section>
+
+        <section class="practice-footprint activity-terrain-panel" aria-label="近七天练习轨迹">
+          <div class="practice-calendar-head">
+            <div><strong id="activityMonth">本月</strong><span id="activitySummary">练习记录会出现在完成当天。</span></div>
+            <nav class="activity-month-nav" aria-label="切换周"><button id="activityMonthPrevious" type="button" aria-label="上一周">‹</button><button id="activityMonthNext" type="button" aria-label="下一周">›</button></nav>
+          </div>
+          <div class="activity-calendar" id="activityCalendar" aria-label="每日练习日历"></div>
+        </section>
+
+        <section class="ai-weekly-coach" id="aiWeeklyCoach" aria-labelledby="aiWeeklyTitle">
+          <div class="ai-weekly-mark" aria-hidden="true"><i></i><i></i><i></i></div>
+          <div class="ai-weekly-copy">
+            <div class="ai-weekly-title-row"><h3 id="aiWeeklyTitle">打开本周 AI 声音分析</h3><span id="aiWeeklyStatus">正在检查</span></div>
+            <p id="aiWeeklyCopy">正在确认 AI 连接与个人作品状态。</p>
+            <div class="ai-weekly-result" id="aiWeeklyResult" hidden>
+              <strong id="aiWeeklyResultTitle"></strong>
+              <p id="aiWeeklyResultCopy"></p>
+            </div>
+          </div>
+          <button class="ai-weekly-action" id="runWeeklyAi" type="button" disabled>请稍候</button>
+        </section>
+
+        <section class="ai-direction-modal" id="aiDirectionModal" hidden role="dialog" aria-modal="true" aria-labelledby="aiDirectionStyleTitle">
+          <article class="ai-direction-shell" tabindex="-1">
+            <div class="ai-direction-handle" aria-hidden="true"></div>
+            <header class="ai-direction-head"><div><span id="aiAnalysisState">本周声音画像</span><strong>听见你的控制</strong></div><button id="closeAiDirection" type="button" aria-label="关闭 AI 声音分析"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></header>
+            <div class="ai-direction-portrait" aria-label="本周控制画像，色团会自主移动并在解析时汇聚">
+              <canvas id="aiWaterCanvas" aria-hidden="true"></canvas>
+              <span class="ai-map-node ai-map-deck"><b id="aiMapDeck">0%</b><small>唱盘</small></span>
+              <span class="ai-map-node ai-map-eq"><b id="aiMapEq">0%</b><small>低频</small></span>
+              <span class="ai-map-node ai-map-mix"><b id="aiMapMix">0%</b><small>混音</small></span>
+              <p class="ai-water-hint" id="aiWaterHint">动态预览 · 尚未开始解析</p>
+            </div>
+            <div class="ai-direction-copy"><h2 id="aiDirectionStyleTitle">等待你的声音</h2><p id="aiDirectionStyleCopy">完成个人 Mix 后生成。</p></div>
+            <section class="ai-findings" id="aiFindings" aria-label="本周表现分析" hidden>
+              <article class="ai-finding-success"><header><span aria-hidden="true">✓</span><h3>做得好</h3></header><ul id="aiWins"><li>等待真实作品</li></ul></article>
+              <article class="ai-finding-risk"><header><span aria-hidden="true">!</span><h3>需注意</h3></header><ul id="aiRisks"><li>等待真实作品</li></ul></article>
+            </section>
+            <section class="ai-direction-task" id="aiDirectionTask" hidden><span>下一步</span><h3 id="aiDirectionTaskTitle">等待本周判断</h3><p id="aiDirectionTaskCopy">使用自己的两首音乐录制后生成。</p><a href="./index.html?view=learning">去练习</a></section>
+          </article>
+        </section>
+      </section>
+
+      <section class="my-panel my-works-panel" id="myWorksPanel" data-my-panel="works" aria-label="我的作品" hidden>
+        <span id="worksCount" class="visually-hidden" aria-live="polite">保存你真正想再听一次的 Mix。</span>
+        <div class="works-list" id="worksList" aria-live="polite"></div>
+        <div class="works-empty" id="worksEmpty">
+          <div class="works-empty-vinyl" aria-hidden="true"><span></span></div>
+          <div><strong>第一段 Mix，从这里开始</strong><p>录完后会自动出现在这里，随时回听和下载。</p></div>
+        </div>
+        <p class="works-storage-note" id="worksStorageNote" hidden>仅保存在当前设备，请及时下载。</p>
+      </section>
+
+      <section class="library-player" id="libraryPlayer" aria-label="作品播放器" hidden>
+        <audio id="libraryAudio" preload="metadata"></audio>
+        <div class="library-player-head">
+          <button class="library-player-close" id="libraryPlayerClose" type="button" aria-label="关闭播放器">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"/></svg>
+          </button>
+          <div class="library-player-title"><strong id="libraryPlayerTitle">FIRST MIX</strong><span id="libraryPlayerMeta">本机作品</span></div>
+          <button class="library-player-expand" id="libraryPlayerExpand" type="button" aria-label="展开播放器" aria-expanded="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 14 5-5 5 5"/></svg>
+          </button>
+        </div>
+        <div class="library-wave-wrap">
+          <div class="library-wave" id="libraryWave" aria-hidden="true"></div>
+          <input id="libraryProgress" type="range" min="0" max="1" value="0" step="0.01" aria-label="播放进度" />
+        </div>
+        <div class="library-time"><time id="libraryElapsed">00:00</time><span id="libraryNowLabel">MIX PLAYBACK</span><time id="libraryDuration">00:00</time></div>
+        <nav class="mix-story-chapters" id="mixStoryChapters" aria-label="Mix 章节"></nav>
+        <section class="mix-story-panel" aria-labelledby="mixStoryMomentTitle">
+          <div class="mix-story-moment">
+            <div class="mix-story-face" id="mixStoryFace" aria-hidden="true"></div>
+            <div><span id="mixStoryMomentTime">00:00</span><h3 id="mixStoryMomentTitle">Intro</h3><p id="mixStoryMomentCopy">作品从这里开始。</p></div>
+          </div>
+          <label class="mix-story-note" for="mixStoryNote"><span>这一段的备注</span><textarea id="mixStoryNote" rows="2" maxlength="120" placeholder="例如：这里低频切太早"></textarea></label>
+          <button class="mix-story-save" id="mixStorySave" type="button">保存备注</button>
+        </section>
+        <div class="mix-story-footer">
+          <div class="mix-story-moods" id="mixStoryMoods" aria-label="本次 Mix 情绪标签"></div>
+          <button class="mix-story-share" id="mixStoryShare" type="button">生成作品海报</button>
+        </div>
+        <div class="library-controls">
+          <button id="libraryPrevious" type="button" aria-label="上一段作品"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M18 6l-9 6 9 6Z"/></svg></button>
+          <button id="libraryBack" type="button" aria-label="后退十秒"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8H2V5M3 7a8 8 0 1 1-1 7"/><text x="9" y="15">10</text></svg></button>
+          <button class="library-play" id="libraryPlay" type="button" aria-label="播放"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="play-shape" d="M8 5v14l11-7Z"/><path class="pause-shape" d="M6.5 5h3v14h-3zm8 0h3v14h-3z"/></svg></button>
+          <button id="libraryForward" type="button" aria-label="前进十秒"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 8h3V5M21 7a8 8 0 1 0 1 7"/><text x="7" y="15">10</text></svg></button>
+          <button id="libraryNext" type="button" aria-label="下一段作品"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M6 6l9 6-9 6Z"/></svg></button>
+        </div>
+      </section>
+
+    </section>
+
+    <section class="mix-recorder" id="mixRecorder" aria-label="Mix 录制">
+      <span class="recorder-light" aria-hidden="true"></span>
+      <div><strong id="recordTitle">录制 Mix</strong><small id="recordStatus">记录打碟台最终输出</small></div>
+      <time id="recordTime">00:00</time>
+      <button class="coach-toggle" type="button" id="coachToggle" aria-pressed="true">教练已开</button>
+      <button type="button" id="recordButton">开始录制</button>
+    </section>
+  </main>
+
+  <aside class="tour-panel" id="interfaceTour" aria-labelledby="tourTitle" aria-live="polite" hidden>
+    <p id="tourProgress">界面介绍 1 / 5</p>
+    <h2 id="tourTitle">Deck  音轨台</h2>
+    <p id="tourDescription"></p>
+    <div class="tour-actions">
+      <button class="text-button" id="skipTour" type="button">跳过介绍</button>
+      <button class="primary-button" id="nextTour" type="button">下一个</button>
+    </div>
+  </aside>
+
+  <div class="success-sheet" id="successSheet" hidden role="dialog" aria-modal="true" aria-labelledby="successTitle">
+    <div class="success-inner">
+      <button class="close-button" id="closeSuccess" type="button" aria-label="关闭完成提示">×</button>
+      <img class="success-character" src="./assets/characters/dj-feedback-avatar-v1.png" alt="紫发 DJ 点赞庆祝完成混音" />
+      <p>FIRST TRANSITION</p>
+      <h2 id="successTitle">完成第一次转场</h2>
+      <p>A 退场，B 接住了。</p>
+      <button class="primary-button" id="enterFreeMix" type="button">用自己的音乐继续</button>
+      <button class="primary-button" id="tryAgain" type="button">再做一次</button>
+      <button class="primary-button" id="successNext" type="button">继续学习</button>
+    </div>
+  </div>
+
+  <div class="techniques-backdrop" id="techniquesBackdrop" hidden></div>
+  <aside class="techniques-sheet" id="techniquesSheet" hidden role="region" aria-labelledby="techniquesTitle">
+    <button class="sheet-grabber" id="techniquesGrabber" type="button" aria-label="展开技巧面板"><span></span></button>
+    <header class="techniques-head">
+      <div><span>第二阶段</span><h2 id="techniquesTitle">技巧玩法</h2><p>先听效果，再进入打碟台练习。</p></div>
+      <button class="techniques-close" id="techniquesClose" type="button" aria-label="关闭技巧玩法"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+    </header>
+    <div class="techniques-progress"><span><i></i></span><strong>3 / 7 已解锁</strong></div>
+    <div class="techniques-grid">
+      <button class="technique-card is-unlocked" type="button" data-technique="hot-cue"><span>HOT CUE</span><strong>每个打击垫一个定位点</strong><i aria-hidden="true"><b></b><b></b><b></b><b></b></i></button>
+      <button class="technique-card is-unlocked" type="button" data-technique="loop"><span>4 / 8 BEAT LOOP</span><strong>截住一段继续循环</strong><i aria-hidden="true"><b></b><b></b><b></b><b></b></i></button>
+      <button class="technique-card is-unlocked" type="button" data-technique="filter"><span>FILTER SWEEP</span><strong>扫掉低频或高频</strong><i aria-hidden="true"><b></b><b></b><b></b><b></b></i></button>
+      <button class="technique-card" type="button" disabled><span>ECHO OUT</span><strong>完成 04 后解锁</strong></button>
+      <button class="technique-card" type="button" disabled><span>BEAT JUMP</span><strong>完成 05 后解锁</strong></button>
+      <button class="technique-card" type="button" disabled><span>SAMPLER</span><strong>完成 06 后解锁</strong></button>
+      <button class="technique-card" type="button" disabled><span>SCRATCH</span><strong>真实搓碟引擎开发中</strong></button>
+    </div>
+    <button class="techniques-practice" id="techniquesPractice" type="button">进入打碟台练习 <span aria-hidden="true">→</span></button>
+  </aside>
+
+  <nav class="app-tabbar" aria-label="主要页面">
+    <button class="app-tab is-active" id="navHome" type="button" aria-current="page">
+      <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M3.5 10.5 12 3l8.5 7.5v9a1.5 1.5 0 0 1-1.5 1.5H5a1.5 1.5 0 0 1-1.5-1.5v-9Z"/><path d="M9 21v-7h6v7"/></svg>
+      <span>学习</span>
+    </button>
+    <button class="app-tab" id="navPractice" type="button">
+      <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 4.5h10.5A2.5 2.5 0 0 1 18 7v13H7.5A2.5 2.5 0 0 1 5 17.5v-13Z"/><path d="M5 17.5A2.5 2.5 0 0 1 7.5 15H18M9 8h5M9 11h4"/></svg>
+      <span>打碟台</span>
+    </button>
+    <button class="app-tab" id="navConsole" type="button">
+      <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="7" cy="8" r="3.5"/><circle cx="17" cy="16" r="3.5"/><path d="M11 8h9M4 16h9M17 4v8M7 12v8"/></svg>
+      <span>我的</span>
+    </button>
+  </nav>
+
+  <dialog class="orientation-choice" id="practiceOrientationChoice" aria-labelledby="practiceOrientationTitle" aria-describedby="practiceOrientationCopy">
+    <h2 id="practiceOrientationTitle">横屏获得更完整的打碟台视野</h2>
+    <p id="practiceOrientationCopy">是否切换横屏？如果设备不允许自动旋转，手动横置手机即可。</p>
+    <label class="orientation-choice-remember"><input id="practiceRememberLandscape" type="checkbox">以后不再询问，默认横屏</label>
+    <div class="orientation-choice-actions">
+      <button id="practiceOrientationStay" type="button">竖屏继续</button>
+      <button id="practiceOrientationRotate" type="button">切换横屏</button>
+    </div>
+  </dialog>
+
+  <noscript>FIRST MIX 需要 JavaScript 才能运行浏览器音频原型。</noscript>
+  <link rel="stylesheet" href="./controller-3d.css?v=20261012-model-zoom-1" />
+  <link rel="stylesheet" href="./sheet-swipe-dismiss.css?v=20261011-1" />
+  <link rel="stylesheet" href="./layout-refresh.css?v=20261012-hide-landscape-nav-1" />
+  <link rel="stylesheet" href="./hot-cue-lesson.css?v=20261012-skills-2" />
+  <script defer src="./sheet-swipe-dismiss.js?v=20261011-1"></script>
+  <script type="module" src="./app.js?v=20261012-orientation-choice-1"></script>
+</body>
+</html>

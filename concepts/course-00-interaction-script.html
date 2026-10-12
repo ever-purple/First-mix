@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FIRST MIX｜00 第一次交接 · 逐步交互脚本</title>
+  <style>
+    @font-face{font-family:Inter;src:url('../fonts/Inter-400.woff2') format('woff2');font-weight:400;font-display:swap}
+    @font-face{font-family:Inter;src:url('../fonts/Inter-600.woff2') format('woff2');font-weight:600;font-display:swap}
+    @font-face{font-family:GochiHand;src:url('../fonts/GochiHand.woff2') format('woff2');font-weight:400;font-display:swap}
+    :root{--ink:#1c1821;--muted:#696170;--paper:#f7f3eb;--white:#fffdf8;--violet:#7753c8;--violet-soft:#e7def3;--lime:#a9ef3d;--lime-soft:#e8f7ce;--sky:#d8edf2;--line:rgba(28,24,33,.14);--shadow:0 26px 70px rgba(61,45,72,.18);color-scheme:light}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;min-height:100vh;background:#bfdee7;color:var(--ink);font-family:Inter,"Microsoft YaHei UI","PingFang SC",sans-serif;-webkit-font-smoothing:antialiased}
+    body:before,body:after{content:"";position:fixed;z-index:-1;width:44vw;height:44vw;border-radius:48% 52% 58% 42%;filter:blur(76px);opacity:.52}
+    body:before{left:-14vw;top:-15vw;background:#b9f060}
+    body:after{right:-12vw;bottom:-17vw;background:#a98cdd}
+    a,button{font:inherit;color:inherit}::selection{background:var(--lime);color:var(--ink)}
+    :focus-visible{outline:3px solid var(--lime);outline-offset:3px}
+    .page{width:min(1240px,calc(100% - 28px));margin:0 auto;padding:24px 0 80px}
+    .topbar{display:grid;grid-template-columns:48px 1fr;align-items:center;gap:15px;margin-bottom:18px}
+    .back{width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.67);display:grid;place-items:center;text-decoration:none}
+    .back svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .brand{font-family:GochiHand,cursive;font-size:1.65rem}
+    .workspace{display:grid;grid-template-columns:250px minmax(0,1fr);background:rgba(247,243,235,.97);border-radius:28px;box-shadow:var(--shadow);overflow:hidden}
+    .course-list{padding:30px 24px;border-right:1px solid var(--line);background:rgba(255,253,248,.66)}
+    .course-list h2{font-size:.82rem;letter-spacing:.08em;margin:0 0 17px;text-transform:uppercase}
+    .course-list ol{list-style:none;padding:0;margin:0}
+    .course-list li{border-top:1px solid var(--line)}
+    .course-list li:last-child{border-bottom:1px solid var(--line)}
+    .course-list a{display:grid;grid-template-columns:28px 1fr;gap:8px;padding:15px 0;text-decoration:none;font-size:.82rem;line-height:1.35;color:#5d5561}
+    .course-list a span:first-child{font-variant-numeric:tabular-nums;color:#8c838f}
+    .course-list li.active a{color:var(--ink);font-weight:600}
+    .course-list li.active a span:first-child{color:var(--violet)}
+    .course-list li.active a:after{content:"";grid-column:2;width:34px;height:4px;border-radius:99px;background:var(--lime);margin-top:2px}
+    .main{min-width:0}
+    .hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(250px,.75fr);gap:42px;padding:44px 46px 35px;border-bottom:1px solid var(--line)}
+    h1{font-size:clamp(2.55rem,5vw,4.6rem);line-height:.98;letter-spacing:-.045em;margin:0 0 24px;text-wrap:balance}
+    .question{font-size:.92rem;line-height:1.62;color:#524a57;margin:0;max-width:40em}
+    .question strong{display:block;font-size:clamp(1.25rem,2.4vw,1.75rem);line-height:1.25;letter-spacing:-.02em;color:var(--ink);margin-bottom:9px}
+    .goal{align-self:end;padding-top:14px;border-top:1px solid var(--ink)}
+    .goal strong{display:block;font-size:.92rem;margin-bottom:8px}
+    .goal p{font-size:.86rem;line-height:1.58;color:var(--muted);margin:0}
+    .goal ul{display:flex;flex-wrap:wrap;gap:7px;list-style:none;padding:0;margin:14px 0 0}
+    .goal li{padding:6px 9px;border-radius:9px;background:var(--lime-soft);font-size:.75rem;font-weight:600;color:#38520d}
+    .guardrails{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--line)}
+    .guardrails div{padding:18px 22px;border-right:1px solid var(--line)}
+    .guardrails div:last-child{border-right:0}
+    .guardrails strong{display:block;font-size:.82rem;margin-bottom:5px}
+    .guardrails span{display:block;font-size:.79rem;line-height:1.48;color:var(--muted)}
+    .script{padding:34px 46px 48px}
+    .script-head{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:18px}
+    .script-head h2{font-size:1.75rem;letter-spacing:-.025em;margin:0 0 6px}
+    .script-head p{font-size:.84rem;line-height:1.55;color:var(--muted);margin:0}
+    .legend{font-size:.75rem;color:var(--muted);white-space:nowrap}
+    .steps{border-top:1px solid var(--ink)}
+    .step{display:grid;grid-template-columns:76px minmax(0,1fr);gap:24px;padding:27px 0;border-bottom:1px solid var(--line)}
+    .step-number{font-size:2.15rem;line-height:1;font-weight:600;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+    .step-number span{display:block;width:max-content;margin-top:9px;padding:5px 8px;border-radius:8px;background:var(--violet-soft);color:#4f377f;font-size:.72rem;letter-spacing:0}
+    .step:nth-child(2) .step-number span,.step:nth-child(5) .step-number span{background:var(--lime-soft);color:#38520d}
+    .step-main h3{font-size:1.25rem;line-height:1.25;margin:0 0 7px;letter-spacing:-.015em}
+    .screen-copy{display:flex;gap:9px;align-items:flex-start;padding:2px 0;font-size:.85rem;font-weight:600;line-height:1.5;color:#443d48;margin:0 0 16px}
+    .screen-copy:before{content:"";width:8px;height:8px;flex:0 0 auto;margin-top:.38em;border-radius:50%;background:var(--violet)}
+    .detail-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+    .detail{padding-top:11px;border-top:1px solid var(--line)}
+    .detail b{display:block;font-size:.72rem;letter-spacing:.06em;color:#655d69;margin-bottom:6px;text-transform:uppercase}
+    .detail p{font-size:.82rem;line-height:1.55;color:#574f5b;margin:0}
+    .focus-line{display:grid;grid-template-columns:20px max-content minmax(0,1fr);align-items:start;gap:10px;margin-top:14px;padding:11px 12px;border-radius:12px;background:#ebe7e0}
+    .focus-line svg{width:20px;height:20px;flex:0 0 auto;fill:none;stroke:var(--violet);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+    .focus-line strong{font-size:.78rem}.focus-line span{font-size:.78rem;line-height:1.45;color:#5e5662}
+    .audio-map{display:grid;grid-template-columns:minmax(0,1fr) 42px minmax(0,1fr);align-items:center;gap:12px;margin-top:17px}
+    .audio-track{padding:13px 14px;border-radius:13px;background:var(--white)}
+    .audio-track strong,.audio-track span{display:block}
+    .audio-track strong{font-size:.82rem;margin-bottom:5px}.audio-track span{font-size:.8rem;line-height:1.45;color:var(--muted)}
+    .arrow{display:grid;place-items:center;color:var(--violet)}
+    .arrow svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+    .question-preview{position:relative;min-height:470px;margin:34px 46px 0;border-radius:20px;background:#dad4dc;overflow:hidden;display:grid;place-items:center;padding:112px 24px 38px}
+    .question-preview:before,.question-preview:after{content:"";position:absolute;border-radius:18px;background:rgba(255,255,255,.34);filter:blur(1px)}
+    .question-preview:before{width:78%;height:84px;left:11%;top:28px}.question-preview:after{width:88%;height:128px;left:6%;bottom:28px}
+    .question-modal{position:relative;z-index:1;width:min(560px,100%);padding:92px 28px 26px;border-radius:26px;background:#7652c5;color:#fff;box-shadow:0 24px 52px rgba(35,26,42,.28)}
+    .question-character{position:absolute;right:22px;top:-150px;width:238px;height:238px;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 14px 18px rgba(28,20,35,.24));pointer-events:none}
+    .question-modal h2{font-size:clamp(1.65rem,3.2vw,2.35rem);line-height:1.08;letter-spacing:-.025em;margin:0 0 11px;max-width:12em}.question-modal p{max-width:31em;margin:0 0 20px;color:#eee8f8;font-size:.86rem;line-height:1.55}.question-modal button{min-height:44px;border:0;border-radius:13px;background:var(--lime);color:#192108;padding:0 17px;font-weight:600}
+    .bottom-sheet{position:relative;margin-top:34px;padding:62px 24px 24px;border-radius:26px 26px 18px 18px;background:#7652c5;color:#fff;overflow:visible}
+    .character{position:absolute;right:32px;top:-42px;width:118px;height:82px;pointer-events:none}
+    .character:before{content:"";position:absolute;right:12px;bottom:0;width:80px;height:66px;border-radius:48% 52% 42% 44%;background:#d5bcff;border:3px solid #1c1821;transform:rotate(-4deg)}
+    .character:after{content:"★";position:absolute;right:33px;top:11px;color:var(--lime);font-size:1.8rem;text-shadow:1px 2px 0 #1c1821}
+    .bottom-sheet h3{font-size:1.65rem;line-height:1.1;margin:0 0 8px;letter-spacing:-.025em}
+    .bottom-sheet p{font-size:.86rem;line-height:1.52;margin:0 0 18px;max-width:35em;color:#eee8f8}
+    .result-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+    .result-row span{padding:7px 9px;border-radius:9px;background:rgba(255,255,255,.14);font-size:.75rem;font-weight:600}
+    .sheet-actions{display:grid;grid-template-columns:1fr auto;gap:10px}
+    .sheet-actions button{min-height:44px;border:0;border-radius:13px;padding:0 16px;font-weight:600}
+    .sheet-actions button:first-child{background:#211c28;color:#fff}.sheet-actions button:last-child{background:var(--lime);color:#1c1821}
+    .notes{margin-top:34px;padding-top:24px;border-top:1px solid var(--ink)}
+    .notes h2{font-size:1.35rem;margin:0 0 14px}
+    .notes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .note{padding:14px 15px;border-radius:14px;background:#eee9e2}
+    .note strong{display:block;font-size:.82rem;margin-bottom:6px}.note p{font-size:.8rem;line-height:1.55;color:#5e5662;margin:0}
+    @media(max-width:980px){
+      .workspace{grid-template-columns:1fr}.course-list{border-right:0;border-bottom:1px solid var(--line);padding:20px}.course-list ol{display:grid;grid-template-columns:repeat(4,1fr)}.course-list li:nth-child(4){border-right:0}.course-list li{border-right:1px solid var(--line)}.course-list a{padding:12px 10px}.course-list li.active a:after{display:none}
+      .hero{padding:38px 30px 30px}.script{padding:30px}.detail-grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:700px){
+      .page{width:100%;padding:0 0 40px}.topbar{padding:10px 12px;margin:0}.workspace{border-radius:26px 26px 0 0}
+      .course-list{overflow:auto;padding:16px 14px}.course-list h2{margin-left:8px}.course-list ol{display:flex;width:max-content}.course-list li{width:166px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+      .hero{grid-template-columns:1fr;gap:24px;padding:30px 20px 26px}h1{font-size:2.55rem}.guardrails{grid-template-columns:1fr}.guardrails div{border-right:0;border-bottom:1px solid var(--line);padding:14px 20px}.guardrails div:last-child{border-bottom:0}
+      .question-preview{min-height:430px;margin:26px 14px 0;padding:104px 12px 26px}.question-modal{padding:88px 20px 21px}.question-character{right:4px;top:-137px;width:218px;height:218px}.script{padding:26px 20px 36px}.script-head{display:block}.legend{display:block;margin-top:8px}.step{grid-template-columns:48px minmax(0,1fr);gap:14px}.step-number{font-size:1.65rem}.detail-grid{grid-template-columns:1fr}.audio-map{grid-template-columns:1fr}.arrow{height:22px;transform:rotate(90deg)}.bottom-sheet{padding:58px 18px 18px}.character{right:18px}.sheet-actions{grid-template-columns:1fr}.notes-grid{grid-template-columns:1fr}
+    }
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <a class="back" href="./course-00-static.html" aria-label="返回课程 00 静态稿"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></a>
+      <div class="brand">FIRST MIX</div>
+    </header>
+
+    <section class="workspace" aria-labelledby="page-title">
+      <aside class="course-list" aria-label="课程目录">
+        <h2>课程</h2>
+        <ol>
+          <li class="active"><a href="#page-title"><span>00</span><span>第一次交接</span></a></li>
+          <li><a href="./course-01-interaction-script.html"><span>01</span><span>设置开始位置</span></a></li>
+          <li><a href="#"><span>02</span><span>听懂音乐结构</span></a></li>
+          <li><a href="#"><span>03</span><span>让两首歌对齐</span></a></li>
+          <li><a href="#"><span>04</span><span>在正确时间接入</span></a></li>
+          <li><a href="#"><span>05</span><span>让转场保持清晰</span></a></li>
+          <li><a href="#"><span>06</span><span>选择短交接或长混合</span></a></li>
+          <li><a href="#"><span>07</span><span>独立完成与 AI 评分</span></a></li>
+        </ol>
+      </aside>
+
+      <div class="main">
+        <header class="hero">
+          <div>
+            <h1 id="page-title">00 第一次交接</h1>
+            <p class="question"><strong>怎样换到下一首，音乐不会突然断掉？</strong>先不讲 BPM、Cue 或音乐结构。系统已经把两首歌准备好，你只需要亲手完成一次最简单的交接：让 A 播放，让 B 在正确位置加入，再把听众从 A 带到 B。</p>
+          </div>
+          <aside class="goal">
+            <strong>本节完成标准</strong>
+            <p>用户必须真实操作两个播放键和 Crossfader。只有声音从 A → A+B → B 完整变化，课程才通过。</p>
+            <ul><li>约 2 分钟</li><li>6 个动作节点</li><li>产出一次交接</li></ul>
+          </aside>
+        </header>
+
+        <section class="guardrails" aria-label="课程约束">
+          <div><strong>系统预先准备</strong><span>两首歌速度已一致，B 的开始位置已设好，降低第一次操作的变量。</span></div>
+          <div><strong>本课只出现</strong><span>Deck A、Deck B、播放键与 Crossfader，不提前解释其他控件。</span></div>
+          <div><strong>不能点“继续”过关</strong><span>每一步由真实操作触发；未达到判定条件时停留原步并就地重试。</span></div>
+        </section>
+
+        <section class="question-preview" aria-label="课程开场提问弹窗示意">
+          <div class="question-modal">
+            <img class="question-character" src="../assets/characters/dj-question-thinking-v1.png" alt="DJ 角色托着下巴思考">
+            <h2>怎样换到下一首，音乐不会突然断掉？</h2>
+            <p>先听一次完整交接：开始只有 A，中间两首一起，最后只剩 B。</p>
+            <button type="button">先听一次交接</button>
+          </div>
+        </section>
+
+        <section class="script" aria-labelledby="script-title">
+          <div class="script-head">
+            <div><h2 id="script-title">逐步交互脚本</h2><p>屏幕一次只提出一个动作。高亮区域与说明严格同步，未相关区域压暗但保留位置感。</p></div>
+            <span class="legend">屏幕话术 · 操作 · 判定 · 声音反馈</span>
+          </div>
+
+          <div class="steps">
+            <article class="step">
+              <div class="step-number">00<span>先听目标</span></div>
+              <div class="step-main">
+                <h3>先知道“交接成功”听起来是什么</h3>
+                <p class="screen-copy">注意听：先只有 A，中间两首一起，最后只剩 B。</p>
+                <div class="detail-grid">
+                  <div class="detail"><b>画面</b><p>先显示居中紫色提问弹窗，背景压暗；思考表情人物从弹窗上缘露出。</p></div>
+                  <div class="detail"><b>用户动作</b><p>点击“先听一次交接”。同一块紫色色块缩短并上移，变成奶白课程区上方带角色头像的提问对话框；课程区不移动。同时播放示范，听完后自动进入操作，不出现“继续”。</p></div>
+                  <div class="detail"><b>通过条件</b><p>完整播放 12 秒示范；允许重听，不记录失败。</p></div>
+                  <div class="detail"><b>声音反馈</b><p>A 4 秒 → A+B 4 秒 → B 4 秒，交接变化必须明显。</p></div>
+                </div>
+                <div class="audio-map">
+                  <div class="audio-track"><strong>Deck A · Deep House</strong><span>较厚的鼓和低频，代表即将离开的歌。</span></div>
+                  <div class="arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M15 8l4 4-4 4"/></svg></div>
+                  <div class="audio-track"><strong>Deck B · Melodic House</strong><span>明亮旋律在 8 小节处进入，交接结果容易听辨。</span></div>
+                </div>
+              </div>
+            </article>
+
+            <article class="step">
+              <div class="step-number">01<span>启动 A</span></div>
+              <div class="step-main">
+                <h3>让第一首歌先走起来</h3>
+                <p class="screen-copy">先按左边的播放键。左边这条歌曲通道叫 Deck A。</p>
+                <div class="detail-grid">
+                  <div class="detail"><b>高亮</b><p>精确框选 Deck A 的 Play 键；其余区域覆盖半透明暗层。</p></div>
+                  <div class="detail"><b>用户动作</b><p>按下 Play A。</p></div>
+                  <div class="detail"><b>通过条件</b><p>Deck A 进入播放状态，并持续播放至少 2 秒。</p></div>
+                  <div class="detail"><b>即时反馈</b><p>按钮转为暂停图标，A 波形开始移动；提示“现在只有 A”。</p></div>
+                </div>
+                <div class="focus-line"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/><circle cx="12" cy="12" r="9"/></svg><strong>错误处理</strong><span>点击其他控件不改变状态，只轻微震动高亮框并提示“这一步只需要启动 A”。</span></div>
+              </div>
+            </article>
+
+            <article class="step">
+              <div class="step-number">02<span>准备 B</span></div>
+              <div class="step-main">
+                <h3>等到提示点，让第二首加入</h3>
+                <p class="screen-copy">听完这四拍，在下一次亮起时按 Play B。</p>
+                <div class="detail-grid">
+                  <div class="detail"><b>高亮</b><p>Deck B 的 Play 键保持高亮；屏幕中央显示四拍倒数。</p></div>
+                  <div class="detail"><b>用户动作</b><p>跟随 4、3、2、1 的拍点提示，在下一拍按 Play B。</p></div>
+                  <div class="detail"><b>通过条件</b><p>触发时间距离目标拍不超过 ±0.8 拍，A 与 B 同时播放；第一课优先保证用户能完成。</p></div>
+                  <div class="detail"><b>声音反馈</b><p>B 的波形开始移动；Crossfader 仍在 A 端，所以此刻听到的仍然只有 A。</p></div>
+                </div>
+                <div class="focus-line"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><strong>错误处理</strong><span>按早或按晚时自动回到四拍前：“早了 0.6 拍，再跟一次。”只说明差多少，不判失败。</span></div>
+              </div>
+            </article>
+
+            <article class="step">
+              <div class="step-number">03<span>两首相遇</span></div>
+              <div class="step-main">
+                <h3>把 Crossfader 推到中间</h3>
+                <p class="screen-copy">拖动中间这根横杆到中央，让两首歌短暂同时出现。</p>
+                <div class="detail-grid">
+                  <div class="detail"><b>高亮</b><p>只高亮 Crossfader 滑轨和滑块；中央位置出现明确刻度。</p></div>
+                  <div class="detail"><b>用户动作</b><p>从 A 端拖到中点。</p></div>
+                  <div class="detail"><b>通过条件</b><p>滑块进入 45%–55% 区间并停留至少 2 秒。</p></div>
+                  <div class="detail"><b>声音反馈</b><p>A 与 B 音量接近，状态文字变为“两首一起”。</p></div>
+                </div>
+                <div class="focus-line"><svg viewBox="0 0 24 24"><path d="M4 8h16M4 16h16"/><circle cx="9" cy="8" r="2"/><circle cx="15" cy="16" r="2"/></svg><strong>操作反馈</strong><span>拖动时声音连续变化，不用动画代替声音；到达中央后滑块轻微吸附并出现一次短振动。</span></div>
+              </div>
+            </article>
+
+            <article class="step">
+              <div class="step-number">04<span>交给 B</span></div>
+              <div class="step-main">
+                <h3>继续推到 B，让第一首退出</h3>
+                <p class="screen-copy">保持同一方向，把横杆推到最右边。</p>
+                <div class="detail-grid">
+                  <div class="detail"><b>高亮</b><p>Crossfader 的中央到 B 端亮起；A 端不再发光。</p></div>
+                  <div class="detail"><b>用户动作</b><p>将滑块拖到 B 端。</p></div>
+                  <div class="detail"><b>通过条件</b><p>Crossfader ≥ 96%，并保持到下一个小节开始。</p></div>
+                  <div class="detail"><b>声音反馈</b><p>A 平滑退出，最终只剩 B；屏幕明确显示“现在只有 B”。</p></div>
+                </div>
+                <div class="focus-line"><svg viewBox="0 0 24 24"><path d="M5 12h14M15 8l4 4-4 4"/></svg><strong>错误处理</strong><span>中途反向不重置课程，只提示“方向反了，继续把声音交给 B”。用户仍可从当前位置完成。</span></div>
+              </div>
+            </article>
+
+            <article class="step">
+              <div class="step-number">05<span>确认完成</span></div>
+              <div class="step-main">
+                <h3>让结果自己证明操作成功</h3>
+                <p class="screen-copy">A 已退出，B 正在继续。你完成了第一次交接。</p>
+                <div class="detail-grid">
+                  <div class="detail"><b>画面</b><p>取消遮罩，A 的波形变暗，B 的波形继续移动；不再要求额外点击。</p></div>
+                  <div class="detail"><b>系统判定</b><p>B 单独播放满 2 秒，且 A 输出低于 −40 dB。</p></div>
+                  <div class="detail"><b>记录</b><p>保存“完成 00”与本次按拍误差，不评价分数或排名。</p></div>
+                  <div class="detail"><b>下一课伏笔</b><p>只提出问题：“B 为什么每次都能从同一个地方开始？”</p></div>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <section class="bottom-sheet" aria-label="课程完成底部弹窗示意">
+            <div class="character" aria-hidden="true"></div>
+            <h3>你把 A 交给了 B</h3>
+            <p>你已经让第一首退出、第二首继续，并亲手完成了一次最基础的交接。下一课会解决：怎样让歌曲每次都从你指定的位置开始。</p>
+            <div class="result-row"><span>会启动两条 Deck</span><span>会使用 Crossfader</span><span>完成 1 次交接</span></div>
+            <div class="sheet-actions"><button type="button">再做一次</button><button type="button">01 设置开始位置 →</button></div>
+            <p class="sheet-note">“再做一次”直接回到本课操作，不重复显示开场提问弹窗。</p>
+          </section>
+
+          <section class="notes" aria-labelledby="notes-title">
+            <h2 id="notes-title">制作前必须满足</h2>
+            <div class="notes-grid">
+              <div class="note"><strong>音乐不是占位循环</strong><p>A、B 都要有清楚的段落与音色差异；中间重叠、A 退出、B 独奏必须一耳朵听懂。</p></div>
+              <div class="note"><strong>首次成功由系统搭脚手架</strong><p>速度和开始位置预先设好。00 只验证一次交接，复杂变量放进后续课程逐步拆解。</p></div>
+              <div class="note"><strong>结算只能从底部出现</strong><p>底部弹窗不占满屏；人物从上缘露出并像靠在弹窗上，正文和按钮保持完整可见。</p></div>
+            </div>
+          </section>
+        </section>
+      </div>
+    </section>
+  </main>
+<script src="course-concept-highlights.js"></script>
+</body>
+</html>

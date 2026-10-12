@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FIRST MIX｜06 选择短交接或长混合 · 逐步交互脚本</title>
+  <style>
+    @font-face{font-family:Inter;src:url('../fonts/Inter-400.woff2') format('woff2');font-weight:400;font-display:swap}
+    @font-face{font-family:Inter;src:url('../fonts/Inter-600.woff2') format('woff2');font-weight:600;font-display:swap}
+    @font-face{font-family:GochiHand;src:url('../fonts/GochiHand.woff2') format('woff2');font-weight:400;font-display:swap}
+    :root{--ink:#1c1821;--muted:#696170;--paper:#f7f3eb;--white:#fffdf8;--violet:#7753c8;--violet-soft:#e7def3;--lime:#a9ef3d;--lime-soft:#e8f7ce;--sky:#d8edf2;--line:rgba(28,24,33,.14);--shadow:0 26px 70px rgba(61,45,72,.18);color-scheme:light}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;min-height:100vh;background:#bfdee7;color:var(--ink);font-family:Inter,"Microsoft YaHei UI","PingFang SC",sans-serif;-webkit-font-smoothing:antialiased}
+    body:before,body:after{content:"";position:fixed;z-index:-1;width:44vw;height:44vw;border-radius:48% 52% 58% 42%;filter:blur(76px);opacity:.52}
+    body:before{left:-14vw;top:-15vw;background:#b9f060}
+    body:after{right:-12vw;bottom:-17vw;background:#a98cdd}
+    a,button{font:inherit;color:inherit}::selection{background:var(--lime);color:var(--ink)}
+    :focus-visible{outline:3px solid var(--lime);outline-offset:3px}
+    .page{width:min(1240px,calc(100% - 28px));margin:0 auto;padding:24px 0 80px}
+    .topbar{display:grid;grid-template-columns:48px 1fr;align-items:center;gap:15px;margin-bottom:18px}
+    .back{width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.67);display:grid;place-items:center;text-decoration:none}
+    .back svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .brand{font-family:GochiHand,cursive;font-size:1.65rem}
+    .workspace{display:grid;grid-template-columns:250px minmax(0,1fr);background:rgba(247,243,235,.97);border-radius:28px;box-shadow:var(--shadow);overflow:hidden}
+    .course-list{padding:30px 24px;border-right:1px solid var(--line);background:rgba(255,253,248,.66)}
+    .course-list h2{font-size:.82rem;letter-spacing:.08em;margin:0 0 17px;text-transform:uppercase}
+    .course-list ol{list-style:none;padding:0;margin:0}
+    .course-list li{border-top:1px solid var(--line)}
+    .course-list li:last-child{border-bottom:1px solid var(--line)}
+    .course-list a{display:grid;grid-template-columns:28px 1fr;gap:8px;padding:15px 0;text-decoration:none;font-size:.82rem;line-height:1.35;color:#5d5561}
+    .course-list a span:first-child{font-variant-numeric:tabular-nums;color:#8c838f}
+    .course-list li.active a{color:var(--ink);font-weight:600}
+    .course-list li.active a span:first-child{color:var(--violet)}
+    .course-list li.active a:after{content:"";grid-column:2;width:34px;height:4px;border-radius:99px;background:var(--lime);margin-top:2px}
+    .main{min-width:0}
+    .hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(250px,.75fr);gap:42px;padding:44px 46px 35px;border-bottom:1px solid var(--line)}
+    h1{font-size:clamp(2.55rem,5vw,4.6rem);line-height:.98;letter-spacing:-.045em;margin:0 0 24px;text-wrap:balance}
+    .question{font-size:.92rem;line-height:1.62;color:#524a57;margin:0;max-width:40em}
+    .question strong{display:block;font-size:clamp(1.25rem,2.4vw,1.75rem);line-height:1.25;letter-spacing:-.02em;color:var(--ink);margin-bottom:9px}
+    .goal{align-self:end;padding-top:14px;border-top:1px solid var(--ink)}
+    .goal strong{display:block;font-size:.92rem;margin-bottom:8px}
+    .goal p{font-size:.86rem;line-height:1.58;color:var(--muted);margin:0}
+    .goal ul{display:flex;flex-wrap:wrap;gap:7px;list-style:none;padding:0;margin:14px 0 0}
+    .goal li{padding:6px 9px;border-radius:9px;background:var(--lime-soft);font-size:.75rem;font-weight:600;color:#38520d}
+    .guardrails{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--line)}
+    .guardrails div{padding:18px 22px;border-right:1px solid var(--line)}
+    .guardrails div:last-child{border-right:0}
+    .guardrails strong{display:block;font-size:.82rem;margin-bottom:5px}
+    .guardrails span{display:block;font-size:.79rem;line-height:1.48;color:var(--muted)}
+    .script{padding:34px 46px 48px}
+    .script-head{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:18px}
+    .script-head h2{font-size:1.75rem;letter-spacing:-.025em;margin:0 0 6px}
+    .script-head p{font-size:.84rem;line-height:1.55;color:var(--muted);margin:0}
+    .legend{font-size:.75rem;color:var(--muted);white-space:nowrap}
+    .steps{border-top:1px solid var(--ink)}
+    .step{display:grid;grid-template-columns:76px minmax(0,1fr);gap:24px;padding:27px 0;border-bottom:1px solid var(--line)}
+    .step-number{font-size:2.15rem;line-height:1;font-weight:600;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+    .step-number span{display:block;width:max-content;margin-top:9px;padding:5px 8px;border-radius:8px;background:var(--violet-soft);color:#4f377f;font-size:.72rem;letter-spacing:0}
+    .step:nth-child(3) .step-number span,.step:nth-child(4) .step-number span{background:var(--lime-soft);color:#38520d}
+    .step-main h3{font-size:1.25rem;line-height:1.25;margin:0 0 7px;letter-spacing:-.015em}
+    .screen-copy{display:flex;gap:9px;align-items:flex-start;padding:2px 0;font-size:.85rem;font-weight:600;line-height:1.5;color:#443d48;margin:0 0 16px}
+    .screen-copy:before{content:"";width:8px;height:8px;flex:0 0 auto;margin-top:.38em;border-radius:50%;background:var(--violet)}
+    .detail-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+    .detail{padding-top:11px;border-top:1px solid var(--line)}
+    .detail b{display:block;font-size:.72rem;letter-spacing:.06em;color:#655d69;margin-bottom:6px;text-transform:uppercase}
+    .detail p{font-size:.82rem;line-height:1.55;color:#574f5b;margin:0}
+    .focus-line{display:grid;grid-template-columns:20px max-content minmax(0,1fr);align-items:start;gap:10px;margin-top:14px;padding:11px 12px;border-radius:12px;background:#ebe7e0}
+    .focus-line svg{width:20px;height:20px;flex:0 0 auto;fill:none;stroke:var(--violet);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+    .focus-line strong{font-size:.78rem}.focus-line span{font-size:.78rem;line-height:1.45;color:#5e5662}
+    .focus-line.warn{background:#f6e6df}.focus-line.warn svg{stroke:#b4562f}.focus-line.warn strong{color:#8d3c1c}
+    .audio-map{display:grid;grid-template-columns:minmax(0,1fr) 42px minmax(0,1fr);align-items:center;gap:12px;margin-top:17px}
+    .map-label{font-size:.72rem;letter-spacing:.06em;color:#655d69;margin:18px 0 -4px;text-transform:uppercase}
+    .audio-track{padding:13px 14px;border-radius:13px;background:var(--white)}
+    .audio-track strong,.audio-track span{display:block}
+    .audio-track strong{font-size:.82rem;margin-bottom:5px}.audio-track span{font-size:.8rem;line-height:1.45;color:var(--muted)}
+    .arrow{display:grid;place-items:center;color:var(--violet)}
+    .arrow svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+    .readout{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:18px;margin-top:16px;padding:16px 18px;border-radius:14px;background:#ebe7e0}
+    .readout b{font-size:2.7rem;line-height:1;letter-spacing:-.045em;font-variant-numeric:tabular-nums}
+    .readout span{font-size:.82rem;line-height:1.5;color:#5e5662}
+    .ruler{display:flex;gap:3px;margin-top:15px}
+    .ruler i{flex:1;min-width:0;height:26px;border-radius:5px;background:#e0dad2;display:grid;place-items:center;font-size:.62rem;font-style:normal;color:#8c838f;font-variant-numeric:tabular-nums;overflow:hidden}
+    .ruler i.phase{background:#d6cfe4}
+    .ruler i.on{background:var(--lime);color:#1c1821;font-weight:700}
+    .ruler i.swap{background:#a98cdd;color:#fff;font-weight:700}
+    .pair-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:17px}
+    .pair{padding:16px 17px;border-radius:15px;background:#eee9e2}
+    .pair strong{display:block;font-size:.9rem;margin-bottom:9px}
+    .beat-table{width:100%;border-collapse:collapse;font-size:.78rem}
+    .beat-table th,.beat-table td{padding:8px 8px;text-align:left;border-bottom:1px solid var(--line)}
+    .beat-table th{font-size:.68rem;letter-spacing:.06em;color:#655d69;text-transform:uppercase;font-weight:600}
+    .beat-table td{font-variant-numeric:tabular-nums;color:#574f5b}
+    .beat-table tr.is-swap td{background:var(--lime-soft);color:#38520d;font-weight:600}
+    .map-row{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;margin-top:17px;padding:15px 16px;border-radius:14px;background:#eee9e2}
+    .map-row b{font-size:.8rem}
+    .map-row .to{font-size:.8rem;color:var(--violet);font-weight:600}
+    .map-row .then{font-size:.8rem;color:#574f5b;text-align:center}
+    .question-preview{position:relative;min-height:470px;margin:34px 46px 0;border-radius:20px;background:#dad4dc;overflow:hidden;display:grid;place-items:center;padding:112px 24px 38px}
+    .question-preview:before,.question-preview:after{content:"";position:absolute;border-radius:18px;background:rgba(255,255,255,.34);filter:blur(1px)}
+    .question-preview:before{width:78%;height:84px;left:11%;top:28px}.question-preview:after{width:88%;height:128px;left:6%;bottom:28px}
+    .question-modal{position:relative;z-index:1;width:min(560px,100%);padding:92px 28px 26px;border-radius:26px;background:#7652c5;color:#fff;box-shadow:0 24px 52px rgba(35,26,42,.28)}
+    .question-character{position:absolute;right:22px;top:-150px;width:238px;height:238px;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 14px 18px rgba(28,20,35,.24));pointer-events:none}
+    .question-modal h2{font-size:clamp(1.65rem,3.2vw,2.35rem);line-height:1.08;letter-spacing:-.025em;margin:0 0 11px;max-width:12em}.question-modal p{max-width:31em;margin:0 0 20px;color:#eee8f8;font-size:.86rem;line-height:1.55}.question-modal button{min-height:44px;border:0;border-radius:13px;background:var(--lime);color:#192108;padding:0 17px;font-weight:600}
+    .bottom-sheet{position:relative;margin-top:34px;padding:62px 24px 24px;border-radius:26px 26px 18px 18px;background:#7652c5;color:#fff;overflow:visible}
+    .character{position:absolute;right:32px;top:-42px;width:118px;height:82px;pointer-events:none}
+    .character:before{content:"";position:absolute;right:12px;bottom:0;width:80px;height:66px;border-radius:48% 52% 42% 44%;background:#d5bcff;border:3px solid #1c1821;transform:rotate(-4deg)}
+    .character:after{content:"★";position:absolute;right:33px;top:11px;color:var(--lime);font-size:1.8rem;text-shadow:1px 2px 0 #1c1821}
+    .bottom-sheet h3{font-size:1.65rem;line-height:1.1;margin:0 0 8px;letter-spacing:-.025em}
+    .bottom-sheet p{font-size:.86rem;line-height:1.52;margin:0 0 18px;max-width:35em;color:#eee8f8}
+    .result-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+    .result-row span{padding:7px 9px;border-radius:9px;background:rgba(255,255,255,.14);font-size:.75rem;font-weight:600}
+    .sheet-actions{display:grid;grid-template-columns:1fr auto;gap:10px}
+    .sheet-actions button{min-height:44px;border:0;border-radius:13px;padding:0 16px;font-weight:600}
+    .sheet-actions button:first-child{background:#211c28;color:#fff}.sheet-actions button:last-child{background:var(--lime);color:#1c1821}
+    .sheet-note{font-size:.75rem;line-height:1.5;color:#e5dcf5;margin:12px 0 0}
+    .notes{margin-top:34px;padding-top:24px;border-top:1px solid var(--ink)}
+    .notes h2{font-size:1.35rem;margin:0 0 14px}
+    .notes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .note{padding:14px 15px;border-radius:14px;background:#eee9e2}
+    .note strong{display:block;font-size:.82rem;margin-bottom:6px}.note p{font-size:.8rem;line-height:1.55;color:#5e5662;margin:0}
+    @media(max-width:980px){
+      .workspace{grid-template-columns:1fr}.course-list{border-right:0;border-bottom:1px solid var(--line);padding:20px}.course-list ol{display:grid;grid-template-columns:repeat(4,1fr)}.course-list li:nth-child(4){border-right:0}.course-list li{border-right:1px solid var(--line)}.course-list a{padding:12px 10px}.course-list li.active a:after{display:none}
+      .hero{padding:38px 30px 30px}.script{padding:30px}.detail-grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:700px){
+      .page{width:100%;padding:0 0 40px}.topbar{padding:10px 12px;margin:0}.workspace{border-radius:26px 26px 0 0}
+      .course-list{overflow:auto;padding:16px 14px}.course-list h2{margin-left:8px}.course-list ol{display:flex;width:max-content}.course-list li{width:166px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+      .hero{grid-template-columns:1fr;gap:24px;padding:30px 20px 26px}h1{font-size:2.55rem}.guardrails{grid-template-columns:1fr}.guardrails div{border-right:0;border-bottom:1px solid var(--line);padding:14px 20px}.guardrails div:last-child{border-bottom:0}
+      .question-preview{min-height:430px;margin:26px 14px 0;padding:104px 12px 26px}.question-modal{padding:88px 20px 21px}.question-character{right:4px;top:-137px;width:218px;height:218px}.script{padding:26px 20px 36px}.script-head{display:block}.legend{display:block;margin-top:8px}.step{grid-template-columns:48px minmax(0,1fr);gap:14px}.step-number{font-size:1.65rem}.detail-grid{grid-template-columns:1fr}.audio-map{grid-template-columns:1fr}.arrow{height:22px;transform:rotate(90deg)}.pair-grid{grid-template-columns:1fr}.map-row{grid-template-columns:1fr}.map-row .to,.map-row .then{text-align:left}.bottom-sheet{padding:58px 18px 18px}.character{right:18px}.sheet-actions{grid-template-columns:1fr}.notes-grid{grid-template-columns:1fr}
+    }
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <a class="back" href="./course-00-07-interaction-scripts.html" aria-label="返回 00 到 07 课程脚本总览"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></a>
+      <div class="brand">FIRST MIX</div>
+    </header>
+
+    <section class="workspace" aria-labelledby="page-title">
+      <aside class="course-list" aria-label="课程目录">
+        <h2>课程</h2>
+        <ol>
+          <li><a href="./course-00-interaction-script.html"><span>00</span><span>第一次交接</span></a></li>
+          <li><a href="./course-01-interaction-script.html"><span>01</span><span>设置开始位置</span></a></li>
+          <li><a href="./course-02-interaction-script.html"><span>02</span><span>听懂音乐结构</span></a></li>
+          <li><a href="./course-03-interaction-script.html"><span>03</span><span>让两首歌对齐</span></a></li>
+          <li><a href="./course-04-interaction-script-standard.html"><span>04</span><span>在正确时间接入</span></a></li>
+          <li><a href="./course-05-interaction-script-standard.html"><span>05</span><span>让转场保持清晰</span></a></li>
+          <li class="active"><a href="#page-title"><span>06</span><span>选择短交接或长混合</span></a></li>
+          <li><a href="./course-07-interaction-script-standard.html"><span>07</span><span>独立完成与 AI 评分</span></a></li>
+        </ol>
+      </aside>
+
+      <div class="main">
+        <header class="hero">
+          <div>
+            <h1 id="page-title">06 选择短交接或长混合</h1>
+            <p class="question"><strong>两首歌一起走多久，就该换手？</strong>转场长度不是挑一个喜欢的数字。两首歌只要同时出声，就在抢同一块空间：抢得住就多走一段，抢不住就赶快交出去。这一课先让你<strong>量出</strong>这一对歌能一起走几拍，再由这个数字决定用 16 拍还是 32 拍——判据是你自己听出来的，不用背。</p>
+          </div>
+          <aside class="goal">
+            <strong>本节完成标准</strong>
+            <p>用户必须用真实听感量出 A＋B1 与 A＋B2 各自的共存上限，由测得数字选出对应长度，并在 3D 上真实完成一次 32 拍长混与一次 16 拍短接。测量环节不判对错，操作环节必须真实达到控件值。</p>
+            <ul><li>约 4 分钟</li><li>9 个节点</li><li>产出 2 次转场</li></ul>
+          </aside>
+        </header>
+
+        <section class="guardrails" aria-label="课程约束">
+          <div><strong>系统预先准备</strong><span>三首歌速度已对齐到 72 BPM，Cue 已放在乐句头。本课不教对速，对速是 03 的内容。</span></div>
+          <div><strong>测量不判对错</strong><span>02、03 只记录你按下的拍数，没有标准答案。判定只看你的选择是否与自己测得的数字自洽。</span></div>
+          <div><strong>不能点“继续”过关</strong><span>06、07 两步的通过条件全部来自真实控件值与真实拍位；未达标就地重试，并显示当前值与目标值。</span></div>
+        </section>
+
+        <section class="question-preview" aria-label="课程开场提问弹窗示意">
+          <div class="question-modal">
+            <img class="question-character" src="../assets/characters/dj-question-thinking-v1.png" alt="DJ 角色托着下巴思考">
+            <h2>同一套动作，为什么一对歌撑得住，一对撑不住？</h2>
+            <p>先听两段：一段两首歌一起走了很久还很稳，一段走到一半就开始打架。听完你只需要回答一件事——这两对歌，分别该一起走多久。</p>
+            <button type="button">先听两种结局</button>
+          </div>
+        </section>
+
+        <section class="script" aria-labelledby="script-title">
+          <div class="script-head">
+            <div><h2 id="script-title">逐步交互脚本</h2><p>屏幕一次只提出一个动作。测量步骤没有对错，操作步骤给出目标值，未相关区域压暗但保留位置感。</p></div>
+            <span class="legend">画面 · 用户动作 · 通过条件 · 声音反馈</span>
+          </div>
+
+          <div class="steps">
+            <article class="step">
+              <div class="step-number">00<span>先听结局</span></div>
+              <div class="step-main">
+                <h3>先建立“为什么要有这一课”</h3>
+                <p class="screen-copy">同一套动作，先听撑得住的，再听撑不住的。</p>
+                <div class="detail-grid">
+                  <div class="detail"><b>画面</b><p>两张并排播放卡，各带一条 32 格拍尺；播放时当前拍逐格点亮。其余区域压暗。</p></div>
+                  <div class="detail"><b>用户动作</b><p>依次播放「撑得住的」与「撑不住的」。允许反复重听，不限次数。</p></div>
+                  <div class="detail"><b>通过条件</b><p>两段各完整播放一次（32 拍 ≈ 26.7 秒）。允许重听，不记录失败。</p></div>
+                  <div class="detail"><b>声音反馈</b><p>第一段两首共同走到第 16 拍才开始换低频，全程平稳；第二段第 8 拍之后两条主线开始互相挤压，越走越糊。</p></div>
+                </div>
+                <div class="focus-line"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5l5 5M14.5 9.5l-5 5"/></svg><strong>这里不讲原理</strong><span>整步不出现“16 拍”“32 拍”字样，也不解释为什么会打架。这一步只负责让差异被听到——先有感受，后面每一步都是在给这个感受找原因。</span></div>
+                <p class="map-label">撑得住的那一对</p>
+                <div class="audio-map">
+                  <div class="audio-track"><strong>Deck A · 具島直子《まどろみ》</strong><span>72 BPM，人声＋旋律。本课所有对比的共同基准。</span></div>
+                  <div class="arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M15 8l4 4-4 4"/></svg></div>
+                  <div class="audio-track"><strong>Deck B · 葛谷葉子《All Night》</strong><span>器乐为主，留白多，与 A 的人声不抢同一位置。</span></div>
+                </div>
+                <p class="map-label">撑不住的那一对</p>
+                <div class="audio-map">
+                  <div class="audio-track"><strong>Deck A · 具島直子《まどろみ》</strong><span>同一首 A，同一段，不换。</span></div>
+                  <div class="arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M15 8l4 4-4 4"/></svg></div>
+                  <div class="audio-track"><strong>Deck B · 邓丽君《我只在乎你》</strong><span>人声主导，与 A 的人声抢同一个位置。</span></div>
+                </div>
+              </div>
+            </article>
+
+            <article class="step">
+              <div class="step-number">01<span>低频规则</span></div>
+              <div class="step-main">
+                <h3>先记住一条没有例外的规则</h3>
+                <p class="screen-copy">同一个开关，来回听两次。这一次只听底鼓。</p>
+                <div class="detail-grid">
+                  <div class="detail"><b>高亮</b><p>屏幕上只保留一个「低频」切换开关，两个状态：① 低频两个人 ② 低频只有 A。其余控件全部压暗。</p></div>
+                  <div class="detail"><b>用户动作</b><p>播放 8 秒片段，两个状态至少各听一次，可以随时来回切。</p></div>
+                  <div class="detail"><b>通过条件</b><p>两个状态各累计播放满 4 秒。不判对错，只要求都听过。</p></div>
+                  <div class="detail"><b>声音反馈</b><p>① A LOW 0 / B LOW 0：底鼓叠在一起，糊成一团，分不出是谁在走。② A LOW 0 / B LOW −12：底鼓重新清楚，能听出是谁在走。</p></div>
+                </div>
+                <div class="focus-line"><svg viewBox="0 0 24 24"><path d="M12 3v18M5 8v8M19 8v8"/></svg><strong>本课的地基</strong><span>结论只有一句：<strong>低频一次只能有一个主人。</strong>这条没有例外。后面所有“把 B 的 LOW 收到 −12 再进来”都不是要背的操作，是从这一句推出来的。旧版 06 直接命令用户“LOW 保持 −12”，从没解释过为什么。</span></div>
+                <p class="map-label">只切换低频这一个变量</p>
+                <div class="audio-map">
+                  <div class="audio-track"><strong>A LOW 0 · B2 LOW 0</strong><span>两个人都在说话，谁也听不清。</span></div>
+                  <div class="arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M15 8l4 4-4 4"/></svg></div>
+                  <div class="audio-track"><strong>A LOW 0 · B2 LOW −12</strong><span>B2 只用中高频进场，低频让给 A。</span></div>
+                </div>
+              </div>
+            </article>
+
+            <article class="step">
+              <div class="step-number">02<span>量 A＋B1</span></div>
+              <div class="step-main">
+                <h3>你说了算：听到不想再听下去的那一拍，按下去</h3>
+                <p class="screen-copy">两首一起走。你一觉得“这两首不该在一起了”，就按这里。</p>
+                <div class="detail-grid">
+                  <div class="detail"><b>画面</b><p>32 格拍尺从第 1 拍开始逐格点亮，实时拍数显示在拍尺上方；一个大的「撑不住了」按钮常驻在拇指位置。</p></div>
+                  <div class="detail"><b>用户动作</b><p>听到开始难受的那一刻按下按钮。可以重来，不限次数。</p></div>
+                  <div class="detail"><b>通过条件</b><p>在第 2–32 拍之间按下即记录该拍数。<strong>没有标准答案</strong>，测出几拍就是几拍。32 拍走完仍未按下，提示“再听一次，这次注意第 8 拍附近”，不判失败。</p></div>
+                  <div class="detail"><b>声音反馈</b><p>A 正常播放，B1 已按 01 的规则收低频（−12）进入，Crossfader 在中央，两首完整共存。按下时冻结拍数并停播。</p></div>
+                </div>
+                <div class="readout"><b>8 拍</b><span>参考区间 4–12 拍。这是<strong>你自己的读数</strong>，不是标准答案；不同的人会有差异，差异本身就是这一课要讨论的东西。</span></div>
+                <div class="focus-line"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><strong>为什么这么量</strong><span>把“该用多长”这个抽象选择，换成一个可以亲自按出来的数字。学生不需要判断“这首是人声所以……”，只要回答“我听到第几拍开始难受”——判据因此变成可迁移的动作，而不是关于某几首歌的知识。</span></div>
+                <div class="audio-map">
+                  <div class="audio-track"><strong>Deck A · まどろみ</strong><span>基准不变。</span></div>
+                  <div class="arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M15 8l4 4-4 4"/></svg></div>
+                  <div class="audio-track"><strong>Deck B · 我只在乎你</strong><span>两条人声同时出现，注意力被拉向两个方向。</span></div>
+                </div>
+              </div>
+            </article>
+
+            <article class="step">
+              <div class="step-number">03<span>量 A＋B2</span></div>
+              <div class="step-main">
+                <h3>换一首 B，用同样的方法再量一次</h3>
+                <p class="screen-copy">还是那首 A。同样听到难受就按，看看这一对能走到第几拍。</p>
+                <div class="detail-grid">
+                  <div class="detail"><b>画面</b><p>与 02 完全相同；02 测得的数字并排显示在旁边，方便当场对比。</p></div>
+                  <div class="detail"><b>用户动作</b><p>同样按下。可以重听、重测。</p></div>
+                  <div class="detail"><b>通过条件</b><p>同 02：在第 2–32 拍之间按下即记录，无标准答案。</p></div>
+                  <div class="detail"><b>声音反馈</b><p>A＋B2 共存；B2 收低频进入，器乐留白多，明显能走得更久。</p></div>
+                </div>
+                <div class="readout"><b>24 拍</b><span>参考区间 16–32 拍。与 02 的读数放在一起，两个数字的差距就是“为什么同一套动作要分两种长度”的全部答案。</span></div>
+                <div class="focus-line"><svg viewBox="0 0 24 24"><path d="M4 8h16M4 16h16"/><circle cx="9" cy="8" r="2"/><circle cx="15" cy="16" r="2"/></svg><strong>处理办法</strong><span>如果两个数字很接近，说明还没听出差别——这不是错误，提示“回到 00 把两种结局再听一遍”，然后允许重测。绝不能用预设区间覆盖学生的读数。</span></div>
+              </div>
+            </article>
+
+            <article class="step">
+              <div class="step-number">04<span>数字决定</span></div>
+              <div class="step-main">
+                <h3>不用记规则，数字自己会说话</h3>
+                <p class="screen-copy">你量出来的两个数，各自对应一种长度。</p>
+                <div class="detail-grid">
+                  <div class="detail"><b>画面</b><p>两个读数并排，下方一行映射：<strong>≤ 12 拍 → 16 拍短交接；≥ 14 拍 → 32 拍长混合</strong>。再下方是两组选择按钮：A＋B1 用哪种、A＋B2 用哪种。</p></div>
+                  <div class="detail"><b>用户动作</b><p>为两对歌各选一个长度。</p></div>
+                  <div class="detail"><b>通过条件</b><p><strong>选择必须与本人测得的数字自洽</strong>：测得 ≤ 12 拍 → 选短接；测得 ≥ 14 拍 → 选长混；测得 13 拍落在灰区，两个都接受。</p></div>
+                  <div class="detail"><b>声音反馈</b><p>每选完一组立刻播放对应成品，让他听到“按自己的数字选出来的”是什么样。</p></div>
+                </div>
+                <div class="focus-line"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><strong>判定的是推理，不是答案</strong><span>即使学生把 A＋B1 测成 20 拍并据此选了长混，也<strong>判定通过</strong>——他确实用了判据。系统只在“测得 8 拍却选长混”这种不自洽时才要求重来，并补一句不带评判的提示：“你测到 8 拍；多数人在第 8 拍附近会听到两条人声挤在一起，要不要再听一次这里。”真正的失败是抛开自己刚量出的数字去猜。</span></div>
+                <div class="map-row"><b>共测 2 组</b><span class="then">每组只问一次，不选就停在这一步</span><span class="to">2 组都选完 → 05</span></div>
+              </div>
+            </article>
+
+            <article class="step">
+              <div class="step-number">05<span>两种长度</span></div>
+              <div class="step-main">
+                <h3>差别只有一处：什么时候换低频</h3>
+                <p class="screen-copy">两个视图可以来回切换，拍尺会跟着走，只用看换低频那一格。</p>
+                <div class="detail-grid">
+                  <div class="detail"><b>画面</b><p>左右两个视图：16 拍短接与 32 拍长混。每个视图带一条拍尺和 4–5 张分段卡；播放时当前拍点亮，对应的分段卡同时亮起。</p></div>
+                  <div class="detail"><b>用户动作</b><p>两个视图各播放一次，观察拍尺与分段卡的同步。允许只重听换低频那一段。</p></div>
+                  <div class="detail"><b>通过条件</b><p>两个视图各完整播放一次；不判对错。</p></div>
+                  <div class="detail"><b>声音反馈</b><p>16 拍版本在第 9 拍换低频，32 拍版本在第 17 拍换低频。换的那一下最明显，重听时可以只听这里。</p></div>
+                </div>
+                <div class="pair-grid">
+                  <div class="pair">
+                    <strong>16 拍短交接</strong>
+                    <div class="ruler">
+                      <i class="phase on">1</i><i>2</i><i>3</i><i>4</i><i class="phase">5</i><i>6</i><i>7</i><i>8</i><i class="phase swap">9</i><i class="swap">10</i><i class="swap">11</i><i class="swap">12</i><i class="phase">13</i><i>14</i><i>15</i><i>16</i>
+                    </div>
+                    <table class="beat-table">
+                      <tr><th>拍</th><th>推子</th><th>A LOW</th><th>B LOW</th></tr>
+                      <tr><td>准备</td><td>A 端 −1.0</td><td>0</td><td>−12</td></tr>
+                      <tr><td>1–8</td><td>→ 中央 0</td><td>0</td><td>−12</td></tr>
+                      <tr class="is-swap"><td>9–12</td><td>→ +0.3</td><td>0 → −12</td><td>−12 → 0</td></tr>
+                      <tr><td>13–16</td><td>→ B 端 +1.0</td><td>−12</td><td>0</td></tr>
+                    </table>
+                  </div>
+                  <div class="pair">
+                    <strong>32 拍长混合</strong>
+                    <div class="ruler">
+                      <i class="phase on">1</i><i>2</i><i>3</i><i>4</i><i class="phase">5</i><i>6</i><i>7</i><i>8</i><i class="phase">9</i><i>10</i><i>11</i><i>12</i><i class="phase">13</i><i>14</i><i>15</i><i>16</i><i class="phase swap">17</i><i class="swap">18</i><i class="swap">19</i><i class="swap">20</i><i class="phase swap">21</i><i class="swap">22</i><i class="swap">23</i><i class="swap">24</i><i class="phase">25</i><i>26</i><i>27</i><i>28</i><i class="phase">29</i><i>30</i><i>31</i><i>32</i>
+                    </div>
+                    <table class="beat-table">
+                      <tr><th>拍</th><th>推子</th><th>A LOW</th><th>B LOW</th></tr>
+                      <tr><td>准备</td><td>A 端 −1.0</td><td>0</td><td>−12</td></tr>
+                      <tr><td>1–8</td><td>→ −0.5</td><td>0</td><td>−12</td></tr>
+                      <tr><td>9–16</td><td>→ 中央 0</td><td>0</td><td>−12</td></tr>
+                      <tr class="is-swap"><td>17–24</td><td>→ +0.3</td><td>0 → −12</td><td>−12 → 0</td></tr>
+                      <tr><td>25–32</td><td>→ B 端 +1.0</td><td>−12</td><td>0</td></tr>
+                    </table>
+                  </div>
+                </div>
+                <div class="focus-line"><svg viewBox="0 0 24 24"><path d="M5 12h14M15 8l4 4-4 4"/></svg><strong>一句话记住</strong><span><strong>转场总长 ≈ 共存上限 × 2。</strong>测出 8 拍 → 16 拍；测出 16 拍 → 32 拍。前半段让两首一起走完你测得的长度，后半段用同样的时间把低频和重心交出去。所以“选长度”其实在 02、03 就已经做完了，这一步只是把它翻译成动作。</span></div>
+              </div>
+            </article>
+
+            <article class="step">
+              <div class="step-number">06<span>实操长混</span></div>
+              <div class="step-main">
+                <h3>在 3D 上真的做一遍：A＋B2 32 拍</h3>
+                <p class="screen-copy">先按 SYNC B 对齐，再按 PLAY A。B2 会在第 1 拍启动。</p>
+                <div class="detail-grid">
+                  <div class="detail"><b>高亮</b><p>3D 控台占主画面；屏幕上只高亮当前阶段该动的控件，其余保持可见但压暗。状态行常驻显示当前拍段的目标值。</p></div>
+                  <div class="detail"><b>用户动作</b><p>SYNC B → PLAY A → 第 1 拍 PLAY B → 第 9–16 拍推子到中央 → 第 17–24 拍换低频 → 第 25–32 拍推到 B2。</p></div>
+                  <div class="detail"><b>通过条件</b><p>全部来自真实控件值：B2 在第 1–2 拍内进入；第 8 拍 B2 LOW ≤ −9 且推子 ∈ [−0.9, −0.15]；第 16 拍 |推子| ≤ 0.38；第 24 拍 A LOW ≤ −9 且 B2 LOW ≥ −2.5；第 32 拍推子 ≥ 0.8。</p></div>
+                  <div class="detail"><b>声音反馈</b><p>每进入一个拍段，状态行更新为该段目标值。未达标时不判失败，就地回到该拍段重做，并同时显示“你现在是 X，目标是 Y”。</p></div>
+                </div>
+                <div class="focus-line warn"><svg viewBox="0 0 24 24"><path d="M12 9v5M12 17.5v.5"/><circle cx="12" cy="12" r="9"/></svg><strong>实现前必须先改的一行</strong><span>现行 <code>audio-engine.js:429</code> 的 <code>syncB()</code> 里有 <code>if (!deckB.playing) deckB.play(reference)</code>——按 SYNC B 会把 B2 直接播起来，于是后面“第 1 拍按 PLAY B”实际按成了暂停，<code>practice.bStarted</code> 永远不会被置真，这一步<b>无论如何都过不了</b>。脚本要求：<strong>SYNC 只对齐速度与相位，PLAY B 是唯一的启动入口。</strong></span></div>
+              </div>
+            </article>
+
+            <article class="step">
+              <div class="step-number">07<span>实操短接</span></div>
+              <div class="step-main">
+                <h3>换一种长度再做一次：A＋B1 16 拍</h3>
+                <p class="screen-copy">这次只有 16 拍，约 13 秒。第 9 拍就必须换低频，比长混早 8 拍。</p>
+                <div class="detail-grid">
+                  <div class="detail"><b>高亮</b><p>同 06，但拍段更短，提示切换更快；状态行同样常驻目标值。</p></div>
+                  <div class="detail"><b>用户动作</b><p>SYNC B → PLAY A → 第 1 拍 PLAY B → 第 1–8 拍推子到中央 → 第 9–12 拍换低频 → 第 13–16 拍推到 B1。</p></div>
+                  <div class="detail"><b>通过条件</b><p>B1 在第 1–2 拍内进入；第 8 拍 B1 LOW ≤ −9 且推子 ∈ [−0.45, 0.45]；第 12 拍 A LOW ≤ −9 且 B1 LOW ≥ −2.5；第 16 拍推子 ≥ 0.8。</p></div>
+                  <div class="detail"><b>声音反馈</b><p>全程 13 秒。换低频发生在第 9 拍——这 8 拍的提前量就是短接与长混唯一的区别，听感上表现为“两条主线同时存在的时间明显更短”。</p></div>
+                </div>
+                <div class="focus-line"><svg viewBox="0 0 24 24"><path d="M12 3v18M5 8v8M19 8v8"/></svg><strong>这一步是新增的</strong><span>旧设计把短接整段推给 07，而 07 是“独立操作、不再提示、AI 评分”。结果是学完 06 却从没在设备上做过一次短接，这一课只教了一半。短接只有 13 秒、4 个阶段，比长混更适合第一次上手，所以放在长混之后做第二次。</span></div>
+              </div>
+            </article>
+
+            <article class="step">
+              <div class="step-number">08<span>带走</span></div>
+              <div class="step-main">
+                <h3>一句规则，一张表</h3>
+                <p class="screen-copy">以后碰到任何一对歌，先量共存上限，再乘 2。</p>
+                <div class="detail-grid">
+                  <div class="detail"><b>画面</b><p>取消遮罩。顶部一句话规则，中部 05 那张两种长度的拍位对照表常驻，底部两个结果标签。</p></div>
+                  <div class="detail"><b>系统判定</b><p>06、07 两步全部通过，记录“完成 06”。任一步未通过则回到该步，不进入本步。</p></div>
+                  <div class="detail"><b>记录</b><p>保存两次实测的共存上限（B1、B2）与两次转场的拍位误差。<strong>不评分、不排名</strong>；评分是 07 的事。</p></div>
+                  <div class="detail"><b>下一课伏笔</b><p>只提一句：“07 会用 A＋B1，在没有提示的情况下由你独立完成，并由 AI 评分。”</p></div>
+                </div>
+                <div class="focus-line"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/><circle cx="12" cy="12" r="9"/></svg><strong>可迁移性检查</strong><span>学生离开这一课时，应该能用三句话回答陌生的一对歌：① 两首一起放，我听到第几拍开始难受；② 那个数字乘 2 就是转场长度；③ 前半段一起走，后半段在第 9 拍（短）或第 17 拍（长）换低频。答得出来，这一课就成功了；只能背出“B1 用 16 拍、B2 用 32 拍”，就等于没学。</span></div>
+              </div>
+            </article>
+          </div>
+
+          <section class="bottom-sheet" aria-label="课程完成底部弹窗示意">
+            <div class="character" aria-hidden="true"></div>
+            <h3>你学会了按听感选长度</h3>
+            <p>你量出了 A＋B1 与 A＋B2 各自能一起走几拍，用这两个数字选出了对应的长度，并在 3D 上真的做完了长混与短接各一次。下一课不再给提示，换你独立完成 A＋B1。</p>
+            <div class="result-row"><span>会量共存上限</span><span>会做 32 拍长混</span><span>会做 16 拍短接</span><span>完成 2 次转场</span></div>
+            <div class="sheet-actions"><button type="button">再做一次</button><button type="button">07 独立完成与 AI 评分 →</button></div>
+            <p class="sheet-note">“再做一次”回到 02 重新测量，不重复显示开场提问弹窗。两次实测的读数会保留在结果页，方便对比前后变化。</p>
+          </section>
+
+          <section class="notes" aria-labelledby="notes-title">
+            <h2 id="notes-title">设计备注</h2>
+            <div class="notes-grid">
+              <div class="note">
+                <strong>测量不判对错</strong>
+                <p>02、03 是学生自己的听感记录，不存在正确答案。把判定放在“选择是否与自己测得的数字自洽”上（04），才能真正训练判据而不是训练记忆。这一条决定了整个 06 的性质：它是测量课，不是选择题。</p>
+              </div>
+              <div class="note">
+                <strong>三首素材的分工</strong>
+                <p>A 是共同基准，B1 与 B2 只在“与 A 共存的能力”这一个维度上被比较。脚本里不出现“因为 B1 有人声所以短接”这类解释——那会让学生去记歌的特征，而不是去听。所有解释都回到 01 的低频规则和 05 的拍位表。</p>
+              </div>
+              <div class="note">
+                <strong>SYNC 与 PLAY 必须分离</strong>
+                <p>06、07 两步依赖 <code>syncB()</code> 只做对齐、不启动播放，<code>PLAY B</code> 是唯一启动入口。当前 <code>audio-engine.js:429</code> 会在 SYNC 时直接 <code>deckB.play()</code>，导致界面上按钮显示“暂停 B”而提示却说“按 PLAY B”，且该步必然判失败。实现 06 前必须先改这一行。</p>
+              </div>
+            </div>
+          </section>
+        </section>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
