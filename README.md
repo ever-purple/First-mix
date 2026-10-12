@@ -1,50 +1,41 @@
-# FIRST MIX V1
+# FIRST MIX
 
-FIRST MIX is a guided browser experience for a beginner's first DJ transition. Phase two validated the audio foundation; phase three now builds the progressive tutorial and recovery system on top of it. The project remains independent from the portfolio application.
+第一次，也能混得像样。
 
-## Run
+FIRST MIX 是面向 DJ 初学者的交互式学习作品。它把“听懂节拍—准备下一首歌—完成交接”的过程拆成可以亲手操作的小步骤，让用户在浏览器里理解每个动作听起来会发生什么变化，而不必先购买设备或熟悉专业软件。
+
+这是用于个人作品展示与求职交流的非商业 Demo。
+
+## 你可以体验什么
+
+- **00–07 渐进课程**：从第一次交接、设置 Cue、辨认音乐结构和对拍，逐步走到低频处理、选择转场长度，最后练习 16 拍短交接与 32 拍长混。
+- **可操作的打碟台**：双 Deck、播放与 Cue、Hot Cue、BPM/Sync、EQ/音量、Crossfader、Filter 和 4/8 拍 Loop。课程中的操作会影响实际播放状态与声音。
+- **自由练习与技巧卡**：使用内置练习曲，也可以从自己的设备选择音乐，在 Hot Cue、Loop、Filter 等技巧里直接尝试。
+- **作品与反馈**：练习成果可在“我的”页面回看；可选的 AI 分析用于补充文字反馈，核心练习不依赖 AI。
+
+网页支持触摸、鼠标与键盘。打碟台和课程 07 推荐横屏；首次进入可选择是否以后默认横屏。
+
+## 从哪里开始
+
+1. 打开首页，点击“进入 FIRST MIX”。
+2. 从“学习”进入 00–07 课程，跟随引导完成第一次转场。
+3. 到“打碟台”自由练习，或到“我的”回看作品。
+
+本地运行需要 Node.js：
 
 ```powershell
+npm install
 npm start
 ```
 
-Open `http://127.0.0.1:4177` in a modern desktop or mobile browser.
+然后打开 `http://127.0.0.1:4177`。运行自动测试：`npm test`。
 
-## Test
+## AI 与隐私
 
-```powershell
-npm test
-```
+AI 分析是可选功能。若要启用，在服务器本机参考 [`.env.example`](./.env.example) 配置百炼 API Key；不要把真实密钥写进前端或提交到 GitHub。未配置时，课程、打碟台与本地反馈仍可使用。服务器对 AI 请求设置了每日次数与并发上限，但实际费用仍需在模型服务商控制台自行监控和限制。
 
-## AI demo safety
+用户从设备选择的音乐在浏览器端处理；本项目不提供流媒体接入。它是教学原型，不替代实体设备或正式 DJ 软件。
 
-The Node server serves only the frontend files needed by FIRST MIX. Dotfiles, server source, test files, and the local `.env` are not public URLs. Keep the real API key in `.env` on the server; never include it in a source upload.
+## 作品说明
 
-AI analysis is limited by default to 20 calls per UTC day across this server and 5 per client per day, with at most 2 requests in flight. The global count persists in `.ai-usage.json` across restarts; the per-client count resets when the process restarts. Set `AI_DAILY_CALL_LIMIT=0` to disable all paid AI analysis, or set the two limits in `.env` to suit the demo. These limits assume one Node process; a multi-process deployment needs a shared quota store. If using a reverse proxy, overwrite `X-Real-IP` with the actual client address rather than forwarding a visitor-supplied value. Also configure spending protection in the model provider console because a call limit is not a monetary cap.
-
-The automated tests cover control range protection, decibel conversion, equal-power crossfader behavior, ordered tutorial transitions, invalid action rejection, and local coach escalation. Browser verification covers the complete guided path, progressive control locking, responsive layout, and error-free console output.
-
-## Phase two scope
-
-- Two simultaneous 120 BPM synthesized training loops
-- Per-deck volume and low mid high EQ
-- Equal-power Crossfader
-- Sync B to Deck A's current loop position
-- Deterministic first-transition completion
-- Live sample-rate and base-latency reporting
-- Keyboard-operable native controls and reduced-motion support
-
-No audio file is uploaded, no streaming service is connected, and no AI service is called.
-
-## Phase three batch one
-
-- Deterministic Tutorial State Machine: Play A, listen, Sync B, hear MIX, hear B-only, complete
-- Progressive interface that unlocks only the current action
-- EQ controls unlocked after the first successful transition
-- Local Adaptive Coach with contextual two-level hints
-- Automatic local hint after eight seconds without action
-- Local completion marker for later session recovery work
-- First-visit interface tour for Deck, BPM, Beat, Sync, Crossfader, and EQ
-- Spotlight treatment that dims non-current regions, with skip, Escape, and replay support
-- Post-tutorial Free Mix entry with separate local audio import for Deck A and Deck B
-- Browser-only decoding, automatic BPM estimation, manual BPM correction, tempo-matched Sync, and one-click training-track recovery
+本仓库用于展示产品概念、交互设计和前端实现，不代表其中的图片、字体、课程音频均可被第三方再次使用。若要复用素材，请分别核对其来源及许可；本仓库的公开可见性不等于对素材授予再许可。
