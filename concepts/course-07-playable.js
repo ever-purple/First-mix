@@ -474,35 +474,6 @@ function saveMix() {
   const link=document.createElement('a');link.href=mixUrl;link.download=`FIRST-MIX-07-${new Date().toISOString().slice(0,10)}.webm`;link.click();
 }
 
-const keyGuideSteps=[
-  ['PLAY','开始或暂停当前 Deck。录制时何时播放 A、B 由你决定。'],
-  ['CUE','暂停时保存当前位置；播放时返回已保存位置。'],
-  ['SYNC B','让 B 的播放速度跟随 A；拍点仍需用唱盘检查与微调。'],
-  ['唱盘','水平拖动：向右推进、向左回拉，修正瞬时拍点或寻找 Cue。'],
-  ['音量 / GAIN','机身中央两侧的纵向推杆控制每首歌进入混音器的强度。'],
-  ['LOW / MID / HIGH','左右拖动旋钮调节。LOW 管底鼓和贝斯；MID 管人声主体；HIGH 管明亮细节。16 拍练习中，先将 B LOW 降至 −12；交接时将 A LOW 降至 −12、B LOW 升至 0，也可点“一键交换 LOW”。'],
-  ['CROSSFADER','中央横推杆：左侧听 A，右侧听 B，中间同时听两首。'],
-  ['电平与波形','右侧参数面板显示曲名、BPM、播放时间和波形，帮助确认位置。'],
-  ['视角','拖动机身空白处调整角度；右侧参数面板可调倾角与大小。']
-];
-let keyGuideIndex=0;
-function renderKeyGuide(){
-  const [title,copy]=keyGuideSteps[keyGuideIndex];
-  $('#guideProgress').textContent=`${keyGuideIndex+1} / ${keyGuideSteps.length}`;
-  $('#guideTitle').textContent=title;$('#guideCopy').textContent=copy;
-  $('#guidePrevious').disabled=keyGuideIndex===0;
-  $('#guideNext').textContent=keyGuideIndex===keyGuideSteps.length-1?'完成':'下一步';
-}
-function setKeyGuideOpen(open){
-  $('#controlGuide').hidden=!open;
-  $('#guideToggle').setAttribute('aria-expanded',String(open));
-  if(open)renderKeyGuide();
-}
-$('#guideToggle').onclick=()=>setKeyGuideOpen($('#controlGuide').hidden);
-$('#guideClose').onclick=()=>setKeyGuideOpen(false);
-$('#guidePrevious').onclick=()=>{keyGuideIndex=Math.max(0,keyGuideIndex-1);renderKeyGuide();};
-$('#guideNext').onclick=()=>{if(keyGuideIndex===keyGuideSteps.length-1)setKeyGuideOpen(false);else{keyGuideIndex++;renderKeyGuide();}};
-document.addEventListener('keydown',event=>{if(event.key==='Escape')setKeyGuideOpen(false);});
 if($('#viewAngle'))$('#viewAngle').oninput=event=>controller?.setView({tilt:Number(event.target.value)});
 if($('#viewSize'))$('#viewSize').oninput=event=>controller?.setView({zoom:Number(event.target.value)});
 $('#resetCourse07').onclick=()=>window.location.reload();
